@@ -28,7 +28,7 @@ AirDC::AirDC(int pid)
 //RhoAir(Pressure,Temperature,Relative Humidity,mode)
 //Mode 1 is the default BasicAirData routine
 //http://www.basicairdata.eu/calculation-routines.html
-void AirDC::RhoAir(double p, double T,double RH, int mode)
+void AirDC::RhoAir(int mode)
 {
     switch (mode)
     {
@@ -54,11 +54,11 @@ void AirDC::RhoAir(double p, double T,double RH, int mode)
         const double e=- 0.765e-8;
         const double Ma=28.9635 + 12.011*(xco2- 0.0004);
         const double Mv=18.01528;
-        double psv,t,f,xv,Z;
+        double p,T,RH,psv,t,f,xv,Z;
         double Sp,ST,SRH; //sensibility factors
-        _p=p;
-        _T=T;
-        _RH=RH;
+        p=_p;
+        T=_T;
+        RH=_RH;
 //Sequential computation
         psv=1*exp(A*pow(T,2)+B*T+C+D/T);
         t=T-273.15;
@@ -97,12 +97,24 @@ void AirDC::RhoAir(double p, double T,double RH, int mode)
         break;
     }
 }
-void AirDC::IAS(double qc,int mode)
+void AirDC::IAS(int mode)
 {
-    switch (mode){
-        case 1:
-    _IAS=1.27775310604201*sqrt(qc);
-    _uIAS=0.638876553021004/(sqrt(qc))*_uqc;
-    break;
+    switch (mode)
+    {
+    case 1:
+        if (_qc<0)
+        {
+            _qc=0;
+        }
+        _IAS=1.27775310604201*sqrt(_qc);
+        if (_qc>0)
+        {
+            _uIAS=0.638876553021004/(sqrt(_qc))*_uqc;
+        }
+        else
+        {
+            _uIAS=0;
+        }
+        break;
     }
 }

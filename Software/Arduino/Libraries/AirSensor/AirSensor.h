@@ -7,20 +7,21 @@
 #ifndef AirSensor_h
 #define AirSensor_h
 #include "Arduino.h"
+#include "AirDc.h"
 class AirSensor
 {
   public:
     AirSensor(int pid);
-    void Pressure(int mode);
+    void ReadDifferentialPressure(AirDC *out,int mode);
   //private:
     int _pid;
-    double _p;
+ /*   double _p;
     double _T;
     double _RH;
     double _qc;
     double _up;
     double _uT;
     double _uRH;
-    double _uqc;
+    double _uqc;*/
 };
 #endif

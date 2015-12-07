@@ -11,8 +11,8 @@ class AirDC
 {
   public:
     AirDC(int pid);
-    void RhoAir(double p, double T,double RH,int mode);
-    void IAS(double qc,int mode);
+    void RhoAir(int mode);
+    void IAS(int mode);
   //private:
     int _pid;
     double _Rho;
