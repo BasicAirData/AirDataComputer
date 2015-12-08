@@ -59,64 +59,67 @@ void AirDC::RhoAir(int mode)
         p=_p;
         T=_T;
         RH=_RH;
-        for (int i=1;i<5;i++){
-        switch (i){
-    case 1:
+        for (int i=1; i<5; i++)
         {
-        p=p+10;
-        break;
-        }
-    case 2:
-        {
-        p=p+10;
-        break;
-        }
-    case 3:
-        {
-         p=p-10;
-         T=T+10;
-         break;
-        }
-        case 4:
-        {
-         T=T-10;
-         RH=RH+0.1;
-         break;
-        }
-        }
-        psv=1*exp(A*pow(T,2)+B*T+C+D/T);
-        t=T-273.15;
-        f=alfa+bet*p+gama*pow(t,2);
-        xv=RH*f*psv/p;
-        Z=1-p/T*(a0+a1*t+a2*pow(t,2)+(b0+b1*t)*xv+(c0+c1*t)*pow(xv,2))+pow(p,2)/pow(T,2)*(d+e*pow(xv,2));
+            switch (i)
+            {
+            case 1:
+            {
+                p=p+10;
+                break;
+            }
+            case 2:
+            {
+                p=p+10;
+                break;
+            }
+            case 3:
+            {
+                p=p-10;
+                T=T+10;
+                break;
+            }
+            case 4:
+            {
+                T=T-10;
+                RH=RH+0.1;
+                break;
+            }
+            }
+            psv=1*exp(A*pow(T,2)+B*T+C+D/T);
+            t=T-273.15;
+            f=alfa+bet*p+gama*pow(t,2);
+            xv=RH*f*psv/p;
+            Z=1-p/T*(a0+a1*t+a2*pow(t,2)+(b0+b1*t)*xv+(c0+c1*t)*pow(xv,2))+pow(p,2)/pow(T,2)*(d+e*pow(xv,2));
 
-        switch (i){
-        case 1:
+            switch (i)
             {
-                        //Calculates Sensibility factor for p
-        _Rho=p*Ma/(Z*R*T)*(1-xv*(1-Mv/Ma))*0.001;
-        break;
-        }
-        case 2:
+            case 1:
             {
-                        //Calculates Sensibility factor for p
-        Sp=((p*Ma/(Z*R*T)*(1-xv*(1-Mv/Ma))*0.001)-_Rho)/10;
-        break;
-        }
-        case 3:
+                //Calculates Sensibility factor for p
+                _Rho=p*Ma/(Z*R*T)*(1-xv*(1-Mv/Ma))*0.001;
+                break;
+            }
+            case 2:
             {
-                 //Calculates Sensibility factor for T
-        ST=((p*Ma/(Z*R*T)*(1-xv*(1-Mv/Ma))*0.001)-_Rho)/10;
-        break;
-        }
-        case 4:
+                //Calculates Sensibility factor for p
+                Sp=((p*Ma/(Z*R*T)*(1-xv*(1-Mv/Ma))*0.001)-_Rho)/10;
+                break;
+            }
+            case 3:
+            {
+                //Calculates Sensibility factor for T
+                ST=((p*Ma/(Z*R*T)*(1-xv*(1-Mv/Ma))*0.001)-_Rho)/10;
+                break;
+            }
+            case 4:
             {
                 //Calculates Sensibility factor for RH
-        SRH=((p*Ma/(Z*R*T)*(1-xv*(1-Mv/Ma))*0.001)-_Rho)*10;
-        _uRho=sqrt(Sp*Sp*_up*_up+ST*ST*_uT*_uT+SRH*SRH*_uRH*_uRH);
-        break;
-        }
-        }
+                SRH=((p*Ma/(Z*R*T)*(1-xv*(1-Mv/Ma))*0.001)-_Rho)*10;
+                _uRho=sqrt(Sp*Sp*_up*_up+ST*ST*_uT*_uT+SRH*SRH*_uRH*_uRH);
+                break;
+            }
+            }
         }
         break;
     }
@@ -124,6 +127,10 @@ void AirDC::RhoAir(int mode)
 }
 void AirDC::IAS(int mode)
 {
+//Indicated Airspeed
+//IAS=ASI=EAS
+    //http://www.basicairdata.eu/pitot-tube.html
+    //https://en.wikipedia.org/wiki/Equivalent_airspeed
     switch (mode)
     {
     case 1:
@@ -142,4 +149,12 @@ void AirDC::IAS(int mode)
         }
         break;
     }
+}
+void AirDC::TAS(int mode)
+{
+//True Airspeed
+//http://www.basicairdata.eu/pitot-tube.html
+//TAS=IAS*(rhostandard/rhoair)^0.5
+    _TAS=_IAS*sqrt(1.225/_Rho);
+    _uTAS= sqrt((1.225/_Rho)*pow(_uIAS,2)+ pow(0.5*_IAS*1.225/(pow(_Rho,1.5)),2)*pow(_uRho,2));
 }

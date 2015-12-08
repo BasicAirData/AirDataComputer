@@ -9,11 +9,12 @@
 #include "Arduino.h"
 class AirDC
 {
-  public:
+public:
     AirDC(int pid);
     void RhoAir(int mode);
     void IAS(int mode);
-  //private:
+    void TAS(int mode);
+//private:
     int _pid;
     double _Rho;
     double _p;
@@ -21,12 +22,15 @@ class AirDC
     double _RH;
     double _qc;
     double _IAS;
+    double _TAS;
+//uncertainty terms
     double _up;
     double _uT;
     double _uRH;
     double _uRho;
     double _uqc;
     double _uIAS;
+    double _uTAS;
 };
 #endif
 

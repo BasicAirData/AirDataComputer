@@ -13,15 +13,7 @@ class AirSensor
   public:
     AirSensor(int pid);
     void ReadDifferentialPressure(AirDC *out,int mode);
-  //private:
+    void ReadStaticPressure(AirDC *out,int mode);
     int _pid;
- /*   double _p;
-    double _T;
-    double _RH;
-    double _qc;
-    double _up;
-    double _uT;
-    double _uRH;
-    double _uqc;*/
 };
 #endif

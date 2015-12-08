@@ -1,2 +1,3 @@
 AirSensor	KEYWORD1
 ReadDifferentialPressure	KEYWORD2
+ReadStaticPressure	KEYWORD2

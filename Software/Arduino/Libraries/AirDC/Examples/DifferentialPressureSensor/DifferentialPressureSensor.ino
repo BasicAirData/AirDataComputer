@@ -8,6 +8,7 @@
 #include <AirSensor.h>
 
 #define DPSENSOR 3 //Selects the differential pressure Hardware sensor see AirSensor.cpp for details on Hookup
+#define PSENSOR 1 //Selects the static pressure Hardware sensor see AirSensor.cpp for details on Hookup
 
 #if DPSENSOR==1
 #include <Wire.h>
@@ -15,13 +16,14 @@
 #if DPSENSOR==2
 #include <SPI.h>
 #endif
-int dpsensor;
+int dpsensor,psensor;
 double p; //Static Pressure
 AirSensor AirDataSensor(1);
 AirDC AirDataComputer(1);
 
 void setup() {
   Serial.begin(9600);
+//Impact pressure, qc, differential pressure sensor related setup
 #if DPSENSOR==1
   dpsensor = 1;
   Wire.begin();
@@ -36,21 +38,31 @@ void setup() {
 #if DPSENSOR==3
   dpsensor = 3;
 #endif
-
+//Static pressure sensor related setup
+#if PSENSOR==1
+  psensor = 1;
+#endif
 }
 
 void loop() {
   AirDC *ptrAirDC;
   ptrAirDC = &AirDataComputer;
   AirDataSensor.ReadDifferentialPressure(ptrAirDC, dpsensor);
+  AirDataSensor.ReadStaticPressure(ptrAirDC, psensor);
   AirDataComputer.IAS(1);// Calculates the IAS, Algorithm 1
   AirDataComputer.RhoAir(1);// Calculates the air density, Algorithm 1
+  AirDataComputer.TAS(1);// Calculates the IAS, Algorithm 1
   delay(1000); //loop delay
-  Serial.println(dpsensor);  //Sends the Selected sensor
-  Serial.println(AirDataComputer._qc); //Sends the differential pressure reading
-  Serial.println(AirDataComputer._uqc, 10); //Sends the uncertainty of differential pressure measurement
+  Serial.println(dpsensor);  //Prints the Selected sensor
+  Serial.println(psensor);  //Prints the Selected sensor
+  Serial.println(AirDataComputer._qc); //Differential pressure reading
+  Serial.println(AirDataComputer._uqc, 10); //Uncertainty of differential pressure measurement
+  Serial.println(AirDataComputer._p); //Static Pressure
+  Serial.println(AirDataComputer._up, 10); //Uncertainty of static pressure
   Serial.println(AirDataComputer._IAS);//Sends the indicated Airspeed
   Serial.println(AirDataComputer._uIAS, 10); //Sends the uncertainty of IAS measurement
-  Serial.println(AirDataComputer._Rho);//Sends the density of Air
+  Serial.println(AirDataComputer._Rho,4);//Sends the density of Air
   Serial.println(AirDataComputer._uRho, 10); //Sends the uncertainty of the density of air
+  Serial.println(AirDataComputer._TAS); //True Airspeed
+  Serial.println(AirDataComputer._uTAS); //True Airspeed uncertainty
 }

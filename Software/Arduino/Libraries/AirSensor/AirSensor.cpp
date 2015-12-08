@@ -80,10 +80,10 @@ void AirSensor::ReadDifferentialPressure(AirDC *out,int sensor)
         SPI.transfer(GETMEASURE);
         digitalWrite(cs, HIGH);
         digitalWrite(cs, LOW);
-        byte h = SPI.transfer(0x00);
-        byte l = SPI.transfer(0x00);
+        byte hb = SPI.transfer(0x00);
+        byte lb = SPI.transfer(0x00);
         digitalWrite(cs, HIGH);
-        result=word(h,l);
+        result=word(hb,lb);
         rawpressure=result*sensorgain;
         out->_qc=rawpressure; //pa
         out->_uqc=5.0;//pa
@@ -104,10 +104,24 @@ void AirSensor::ReadDifferentialPressure(AirDC *out,int sensor)
         raw = analogRead(analogPin);
         Vread=5.0/1023.0*(raw);
         Pread=(Vread-2.5-offsetv)*1000;
+        Pread=1000;
         out->_qc=Pread; //pa
         out->_uqc=50.0;//pa
         }
         break;
+    }
+}
+
+void AirSensor::ReadStaticPressure(AirDC *out,int sensor)
+{
+    switch (sensor)
+    {
+    case 1 :
+    {
+        out->_p=90000;
+        out->_up=100;
+        break;
+    }
     }
 }
 
