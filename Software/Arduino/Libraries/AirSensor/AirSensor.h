@@ -12,8 +12,10 @@ class AirSensor
 {
   public:
     AirSensor(int pid);
-    void ReadDifferentialPressure(AirDC *out,int mode);
-    void ReadStaticPressure(AirDC *out,int mode);
+    void ReadDifferentialPressure(AirDC *out,int sensor);
+    void ReadStaticPressure(AirDC *out,int sensor);
+    void ReadTAT(AirDC *out,int sensor);
+    void ReadRH(AirDC *out,int sensor);
     int _pid;
 };
 #endif

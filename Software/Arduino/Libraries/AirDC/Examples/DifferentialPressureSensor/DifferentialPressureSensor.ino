@@ -47,12 +47,19 @@ void setup() {
 void loop() {
   AirDC *ptrAirDC;
   ptrAirDC = &AirDataComputer;
+//Measurements
   AirDataSensor.ReadDifferentialPressure(ptrAirDC, dpsensor);
   AirDataSensor.ReadStaticPressure(ptrAirDC, psensor);
+  AirDataSensor.ReadTAT(ptrAirDC, psensor);
+  AirDataSensor.ReadRH(ptrAirDC, psensor);
+//Computation
   AirDataComputer.IAS(1);// Calculates the IAS, Algorithm 1
   AirDataComputer.RhoAir(1);// Calculates the air density, Algorithm 1
   AirDataComputer.TAS(1);// Calculates the IAS, Algorithm 1
+  AirDataComputer.Mach(1);// Calculates the Mach number, Algorithm 1
+  AirDataComputer.OAT(1);// Calculates the Outside Air Temperature, Algorithm 1
   delay(1000); //loop delay
+//Visualitation  
   Serial.println(dpsensor);  //Prints the Selected sensor
   Serial.println(psensor);  //Prints the Selected sensor
   Serial.println(AirDataComputer._qc); //Differential pressure reading
@@ -65,4 +72,11 @@ void loop() {
   Serial.println(AirDataComputer._uRho, 10); //Sends the uncertainty of the density of air
   Serial.println(AirDataComputer._TAS); //True Airspeed
   Serial.println(AirDataComputer._uTAS); //True Airspeed uncertainty
+  Serial.println(AirDataComputer._M,10); //Mach number
+  Serial.println(AirDataComputer._TAT,4); //Total Air Temperature
+  Serial.println(AirDataComputer._uTAT); //Total Air Temperature uncertainty
+  Serial.println(AirDataComputer._T,4); //Outside Temperature, Static Temperature
+  Serial.println(AirDataComputer._uT); //Outside Temperature, Static Temperature uncertainty
+  Serial.println(AirDataComputer._RH); //Relative Humidity
+  Serial.println(AirDataComputer._uRH); //Relative Humidity Uncertainty
 }

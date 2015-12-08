@@ -20,10 +20,11 @@ AirDC::AirDC(int pid)
     //Uncertainty of measurements
     _uRho=0.0; //To be calculated, 0 default value
     _up=5.0;
-    _uT=0.8;
+    _uT=0; //To be calculated
     _uRH=0.05;
     _uqc=5.0;
     _uIAS=0.0;//To be calculated, 0 default value
+    _uTAT=0.0;//To be calculated, 0 default value
 }
 //RhoAir(Pressure,Temperature,Relative Humidity,mode)
 //Mode 1 is the default BasicAirData routine
@@ -158,3 +159,44 @@ void AirDC::TAS(int mode)
     _TAS=_IAS*sqrt(1.225/_Rho);
     _uTAS= sqrt((1.225/_Rho)*pow(_uIAS,2)+ pow(0.5*_IAS*1.225/(pow(_Rho,1.5)),2)*pow(_uRho,2));
 }
+void AirDC::Mach(int mode)
+{
+    switch (mode)
+    {
+    case 1:
+    {
+        //  http://www.basicairdata.eu/air-properties.html
+        //  https://en.wikipedia.org/wiki/Julius_von_Mayer#Mayer.27s_relation
+        double gamma=1.4; // cp/cv;
+        double R,Ma,Rair;
+        R=8314.459848; // J/K/mol
+        Ma=0.0289645; //Kg/mol  Molecular mass of dry air
+        Rair=R/Ma;
+        _M=_TAS/(sqrt(gamma*Rair*_T));
+        break;
+    }
+
+    }
+
+}
+
+void AirDC::OAT(int mode)
+{
+//Outside Air Temperature
+//http://www.basicairdata.blogspot.it/2013/05/resistance-temperature-detectors-for.html
+//https://en.wikipedia.org/wiki/Total_air_temperature
+    switch (mode)
+    {
+case 1:
+    {
+        double gamma=1.4; //cp/cv
+        //https://en.wikipedia.org/wiki/Julius_von_Mayer#Mayer.27s_relation
+
+        _T=_TAT/(1+(gamma-1)/2*pow(_M,2));
+        _uT=1/(1+(gamma-1)/2*2*pow(_M,2))*_uTAT;
+    }
+}
+
+}
+
+

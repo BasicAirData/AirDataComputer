@@ -17,8 +17,9 @@ void AirSensor::ReadDifferentialPressure(AirDC *out,int sensor)
 {
     switch (sensor)
     {
-    case 1 :{
-         //Sensor one is I2C HLCA12X5
+    case 1 :
+    {
+        //Sensor one is I2C HLCA12X5
         //http://www.first-sensor.com/cms/upload/datasheets/DS_Standard-HCLA_E_11629.pdf
         //Basic software for HLCA12X5 from Sensortechnics/First
         // Pressure  - Sensor output hex/dec
@@ -41,9 +42,9 @@ void AirSensor::ReadDifferentialPressure(AirDC *out,int sensor)
         out->_qc=rawdata; //pa
         out->_uqc=10.0;//pa
     }
-        break;
+    break;
     case 2 :
-        {
+    {
         /*
         Differential Pressure sensor LDES205U by FirstSensor/SensorThecnics
         This sensor uses SPI
@@ -87,10 +88,10 @@ void AirSensor::ReadDifferentialPressure(AirDC *out,int sensor)
         rawpressure=result*sensorgain;
         out->_qc=rawpressure; //pa
         out->_uqc=5.0;//pa
-        }
-        break; //Sensor two is SPI
+    }
+    break; //Sensor two is SPI
     case 3 :
-        {
+    {
         //MPXV7002 Sensor
         //Wire the Arduino Uno and MPXV7002 (That sensor is mounted on HobbyKing Pitot Board) in this way
         //MPXV7002    <->   Arduino Uno
@@ -107,8 +108,8 @@ void AirSensor::ReadDifferentialPressure(AirDC *out,int sensor)
         Pread=1000;
         out->_qc=Pread; //pa
         out->_uqc=50.0;//pa
-        }
-        break;
+    }
+    break;
     }
 }
 
@@ -124,4 +125,29 @@ void AirSensor::ReadStaticPressure(AirDC *out,int sensor)
     }
     }
 }
+void AirSensor::ReadTAT(AirDC *out,int sensor)
+{
+    switch (sensor)
+    {
+    case 1 :
+    {
+        //Total Air Temperature Sensor
+//http://www.basicairdata.blogspot.it/2013/05/resistance-temperature-detectors-for.html
+        out->_TAT=288.15;
+        out->_uTAT=1;
+        break;
+    }
+    }
+}
+void AirSensor::ReadRH(AirDC *out,int sensor){
+    switch (sensor)
+    {
+    case 1 :
+    {
+        out->_RH=0.5;
+        out->_uRH=0.05;
+        break;
+    }
+    }
 
+}

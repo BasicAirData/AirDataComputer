@@ -14,15 +14,19 @@ public:
     void RhoAir(int mode);
     void IAS(int mode);
     void TAS(int mode);
+    void Mach(int mode);
+    void OAT(int mode);
 //private:
     int _pid;
-    double _Rho;
     double _p;
     double _T;
     double _RH;
     double _qc;
+    double _Rho;
     double _IAS;
     double _TAS;
+    double _M;
+    double _TAT;
 //uncertainty terms
     double _up;
     double _uT;
@@ -31,6 +35,7 @@ public:
     double _uqc;
     double _uIAS;
     double _uTAS;
+    double _uTAT;
 };
 #endif
 
