@@ -9,6 +9,7 @@
 
 #define DPSENSOR 3 //Selects the differential pressure Hardware sensor see AirSensor.cpp for details on Hookup
 #define PSENSOR 1 //Selects the static pressure Hardware sensor see AirSensor.cpp for details on Hookup
+#define DEBUG 1 //
 
 #if DPSENSOR==1
 #include <Wire.h>
@@ -53,11 +54,13 @@ void loop() {
   AirDataSensor.ReadTAT(ptrAirDC, psensor);
   AirDataSensor.ReadRH(ptrAirDC, psensor);
 //Computation
-  AirDataComputer.IAS(1);// Calculates the IAS, Algorithm 1
   AirDataComputer.RhoAir(1);// Calculates the air density, Algorithm 1
+  AirDataComputer.IAS(1);// Calculates the IAS, Algorithm 1
+  AirDataComputer.CAS(1);// Calculates the CAS, Algorithm 1
   AirDataComputer.TAS(1);// Calculates the IAS, Algorithm 1
   AirDataComputer.Mach(1);// Calculates the Mach number, Algorithm 1
   AirDataComputer.OAT(1);// Calculates the Outside Air Temperature, Algorithm 1
+  AirDataComputer.ISAAltitude(1);// Calculates the ISA altitude from static pressure, Algorithm 1
   delay(1000); //loop delay
 //Visualitation  
   Serial.println(dpsensor);  //Prints the Selected sensor
@@ -70,6 +73,8 @@ void loop() {
   Serial.println(AirDataComputer._uIAS, 10); //Sends the uncertainty of IAS measurement
   Serial.println(AirDataComputer._Rho,4);//Sends the density of Air
   Serial.println(AirDataComputer._uRho, 10); //Sends the uncertainty of the density of air
+  Serial.println(AirDataComputer._CAS); //Calibrated AirSpeed
+  Serial.println(AirDataComputer._uCAS); //Calibrated AirSpeed uncertainty
   Serial.println(AirDataComputer._TAS); //True Airspeed
   Serial.println(AirDataComputer._uTAS); //True Airspeed uncertainty
   Serial.println(AirDataComputer._M,10); //Mach number
@@ -79,4 +84,6 @@ void loop() {
   Serial.println(AirDataComputer._uT); //Outside Temperature, Static Temperature uncertainty
   Serial.println(AirDataComputer._RH); //Relative Humidity
   Serial.println(AirDataComputer._uRH); //Relative Humidity Uncertainty
+  Serial.println(AirDataComputer._h); //Altitude
+  Serial.println(AirDataComputer._uh); //Altitude Uncertainty
 }

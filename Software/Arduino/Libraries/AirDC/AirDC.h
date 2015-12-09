@@ -13,9 +13,11 @@ public:
     AirDC(int pid);
     void RhoAir(int mode);
     void IAS(int mode);
+    void CAS(int mode);
     void TAS(int mode);
     void Mach(int mode);
     void OAT(int mode);
+    void ISAAltitude(int mode);
 //private:
     int _pid;
     double _p;
@@ -24,9 +26,11 @@ public:
     double _qc;
     double _Rho;
     double _IAS;
+    double _CAS;
     double _TAS;
     double _M;
     double _TAT;
+    double _h;
 //uncertainty terms
     double _up;
     double _uT;
@@ -34,8 +38,10 @@ public:
     double _uRho;
     double _uqc;
     double _uIAS;
+    double _uCAS;
     double _uTAS;
     double _uTAT;
+    double _uh;
 };
 #endif
 

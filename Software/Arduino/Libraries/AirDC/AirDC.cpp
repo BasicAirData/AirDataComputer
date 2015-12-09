@@ -151,13 +151,26 @@ void AirDC::IAS(int mode)
         break;
     }
 }
+void AirDC::CAS(int mode)
+{
+//Calibrated Airspeed
+    //http://www.basicairdata.eu/pitot-tube.html
+    //https://en.wikipedia.org/wiki/Equivalent_airspeed
+    switch (mode)
+    {
+    case 1:
+    _CAS=_IAS;
+    _uCAS=_uIAS;
+        break;
+    }
+}
 void AirDC::TAS(int mode)
 {
 //True Airspeed
 //http://www.basicairdata.eu/pitot-tube.html
 //TAS=IAS*(rhostandard/rhoair)^0.5
-    _TAS=_IAS*sqrt(1.225/_Rho);
-    _uTAS= sqrt((1.225/_Rho)*pow(_uIAS,2)+ pow(0.5*_IAS*1.225/(pow(_Rho,1.5)),2)*pow(_uRho,2));
+    _TAS=_CAS*sqrt(1.225/_Rho);
+    _uTAS= sqrt((1.225/_Rho)*pow(_uCAS,2)+ pow(0.5*_CAS*1.225/(pow(_Rho,1.5)),2)*pow(_uRho,2));
 }
 void AirDC::Mach(int mode)
 {
@@ -187,7 +200,7 @@ void AirDC::OAT(int mode)
 //https://en.wikipedia.org/wiki/Total_air_temperature
     switch (mode)
     {
-case 1:
+    case 1:
     {
         double gamma=1.4; //cp/cv
         //https://en.wikipedia.org/wiki/Julius_von_Mayer#Mayer.27s_relation
@@ -195,7 +208,24 @@ case 1:
         _T=_TAT/(1+(gamma-1)/2*pow(_M,2));
         _uT=1/(1+(gamma-1)/2*2*pow(_M,2))*_uTAT;
     }
+    }
+
 }
+void AirDC::ISAAltitude(int mode)
+{
+    switch (mode)
+    {
+    case 1:
+    {
+        double Ps,h;
+        Ps=_p/133.3223684211/25.4;//Pa to inHg Conversion
+        //Using Goodrich 4081 Air data handbook formula
+        _h=(pow(29.92126,0.190255)-pow(Ps,0.190255))/0.000013125214; //US atmosphere 1962
+        //Back to SI
+        _h=h*0.3048;
+        _uh=0.057989724*pow(Ps,-0.809745)*258006317.725680592912*_up;
+    }
+    }
 
 }
 

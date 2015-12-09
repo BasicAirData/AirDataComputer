@@ -105,7 +105,9 @@ void AirSensor::ReadDifferentialPressure(AirDC *out,int sensor)
         raw = analogRead(analogPin);
         Vread=5.0/1023.0*(raw);
         Pread=(Vread-2.5-offsetv)*1000;
+        #if DEBUG==1
         Pread=1000;
+        #endif
         out->_qc=Pread; //pa
         out->_uqc=50.0;//pa
     }
