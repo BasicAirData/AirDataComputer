@@ -18,12 +18,16 @@ public:
     void Mach(int mode);
     void OAT(int mode);
     void ISAAltitude(int mode);
-//private:
+    void OutputSerial(int mode);
+//General use
     int _pid;
+    String _StreamOut;
+//Measurements
     double _p;
     double _T;
     double _RH;
     double _qc;
+//AirData
     double _Rho;
     double _IAS;
     double _CAS;
@@ -31,12 +35,13 @@ public:
     double _M;
     double _TAT;
     double _h;
-//uncertainty terms
+//Measurements Uncertainty
     double _up;
     double _uT;
     double _uRH;
-    double _uRho;
     double _uqc;
+//AirData Uncertainty
+    double _uRho;
     double _uIAS;
     double _uCAS;
     double _uTAS;

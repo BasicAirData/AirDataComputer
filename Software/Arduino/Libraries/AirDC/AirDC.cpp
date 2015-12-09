@@ -228,5 +228,28 @@ void AirDC::ISAAltitude(int mode)
     }
 
 }
+void AirDC::OutputSerial(int mode){
+switch(mode){
+case 1: //Measurements only output
+{
+    //http://www.tigoe.com/pcomp/code/arduinowiring/1161/
+//Measurements
+//sprintf(_StreamOut,"$%f,%f,%f,%f\0",_p,_T,_RH,_qc);
+  String s1(_p, 6);
+  String s2(_T, 6);
+  String s3(_RH, 6);
+  String s4(_qc, 6);
+  _StreamOut='$'+s1+','+s2+','+s3+','+s4;
+//To read string on the other side
+/*
+  if (Serial.find("$")) {
+    _p = Serial.parseFloat(); //
+    _T = Serial.parseFloat();//
+    _RH = Serial.parseFloat();//
+    _qc = Serial.parseFloat();//
+*/
+}
+}
+}
 
 

@@ -63,6 +63,8 @@ void loop() {
   AirDataComputer.ISAAltitude(1);// Calculates the ISA altitude from static pressure, Algorithm 1
   delay(1000); //loop delay
 //Visualitation  
+  AirDataComputer.OutputSerial(1);
+  Serial.println(AirDataComputer._StreamOut); // Prints measurements
   Serial.println(dpsensor);  //Prints the Selected sensor
   Serial.println(psensor);  //Prints the Selected sensor
   Serial.println(AirDataComputer._qc); //Differential pressure reading
