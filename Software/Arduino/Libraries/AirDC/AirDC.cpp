@@ -20,8 +20,9 @@ AirDC::AirDC(int pid)
     _RH=0.0;
     _qc=0.0;
     _AOA=0.17;
-    _AOS=0;
+    _AOS=0.01;
     _IAS=0.0;
+    _TASPCorrected=0.0;
     //Uncertainty of measurements
     _uRho=0.0; //To be calculated, 0 default value
     _up=5.0;
@@ -231,25 +232,27 @@ void AirDC::ISAAltitude(int mode)
         _h=(pow(29.92126,0.190255)-pow(Ps,0.190255))*76189.2339431570; //US atmosphere 1962
         //Back to SI
         _h=_h*0.3048;
-        _uh=0.057989724*pow(Ps,-0.809745)*258006317.725680592912*_up;
+        //76189.2339431570*(_p*0.000295299875080277)^0.190255
+        _uh=4418.19264813511*pow(Ps,-0.809745)*_up*0.000295299875080277;
     }
     }
 
 }
-void AirDC::OutputSerial(int mode)
+String AirDC::OutputSerial(int mode)
 {
+    String StreamOut;
     switch(mode)
     {
-    case 1: //Measurements only output
+    case 1: //Measurements output
     {
-        //http://www.tigoe.com/pcomp/code/arduinowiring/1161/
-//Measurements
-//sprintf(_StreamOut,"$%f,%f,%f,%f\0",_p,_T,_RH,_qc);
+//_p,_T,_RH,_qc,AOA,AOS
         String s1(_p, 6);
         String s2(_T, 6);
         String s3(_RH, 6);
         String s4(_qc, 6);
-        _StreamOut='$'+s1+','+s2+','+s3+','+s4;
+        String s5(_AOA, 6);
+        String s6(_AOS, 6);
+        StreamOut='$'+s1+','+s2+','+s3+','+s4+','+s5+','+s6;
 //To read string on the other side
         /*
           if (Serial.find("$")) {
@@ -258,7 +261,47 @@ void AirDC::OutputSerial(int mode)
             _RH = Serial.parseFloat();//
             _qc = Serial.parseFloat();//
         */
+        break;
     }
+    case 2: //Air data output
+        //_Rho,_IAS,_CAS,_TAS,_TASPCorrected,_M,_TAT,_h,_mu,_Re
+    {
+        String s1(_Rho, 6);
+        String s2(_IAS, 6);
+        String s3(_CAS, 6);
+        String s4(_TAS, 6);
+        String s5(_TASPCorrected, 6);
+        String s6(_M, 6);
+        String s7(_TAT, 6);
+        String s8(_h, 6);
+        String s9(_mu, 6);
+        String s10(_Re, 6);
+        StreamOut='$'+s1+','+s2+','+s3+','+s4+','+s5+','+s6+','+s7+','+s8+','+s9+','+s10;
+        break;
+    }
+    case 3: //Measurements uncertainty output
+        //_up,_uT,_uRH,_uqc
+    {
+        String s1(_up, 6);
+        String s2(_uT, 6);
+        String s3(_uRH, 6);
+        String s4(_uqc, 6);
+        StreamOut='$'+s1+','+s2+','+s3+','+s4;
+        break;
+    }
+    case 4: //Air data uncertainty output
+        //_uRho,_uIAS,_uCAS,_uTAS,_uTAT,_uh;
+    {
+        String s1(_uRho, 6);
+        String s2(_uIAS, 6);
+        String s3(_uCAS, 6);
+        String s4(_uTAS, 6);
+        String s5(_uTAT, 6);
+        String s6(_uh, 6);
+        StreamOut='$'+s1+','+s2+','+s3+','+s4+','+s5+','+s6;
+        break;
+    }
+    return StreamOut;
     }
 }
 void AirDC::PitotCorrection(int mode)
@@ -267,7 +310,12 @@ void AirDC::PitotCorrection(int mode)
 //http://basicairdata.blogspot.it/2014/07/pitot-correction-for-position-and.html
     switch (mode)
     {
-    case 1:  //Steady state(no angular acceleration) assumed for this method
+    case 1: //No_compensation
+    {
+    _TASPCorrected=_TAS;
+    break;
+    }
+    case 2:  //Steady state(no angular acceleration) assumed for this method
     {
         float R[3][3];
         float PB[3][1]; //Position of probe tip in body coordinates
@@ -279,6 +327,10 @@ void AirDC::PitotCorrection(int mode)
         PB[1][1]=0.5; //Installation position respect c.o.g.
         PB[2][1]=0;
         PB[3][1]=0;
+        WB[1][1]=0.5;   //Angular rates . P, q, r from sensors
+        WB[2][1]=0.5;
+        WB[3][1]=0.5;
+
         R[1][1]=cos(_AOA)*cos(_AOS);
         R[1][2]=sin(_AOS);
         R[1][3]=sin(_AOA)*sin(_AOS);
@@ -302,7 +354,8 @@ void AirDC::PitotCorrection(int mode)
         VCorrected[1][1]=_TAS-PWDOT[1][1];
         VCorrected[2][1]= -PWDOT[2][1];
         VCorrected[3][1]= -PWDOT[3][1];
-        _TASPCorrected=sqrt(pow(VCorrected[1][1],2)+pow(VCorrected[2][1],2)+pow(VCorrected[3][1],2));
+        // _TASPCorrected=sqrt(pow(VCorrected[1][1],2)+pow(VCorrected[2][1],2)+pow(VCorrected[3][1],2));
+        _TASPCorrected=0;
         break;
     }
     }

@@ -18,14 +18,13 @@ public:
     void Mach(int mode);
     void OAT(int mode);
     void ISAAltitude(int mode);
-    void OutputSerial(int mode);
+    String OutputSerial(int mode);
 //Correction and Auxiliary
     void PitotCorrection(int mode);
     void Viscosity(int mode);
     void Red(int mode);
 //General use
     int _pid;
-    String _StreamOut;
 //Geometric
     double _d;//Reference length for Re calculation
 //Measurements

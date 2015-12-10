@@ -57,18 +57,22 @@ void loop() {
   AirDataComputer.IAS(1);// Calculates the IAS, Algorithm 1
   AirDataComputer.CAS(1);// Calculates the CAS, Algorithm 1
   AirDataComputer.TAS(1);// Calculates the IAS, Algorithm 1
+  AirDataComputer.PitotCorrection(1);// Calculates the corrected Airspeed, Algorithm 1
   AirDataComputer.Mach(1);// Calculates the Mach number, Algorithm 1
   AirDataComputer.OAT(1);// Calculates the Outside Air Temperature, Algorithm 1
   AirDataComputer.ISAAltitude(1);// Calculates the  ISA Altitude
-//Measurment corrections and Auxiliary data
-  AirDataComputer.PitotCorrection(1);// Calculates the corrected Airspeed, Algorithm 1
+//Auxiliary data
   AirDataComputer.Viscosity(1);// Calculates the dynamic viscosity, Algorithm 1
   AirDataComputer.Red(1);// Calculates the ISA altitude from static pressure, Algorithm 1
-  delay(1000); //loop delay
-//Visualitation  
-  AirDataComputer.OutputSerial(1);
-  Serial.println(AirDataComputer._StreamOut); // Prints measurements
-  Serial.println(dpsensor);  //Prints the Selected sensor
+  delay(2000); //loop delay
+//Data Output
+  Serial.println(AirDataComputer.OutputSerial(1)); // Measurements
+  Serial.println(AirDataComputer.OutputSerial(2)); // Air Data
+  Serial.println(AirDataComputer.OutputSerial(3)); // Measurements uncertainty
+  Serial.println(AirDataComputer.OutputSerial(4)); // Measurements uncertainty  
+}
+
+/*  Serial.println(dpsensor);  //Prints the Selected sensor
   Serial.println(psensor);  //Prints the Selected sensor
   Serial.println(AirDataComputer._qc); //Differential pressure reading
   Serial.println(AirDataComputer._uqc, 10); //Uncertainty of differential pressure measurement
@@ -93,5 +97,4 @@ void loop() {
   Serial.println(AirDataComputer._uh); //Altitude Uncertainty
   Serial.println(AirDataComputer._TASPCorrected); //True Airspeed Corrected for probe position
   Serial.println(AirDataComputer._mu,10); //Viscosity Pas
-  Serial.println(AirDataComputer._Re); //Reynolds
-}
+  Serial.println(AirDataComputer._Re); //Reynolds*/
