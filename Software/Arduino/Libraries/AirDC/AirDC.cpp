@@ -19,6 +19,8 @@ AirDC::AirDC(int pid)
     _T=288.15;
     _RH=0.0;
     _qc=0.0;
+    _AOA=0.17;
+    _AOS=0;
     _IAS=0.0;
     //Uncertainty of measurements
     _uRho=0.0; //To be calculated, 0 default value
@@ -28,6 +30,7 @@ AirDC::AirDC(int pid)
     _uqc=5.0;
     _uIAS=0.0;//To be calculated, 0 default value
     _uTAT=0.0;//To be calculated, 0 default value
+
 }
 //RhoAir(Pressure,Temperature,Relative Humidity,mode)
 //Mode 1 is the default BasicAirData routine
@@ -222,11 +225,12 @@ void AirDC::ISAAltitude(int mode)
     case 1:
     {
         double Ps,h;
-        Ps=_p/133.3223684211/25.4;//Pa to inHg Conversion
+        Ps=_p*0.000295299875080277;//Pa to inHg Conversion
         //Using Goodrich 4081 Air data handbook formula
-        _h=(pow(29.92126,0.190255)-pow(Ps,0.190255))/0.000013125214; //US atmosphere 1962
+
+        _h=(pow(29.92126,0.190255)-pow(Ps,0.190255))*76189.2339431570; //US atmosphere 1962
         //Back to SI
-        _h=h*0.3048;
+        _h=_h*0.3048;
         _uh=0.057989724*pow(Ps,-0.809745)*258006317.725680592912*_up;
     }
     }
@@ -309,8 +313,8 @@ void AirDC::Viscosity(int mode)
     {
     case 1:
     {
-        //Calculate viscosity. Sutherland's formula, note that unit of measurement [Pas] is multiplied by 10e3
-        _mu= 18.27*(291.15+120)/(_T+120)*pow((_T/291.15),(3/2));
+        //Calculate viscosity. Sutherland's formula, note that unit number multiplied 10e6
+        _mu= 18.27*(291.15+120)/(_T+120)*pow((_T/291.15),(3/2))*1e-6;
     }
     }
 }
