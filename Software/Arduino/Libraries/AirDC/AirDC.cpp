@@ -4,12 +4,15 @@
   Refer to http:\\www.basicairdata.eu
 */
 #include "AirDC.h"
+#include "MatrixMath.h"
 #include <math.h>
 
 AirDC::AirDC(int pid)
 {
     //Default parameters values
     _pid = pid;
+    //Geometric
+    _d=0.008;
     //Parameter values
     _Rho=1.225;
     _p=101325;
@@ -159,8 +162,9 @@ void AirDC::CAS(int mode)
     switch (mode)
     {
     case 1:
-    _CAS=_IAS;
-    _uCAS=_uIAS;
+        //Here the calibration table should be lookup.
+        _CAS=_IAS;
+        _uCAS=_uIAS;
         break;
     }
 }
@@ -228,28 +232,95 @@ void AirDC::ISAAltitude(int mode)
     }
 
 }
-void AirDC::OutputSerial(int mode){
-switch(mode){
-case 1: //Measurements only output
+void AirDC::OutputSerial(int mode)
 {
-    //http://www.tigoe.com/pcomp/code/arduinowiring/1161/
+    switch(mode)
+    {
+    case 1: //Measurements only output
+    {
+        //http://www.tigoe.com/pcomp/code/arduinowiring/1161/
 //Measurements
 //sprintf(_StreamOut,"$%f,%f,%f,%f\0",_p,_T,_RH,_qc);
-  String s1(_p, 6);
-  String s2(_T, 6);
-  String s3(_RH, 6);
-  String s4(_qc, 6);
-  _StreamOut='$'+s1+','+s2+','+s3+','+s4;
+        String s1(_p, 6);
+        String s2(_T, 6);
+        String s3(_RH, 6);
+        String s4(_qc, 6);
+        _StreamOut='$'+s1+','+s2+','+s3+','+s4;
 //To read string on the other side
-/*
-  if (Serial.find("$")) {
-    _p = Serial.parseFloat(); //
-    _T = Serial.parseFloat();//
-    _RH = Serial.parseFloat();//
-    _qc = Serial.parseFloat();//
-*/
+        /*
+          if (Serial.find("$")) {
+            _p = Serial.parseFloat(); //
+            _T = Serial.parseFloat();//
+            _RH = Serial.parseFloat();//
+            _qc = Serial.parseFloat();//
+        */
+    }
+    }
 }
-}
-}
+void AirDC::PitotCorrection(int mode)
+{
+//Based on
+//http://basicairdata.blogspot.it/2014/07/pitot-correction-for-position-and.html
+    switch (mode)
+    {
+    case 1:  //Steady state(no angular acceleration) assumed for this method
+    {
+        float R[3][3];
+        float PB[3][1]; //Position of probe tip in body coordinates
+        float WB[3][1]; //Angular rates in body coordinates [p q r]'
+        float WW[3][1];//Angular rates in wind coordinates [p q r]'
+        float PW[3][1]; //Position of probe tip in wind ref. frame
+        float PWDOT[3][1]; //Velocity of tip in wind ref. frame
+        float VCorrected[3][1];  //Measured Airspeed
+        PB[1][1]=0.5; //Installation position respect c.o.g.
+        PB[2][1]=0;
+        PB[3][1]=0;
+        R[1][1]=cos(_AOA)*cos(_AOS);
+        R[1][2]=sin(_AOS);
+        R[1][3]=sin(_AOA)*sin(_AOS);
+        R[2][1]=-cos(_AOA)*sin(_AOS);
+        R[2][2]=cos(_AOS);
+        R[2][3]=-sin(_AOA)*sin(_AOS);
+        R[3][1]=-sin(_AOA);
+        R[3][2]=0;
+        R[3][3]=cos(_AOA);
 
-
+//Calculation of Position vector in wind axes
+        Matrix.Multiply((float*)R,(float*)PB,3,3,1,(float*)PW);
+//Calculation angular rates at tip in wind frame, attention low angular acceleration assumed. High rates in method 2.
+        Matrix.Multiply((float*)R,(float*)WB,3,3,1,(float*)WW);
+//Calculation of velocity vector at tip in wind coordinates
+//Cross product WWxPW
+        PWDOT[1][1]=WW[2][1]*PW[3][1]-WW[3][1]*PW[2][1];
+        PWDOT[2][1]=WW[3][1]*PW[1][1]-WW[1][1]*PW[3][1];
+        PWDOT[3][1]=WW[1][1]*PW[2][1]-WW[2][1]*PW[1][1];
+//Airspeed vector
+        VCorrected[1][1]=_TAS-PWDOT[1][1];
+        VCorrected[2][1]= -PWDOT[2][1];
+        VCorrected[3][1]= -PWDOT[3][1];
+        _TASPCorrected=sqrt(pow(VCorrected[1][1],2)+pow(VCorrected[2][1],2)+pow(VCorrected[3][1],2));
+        break;
+    }
+    }
+}
+void AirDC::Viscosity(int mode)
+{
+    switch(mode)
+    {
+    case 1:
+    {
+        //Calculate viscosity. Sutherland's formula, note that unit of measurement [Pas] is multiplied by 10e3
+        _mu= 18.27*(291.15+120)/(_T+120)*pow((_T/291.15),(3/2));
+    }
+    }
+}
+void AirDC::Red(int mode)
+{
+    switch(mode)
+    {
+    case 1:
+    {
+        _Re=_Rho*_TAS*_d/_mu;
+    }
+    }
+}

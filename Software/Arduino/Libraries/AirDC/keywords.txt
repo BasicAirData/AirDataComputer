@@ -7,3 +7,6 @@ Mach	KEYWORD2
 OAT	KEYWORD2
 ISAAltitude	KEYWORD2
 OutputSerial	KeYWORD2
+PitotCorrection	KEYWORD2
+Viscosity	KEYWORD2
+Red	KEYWORD2

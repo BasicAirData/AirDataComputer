@@ -19,22 +19,33 @@ public:
     void OAT(int mode);
     void ISAAltitude(int mode);
     void OutputSerial(int mode);
+//Correction and Auxiliary
+    void PitotCorrection(int mode);
+    void Viscosity(int mode);
+    void Red(int mode);
 //General use
     int _pid;
     String _StreamOut;
+//Geometric
+    double _d;//Reference length for Re calculation
 //Measurements
     double _p;
     double _T;
     double _RH;
     double _qc;
+    double _AOA;
+    double _AOS;
 //AirData
     double _Rho;
     double _IAS;
     double _CAS;
     double _TAS;
+    double _TASPCorrected;
     double _M;
     double _TAT;
     double _h;
+    double _mu;
+    double _Re;
 //Measurements Uncertainty
     double _up;
     double _uT;

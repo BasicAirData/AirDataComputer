@@ -60,7 +60,10 @@ void loop() {
   AirDataComputer.TAS(1);// Calculates the IAS, Algorithm 1
   AirDataComputer.Mach(1);// Calculates the Mach number, Algorithm 1
   AirDataComputer.OAT(1);// Calculates the Outside Air Temperature, Algorithm 1
-  AirDataComputer.ISAAltitude(1);// Calculates the ISA altitude from static pressure, Algorithm 1
+//Measurment corrections and Auxiliary data
+  AirDataComputer.PitotCorrection(1);// Calculates the ISA altitude from static pressure, Algorithm 1
+  AirDataComputer.Viscosity(1);// Calculates the dynamic viscosity, Algorithm 1
+  AirDataComputer.Red(1);// Calculates the ISA altitude from static pressure, Algorithm 1
   delay(1000); //loop delay
 //Visualitation  
   AirDataComputer.OutputSerial(1);
@@ -88,4 +91,7 @@ void loop() {
   Serial.println(AirDataComputer._uRH); //Relative Humidity Uncertainty
   Serial.println(AirDataComputer._h); //Altitude
   Serial.println(AirDataComputer._uh); //Altitude Uncertainty
+  Serial.println(AirDataComputer._TASPCorrected); //True Airspeed Corrected for probe position
+  Serial.println(AirDataComputer._mu); //Viscosity mPas
+  Serial.println(AirDataComputer._Re); //Reynolds
 }
