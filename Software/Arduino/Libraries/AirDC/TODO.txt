@@ -5,4 +5,4 @@ Compensate Relative Humidity sensor dynamic
 Add SD Card enable Air Data Computer Example
 
 CHECK/VALIDATE
-Pitot Position, angular rates, correction routine
+Pitot Position, angular rates, correction routine. Add angular acceleration terms.

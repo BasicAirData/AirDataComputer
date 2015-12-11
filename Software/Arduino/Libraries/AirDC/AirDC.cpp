@@ -339,7 +339,7 @@ void AirDC::PitotCorrection(int mode)
 //Matrix.Print((float*)PB,3,1,"PB");
         R[0][0]=cos(_AOA)*cos(_AOS);
         R[0][1]=sin(_AOS);
-        R[0][2]=sin(_AOA)*sin(_AOS);
+        R[0][2]=sin(_AOA)*cos(_AOS);
         R[1][0]=-1*cos(_AOA)*sin(_AOS);
         R[1][1]=cos(_AOS);
         R[1][2]=-1*sin(_AOA)*sin(_AOS);
