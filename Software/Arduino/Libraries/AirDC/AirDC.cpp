@@ -20,7 +20,7 @@ AirDC::AirDC(int pid)
     _RH=0.0;
     _qc=0.0;
     _AOA=0.17;
-    _AOS=0.01;
+    _AOS=0.00;
     _IAS=0.0;
     _TASPCorrected=0.0;
     //Uncertainty of measurements
@@ -33,7 +33,7 @@ AirDC::AirDC(int pid)
     _uTAT=0.0;//To be calculated, 0 default value
 //Inertial Unit
     _Ip=0;
-    _Iq=2.6;
+    _Iq=3;
     _Ir=0;
     _Ipdot=0.00;
     _Iqdot=0.00;
@@ -330,45 +330,39 @@ void AirDC::PitotCorrection(int mode)
         float PW[3][1]; //Position of probe tip in wind ref. frame
         float PWDOT[3][1]; //Velocity of tip in wind ref. frame
         float VCorrected[3][1];  //Measured Airspeed
-        PB[1][1]=0.5; //Installation position respect c.o.g.
-        PB[2][1]=0;
-        PB[3][1]=0;
-        WB[1][1]=_Ip;   //Angular rates . P, q, r from sensors
-        WB[2][1]=_Iq;
-        WB[3][1]=_Ir;
-
-        R[1][1]=cos(_AOA)*cos(_AOS);
-        R[1][2]=sin(_AOS);
-        R[1][3]=sin(_AOA)*sin(_AOS);
-        R[2][1]=-1*cos(_AOA)*sin(_AOS);
-        R[2][2]=cos(_AOS);
-        R[2][3]=-1*sin(_AOA)*sin(_AOS);
-        R[3][1]=-1*sin(_AOA);
-        R[3][2]=0;
-        R[3][3]=cos(_AOA);
-        Serial.Println("Debug")
-        Matrix.Print((float*)R,3,3,"R");
+        PB[0][0]=0.5; //Installation position respect c.o.g.
+        PB[1][0]=0;
+        PB[2][0]=0;
+        WB[0][0]=_Ip;   //Angular rates . P, q, r from sensors
+        WB[1][0]=_Iq;
+        WB[2][0]=_Ir;
+//Matrix.Print((float*)PB,3,1,"PB");
+        R[0][0]=cos(_AOA)*cos(_AOS);
+        R[0][1]=sin(_AOS);
+        R[0][2]=sin(_AOA)*sin(_AOS);
+        R[1][0]=-1*cos(_AOA)*sin(_AOS);
+        R[1][1]=cos(_AOS);
+        R[1][2]=-1*sin(_AOA)*sin(_AOS);
+        R[2][0]=-1*sin(_AOA);
+        R[2][1]=0;
+        R[2][2]=cos(_AOA);
 
 //Calculation of Position vector in wind axes
         Matrix.Multiply((float*)R,(float*)PB,3,3,1,(float*)PW);
 //Calculation of angular rates at tip in wind frame. Attention, assumed low angular acceleration. High rates in another method.
+
         Matrix.Multiply((float*)R,(float*)WB,3,3,1,(float*)WW);
-        Serial.Println("Debug")
-        Matrix.Print((float*)PW,3,1,"PW");
-        Matrix.Print((float*)WW,3,1,"WW");
 //Calculation of velocity vector at tip in wind coordinates
 //Cross product WWxPW
-        PWDOT[1][1]=WW[2][1]*PW[3][1]-WW[3][1]*PW[2][1];
-        PWDOT[2][1]=WW[3][1]*PW[1][1]-WW[1][1]*PW[3][1];
-        PWDOT[3][1]=WW[1][1]*PW[2][1]-WW[2][1]*PW[1][1];
+        PWDOT[0][0]=WW[1][0]*PW[2][0]-WW[2][0]*PW[1][0];
+        PWDOT[1][0]=WW[2][0]*PW[0][0]-WW[0][0]*PW[2][0];
+        PWDOT[2][0]=WW[0][0]*PW[1][0]-WW[1][0]*PW[0][0];
 //Airspeed vector
-        VCorrected[1][1]=_TAS-PWDOT[1][1];
-        VCorrected[2][1]= -PWDOT[2][1];
-        VCorrected[3][1]= -PWDOT[3][1];
-        Serial.Println("Debug")
-        Matrix.Print((float*)VCorrected,3,1,"VCorrected");
-        // _TASPCorrected=sqrt(pow(VCorrected[1][1],2)+pow(VCorrected[2][1],2)+pow(VCorrected[3][1],2));
-        _TASPCorrected=0;
+        VCorrected[0][0]=_TAS-PWDOT[0][0];
+        VCorrected[1][0]= -PWDOT[1][0];
+        VCorrected[2][0]= -PWDOT[2][0];
+        _TASPCorrected=sqrt(pow(VCorrected[0][0],2)+pow(VCorrected[1][0],2)+pow(VCorrected[2][0],2));
+        //_TASPCorrected=0;
         break;
     }
     }
