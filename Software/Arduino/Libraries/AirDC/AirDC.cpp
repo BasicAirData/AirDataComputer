@@ -31,7 +31,13 @@ AirDC::AirDC(int pid)
     _uqc=5.0;
     _uIAS=0.0;//To be calculated, 0 default value
     _uTAT=0.0;//To be calculated, 0 default value
-
+//Inertial Unit
+    _Ip=0;
+    _Iq=2.6;
+    _Ir=0;
+    _Ipdot=0.00;
+    _Iqdot=0.00;
+    _Irdot=0.00;
 }
 //RhoAir(Pressure,Temperature,Relative Humidity,mode)
 //Mode 1 is the default BasicAirData routine
@@ -252,10 +258,10 @@ String AirDC::OutputSerial(int mode)
         String s4(_qc, 6);
         String s5(_AOA, 6);
         String s6(_AOS, 6);
-        StreamOut='$'+s1+','+s2+','+s3+','+s4+','+s5+','+s6;
+        StreamOut='$TMO,'+s1+','+s2+','+s3+','+s4+','+s5+','+s6;
 //To read string on the other side
         /*
-          if (Serial.find("$")) {
+          if (Serial.find("$TMO,")) {
             _p = Serial.parseFloat(); //
             _T = Serial.parseFloat();//
             _RH = Serial.parseFloat();//
@@ -276,7 +282,7 @@ String AirDC::OutputSerial(int mode)
         String s8(_h, 6);
         String s9(_mu, 6);
         String s10(_Re, 6);
-        StreamOut='$'+s1+','+s2+','+s3+','+s4+','+s5+','+s6+','+s7+','+s8+','+s9+','+s10;
+        StreamOut='$TAD,'+s1+','+s2+','+s3+','+s4+','+s5+','+s6+','+s7+','+s8+','+s9+','+s10;
         break;
     }
     case 3: //Measurements uncertainty output
@@ -286,7 +292,7 @@ String AirDC::OutputSerial(int mode)
         String s2(_uT, 6);
         String s3(_uRH, 6);
         String s4(_uqc, 6);
-        StreamOut='$'+s1+','+s2+','+s3+','+s4;
+        StreamOut='$TMU,'+s1+','+s2+','+s3+','+s4;
         break;
     }
     case 4: //Air data uncertainty output
@@ -298,7 +304,7 @@ String AirDC::OutputSerial(int mode)
         String s4(_uTAS, 6);
         String s5(_uTAT, 6);
         String s6(_uh, 6);
-        StreamOut='$'+s1+','+s2+','+s3+','+s4+','+s5+','+s6;
+        StreamOut='$TAU,'+s1+','+s2+','+s3+','+s4+','+s5+','+s6;
         break;
     }
     return StreamOut;
@@ -327,24 +333,29 @@ void AirDC::PitotCorrection(int mode)
         PB[1][1]=0.5; //Installation position respect c.o.g.
         PB[2][1]=0;
         PB[3][1]=0;
-        WB[1][1]=0.5;   //Angular rates . P, q, r from sensors
-        WB[2][1]=0.5;
-        WB[3][1]=0.5;
+        WB[1][1]=_Ip;   //Angular rates . P, q, r from sensors
+        WB[2][1]=_Iq;
+        WB[3][1]=_Ir;
 
         R[1][1]=cos(_AOA)*cos(_AOS);
         R[1][2]=sin(_AOS);
         R[1][3]=sin(_AOA)*sin(_AOS);
-        R[2][1]=-cos(_AOA)*sin(_AOS);
+        R[2][1]=-1*cos(_AOA)*sin(_AOS);
         R[2][2]=cos(_AOS);
-        R[2][3]=-sin(_AOA)*sin(_AOS);
-        R[3][1]=-sin(_AOA);
+        R[2][3]=-1*sin(_AOA)*sin(_AOS);
+        R[3][1]=-1*sin(_AOA);
         R[3][2]=0;
         R[3][3]=cos(_AOA);
+        Serial.Println("Debug")
+        Matrix.Print((float*)R,3,3,"R");
 
 //Calculation of Position vector in wind axes
         Matrix.Multiply((float*)R,(float*)PB,3,3,1,(float*)PW);
-//Calculation angular rates at tip in wind frame, attention low angular acceleration assumed. High rates in method 2.
+//Calculation of angular rates at tip in wind frame. Attention, assumed low angular acceleration. High rates in another method.
         Matrix.Multiply((float*)R,(float*)WB,3,3,1,(float*)WW);
+        Serial.Println("Debug")
+        Matrix.Print((float*)PW,3,1,"PW");
+        Matrix.Print((float*)WW,3,1,"WW");
 //Calculation of velocity vector at tip in wind coordinates
 //Cross product WWxPW
         PWDOT[1][1]=WW[2][1]*PW[3][1]-WW[3][1]*PW[2][1];
@@ -354,6 +365,8 @@ void AirDC::PitotCorrection(int mode)
         VCorrected[1][1]=_TAS-PWDOT[1][1];
         VCorrected[2][1]= -PWDOT[2][1];
         VCorrected[3][1]= -PWDOT[3][1];
+        Serial.Println("Debug")
+        Matrix.Print((float*)VCorrected,3,1,"VCorrected");
         // _TASPCorrected=sqrt(pow(VCorrected[1][1],2)+pow(VCorrected[2][1],2)+pow(VCorrected[3][1],2));
         _TASPCorrected=0;
         break;

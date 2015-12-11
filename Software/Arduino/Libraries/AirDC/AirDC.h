@@ -57,6 +57,13 @@ public:
     double _uTAS;
     double _uTAT;
     double _uh;
+//Inertial Unit
+    double _Ip;
+    double _Iq;
+    double _Ir;
+    double _Ipdot;
+    double _Iqdot;
+    double _Irdot;
 };
 #endif
 

@@ -64,37 +64,14 @@ void loop() {
 //Auxiliary data
   AirDataComputer.Viscosity(1);// Calculates the dynamic viscosity, Algorithm 1
   AirDataComputer.Red(1);// Calculates the ISA altitude from static pressure, Algorithm 1
-  delay(2000); //loop delay
+  delay(2000);
 //Data Output
+  Serial.println("$TMO,_p,_T,_RH,_qc,AOA,AOS");
   Serial.println(AirDataComputer.OutputSerial(1)); // Measurements
+  Serial.println("$TAD,_Rho,_IAS,_CAS,_TAS,_TASPCorrected,_M,_TAT,_h,_mu,_Re");
   Serial.println(AirDataComputer.OutputSerial(2)); // Air Data
+  Serial.println("$TMU,_up,_uT,_uRH,_uqc");  
   Serial.println(AirDataComputer.OutputSerial(3)); // Measurements uncertainty
+  Serial.println("$TAU,_uRho,_uIAS,_uCAS,_uTAS,_uTAT,_uh");  
   Serial.println(AirDataComputer.OutputSerial(4)); // Measurements uncertainty  
 }
-
-/*  Serial.println(dpsensor);  //Prints the Selected sensor
-  Serial.println(psensor);  //Prints the Selected sensor
-  Serial.println(AirDataComputer._qc); //Differential pressure reading
-  Serial.println(AirDataComputer._uqc, 10); //Uncertainty of differential pressure measurement
-  Serial.println(AirDataComputer._p); //Static Pressure
-  Serial.println(AirDataComputer._up, 10); //Uncertainty of static pressure
-  Serial.println(AirDataComputer._IAS);//Sends the indicated Airspeed
-  Serial.println(AirDataComputer._uIAS, 10); //Sends the uncertainty of IAS measurement
-  Serial.println(AirDataComputer._Rho,4);//Sends the density of Air
-  Serial.println(AirDataComputer._uRho, 10); //Sends the uncertainty of the density of air
-  Serial.println(AirDataComputer._CAS); //Calibrated AirSpeed
-  Serial.println(AirDataComputer._uCAS); //Calibrated AirSpeed uncertainty
-  Serial.println(AirDataComputer._TAS); //True Airspeed
-  Serial.println(AirDataComputer._uTAS); //True Airspeed uncertainty
-  Serial.println(AirDataComputer._M,10); //Mach number
-  Serial.println(AirDataComputer._TAT,4); //Total Air Temperature
-  Serial.println(AirDataComputer._uTAT); //Total Air Temperature uncertainty
-  Serial.println(AirDataComputer._T,4); //Outside Temperature, Static Temperature
-  Serial.println(AirDataComputer._uT); //Outside Temperature, Static Temperature uncertainty
-  Serial.println(AirDataComputer._RH); //Relative Humidity
-  Serial.println(AirDataComputer._uRH); //Relative Humidity Uncertainty
-  Serial.println(AirDataComputer._h,4); //Altitude
-  Serial.println(AirDataComputer._uh); //Altitude Uncertainty
-  Serial.println(AirDataComputer._TASPCorrected); //True Airspeed Corrected for probe position
-  Serial.println(AirDataComputer._mu,10); //Viscosity Pas
-  Serial.println(AirDataComputer._Re); //Reynolds*/
