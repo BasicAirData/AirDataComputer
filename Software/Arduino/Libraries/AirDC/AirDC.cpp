@@ -13,16 +13,22 @@ AirDC::AirDC(int pid)
     _pid = pid;
     //Geometric
     _d=0.008;
+    _PitotXcog=0.5;// Distance alog x body axes of the Pitot tip
+    _PitotYcog=0;// Distance alog y body axes of the Pitot tip
+    _PitotZcog=0;// Distance alog z body axes of the Pitot tip
     //Parameter values
     _Rho=1.225;
-    _p=101325;
+    _p=90000;
     _T=288.15;
     _RH=0.0;
     _qc=0.0;
+    _pSeaLevel=101325; //Value of pressure at sea level
     _AOA=0.17;
     _AOS=0.00;
     _IAS=0.0;
     _TASPCorrected=0.0;
+    _AOAdot=1;
+    _AOSdot=0;
     //Uncertainty of measurements
     _uRho=0.0; //To be calculated, 0 default value
     _up=5.0;
@@ -35,9 +41,7 @@ AirDC::AirDC(int pid)
     _Ip=0;
     _Iq=3;
     _Ir=0;
-    _Ipdot=0.00;
-    _Iqdot=0.00;
-    _Irdot=0.00;
+
 }
 //RhoAir(Pressure,Temperature,Relative Humidity,mode)
 //Mode 1 is the default BasicAirData routine
@@ -229,7 +233,8 @@ void AirDC::ISAAltitude(int mode)
 {
     switch (mode)
     {
-    case 1:
+    case 1: //Uncorrected above mean sea level altitude
+        //http://www.basicairdata.eu/altimeter.html
     {
         double Ps,h;
         Ps=_p*0.000295299875080277;//Pa to inHg Conversion
@@ -240,6 +245,42 @@ void AirDC::ISAAltitude(int mode)
         _h=_h*0.3048;
         //76189.2339431570*(_p*0.000295299875080277)^0.190255
         _uh=4418.19264813511*pow(Ps,-0.809745)*_up*0.000295299875080277;
+        break;
+    }
+      case 2: //Corrected above mean sea level altitude, pressure at sea level should be available.
+//Sea level pressure should be put into _pSeaLevel
+//Mimics https://en.wikipedia.org/wiki/QNH
+    {
+/*Should solve for _h
+0=_p-pSeaLevel*(1-0.0065*_h/T0)^(g/Rair/0.0065);
+0=_p-pSeaLevel*(1-2.2557695644629534E-5*_h)^(5.255786239252914);
+Newton method used
+*/
+int i;
+double f,fdot,t0,t1,t,erralt;
+i=0;
+t0=1000; //Newton's initial value
+erralt=0; //Newton's initial value
+//while (abs(t1-t0)>(1/100))||(i==0)
+while ((abs(erralt)>(0.01)) || (i==0))
+    {
+    t=t0;
+    f=_p-_pSeaLevel*pow((1-0.000022557695644629534*t),(5.255786239252914));
+    fdot=_pSeaLevel*0.00011855842635829929*pow((1-0.000022557695644629534*t),(4.255786239252914));
+    t1=t0-f/fdot;
+/*    Serial.print("Iteration:");
+    Serial.println(i);
+    Serial.print("Current calculated altitude:");
+    Serial.println(t1);*/
+    erralt=t1-t0;
+    /*Serial.print("Altitude error:");
+    Serial.println(erralt);*/
+    t0=t1;
+    i=i+1;
+    }
+    _h=t1;
+    _uh=0; //Complete it!
+    break;
     }
     }
 
@@ -258,7 +299,7 @@ String AirDC::OutputSerial(int mode)
         String s4(_qc, 6);
         String s5(_AOA, 6);
         String s6(_AOS, 6);
-        StreamOut='$TMO,'+s1+','+s2+','+s3+','+s4+','+s5+','+s6;
+        StreamOut="$TMO,"+s1+','+s2+','+s3+','+s4+','+s5+','+s6;
 //To read string on the other side
         /*
           if (Serial.find("$TMO,")) {
@@ -282,7 +323,7 @@ String AirDC::OutputSerial(int mode)
         String s8(_h, 6);
         String s9(_mu, 6);
         String s10(_Re, 6);
-        StreamOut='$TAD,'+s1+','+s2+','+s3+','+s4+','+s5+','+s6+','+s7+','+s8+','+s9+','+s10;
+        StreamOut="$TAD,"+s1+','+s2+','+s3+','+s4+','+s5+','+s6+','+s7+','+s8+','+s9+','+s10;
         break;
     }
     case 3: //Measurements uncertainty output
@@ -292,7 +333,7 @@ String AirDC::OutputSerial(int mode)
         String s2(_uT, 6);
         String s3(_uRH, 6);
         String s4(_uqc, 6);
-        StreamOut='$TMU,'+s1+','+s2+','+s3+','+s4;
+        StreamOut="$TMU,"+s1+','+s2+','+s3+','+s4;
         break;
     }
     case 4: //Air data uncertainty output
@@ -304,7 +345,7 @@ String AirDC::OutputSerial(int mode)
         String s4(_uTAS, 6);
         String s5(_uTAT, 6);
         String s6(_uh, 6);
-        StreamOut='$TAU,'+s1+','+s2+','+s3+','+s4+','+s5+','+s6;
+        StreamOut="$TAU,"+s1+','+s2+','+s3+','+s4+','+s5+','+s6;
         break;
     }
     return StreamOut;
@@ -330,12 +371,13 @@ void AirDC::PitotCorrection(int mode)
         float PW[3][1]; //Position of probe tip in wind ref. frame
         float PWDOT[3][1]; //Velocity of tip in wind ref. frame
         float VCorrected[3][1];  //Measured Airspeed
-        PB[0][0]=0.5; //Installation position respect c.o.g.
-        PB[1][0]=0;
-        PB[2][0]=0;
-        WB[0][0]=_Ip;   //Angular rates . P, q, r from sensors
-        WB[1][0]=_Iq;
-        WB[2][0]=_Ir;
+        PB[0][0]=_PitotXcog; //Installation position respect c.o.g.
+        PB[1][0]=_PitotYcog;
+        PB[2][0]=_PitotZcog;
+        WB[0][0]=_Ip-_AOSdot*sin(_AOA);   //Angular rates . P, q, r from sensors and
+        //WB[1][0]=_Iq-_AOAdot;
+        WB[1][0]=0;
+        WB[2][0]=_Ir+_AOSdot*cos(_AOA);
 //Matrix.Print((float*)PB,3,1,"PB");
         R[0][0]=cos(_AOA)*cos(_AOS);
         R[0][1]=sin(_AOS);
@@ -349,7 +391,7 @@ void AirDC::PitotCorrection(int mode)
 
 //Calculation of Position vector in wind axes
         Matrix.Multiply((float*)R,(float*)PB,3,3,1,(float*)PW);
-//Calculation of angular rates at tip in wind frame. Attention, assumed low angular acceleration. High rates in another method.
+//Calculation of angular rates at tip in wind frame.
 
         Matrix.Multiply((float*)R,(float*)WB,3,3,1,(float*)WW);
 //Calculation of velocity vector at tip in wind coordinates
@@ -362,7 +404,6 @@ void AirDC::PitotCorrection(int mode)
         VCorrected[1][0]= -PWDOT[1][0];
         VCorrected[2][0]= -PWDOT[2][0];
         _TASPCorrected=sqrt(pow(VCorrected[0][0],2)+pow(VCorrected[1][0],2)+pow(VCorrected[2][0],2));
-        //_TASPCorrected=0;
         break;
     }
     }

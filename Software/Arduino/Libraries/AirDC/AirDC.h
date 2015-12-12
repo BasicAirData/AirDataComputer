@@ -27,6 +27,9 @@ public:
     int _pid;
 //Geometric
     double _d;//Reference length for Re calculation
+    double _PitotXcog;// Distance alog x body axes of the Pitot tip
+    double _PitotYcog;// Distance alog y body axes of the Pitot tip
+    double _PitotZcog;// Distance alog z body axes of the Pitot tip
 //Measurements
     double _p;
     double _T;
@@ -34,6 +37,7 @@ public:
     double _qc;
     double _AOA;
     double _AOS;
+    double _pSeaLevel; //Value of pressure at sea level
 //AirData
     double _Rho;
     double _IAS;
@@ -45,6 +49,8 @@ public:
     double _h;
     double _mu;
     double _Re;
+    double _AOAdot;
+    double _AOSdot;
 //Measurements Uncertainty
     double _up;
     double _uT;
@@ -61,9 +67,6 @@ public:
     double _Ip;
     double _Iq;
     double _Ir;
-    double _Ipdot;
-    double _Iqdot;
-    double _Irdot;
 };
 #endif
 

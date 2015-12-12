@@ -59,7 +59,7 @@ void loop() {
   AirDataComputer.PitotCorrection(2);// Corrected Airspeed, Algorithm 1
   AirDataComputer.Mach(1);// Calculates the Mach number, Algorithm 1
   AirDataComputer.OAT(1);// Calculates the Outside Air Temperature, Algorithm 1
-  AirDataComputer.ISAAltitude(1);// Calculates the  ISA Altitude
+  AirDataComputer.ISAAltitude(2);// Calculates the  ISA Altitude, Mehtod 2
 //Auxiliary data
   AirDataComputer.Viscosity(1);// Calculates the dynamic viscosity, Algorithm 1
   AirDataComputer.Red(1);// Calculates the ISA altitude from static pressure, Algorithm 1
