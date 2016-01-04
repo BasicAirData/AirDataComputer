@@ -6,6 +6,7 @@
 #include "AirDC.h"
 #include "MatrixMath.h"
 #include <math.h>
+#include <Time.h>
 
 AirDC::AirDC(int pid)
 {
@@ -347,6 +348,21 @@ String AirDC::OutputSerial(int mode)
         String s5(_uTAT, 6);
         String s6(_uh, 6);
         StreamOut="$TAU,"+s1+','+s2+','+s3+','+s4+','+s5+','+s6;
+        break;
+    }
+    case 51: //Output for Temperature Logger Example
+    {
+        String s1(_Rho, 6);
+        String s2(_T, 6);
+        String s3(_p, 6);
+        String s4(hour());
+        String s5(minute());
+        String s6(second());
+        String s7(month());
+        String s8(day());
+        String s9(year());
+        String s10(millis());
+        StreamOut="$TEX,"+s1+','+s2+','+s3+','+s4+','+s5+','+s6+','+s7+','+s8+','+s9+','+s10;
         break;
     }
     return StreamOut;
