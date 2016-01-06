@@ -353,8 +353,8 @@ String AirDC::OutputSerial(int mode)
     case 51: //Output for Temperature Logger Example
     {
         String s1(_Rho, 6);
-        String s2(_T, 6);
-        String s3(_p, 6);
+        String s2(_TAT, 6);
+        String s3(_uTAT, 6);
         String s4(hour());
         String s5(minute());
         String s6(second());
