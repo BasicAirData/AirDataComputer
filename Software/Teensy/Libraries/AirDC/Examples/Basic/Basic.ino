@@ -1,6 +1,6 @@
 /*
-  DifferentialPressureSensor.ino - AirDc Library Example File
-  Reads a differential pressure sensor and printout air density. Measurements are given with uncertainty.
+  Basic.ino - AirDc Library Example File
+  Reads a differential pressure sensor and printout basic air data. Measurements are given with uncertainty.
   Created by J. Larragueta, December 3, 2015.
   Refer to http:\\www.basicairdata.eu
 */
