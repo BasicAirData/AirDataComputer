@@ -10,7 +10,7 @@
 #include <AirSensor.h>
 #define SDSAVE 1 //If 1 then the data is saved to Secure Digital Card
 #define TSENSOR 1 //Selects the Temperature sensor DS18B20 see AirSensor.cpp for details
-const int mainperiod=90000; //Main sample period in ms (15 minutes,900000=1000*60*15). Set to your sample period (grater than 1000 ms)
+const int mainperiod=900000; //Main sample period in ms (15 minutes,900000=1000*60*15). Set to your sample period (grater than 1000 ms)
 
 const int chipSelect = 4;
 unsigned long int t1; //Store the current run time in ms
@@ -33,9 +33,10 @@ void setup() {
   TATSensor = 1;
 #endif
   Serial.begin(9600);
-  while (!Serial) {
+  while (!Serial && (millis()<4500)) {
     ; // wait for serial port to connect. Needed for Leonardo only
   }
+  
 #if SDSAVE==1
   Serial.print("Initializing SD card...");
   if (!SD.begin(chipSelect)) {
@@ -48,7 +49,7 @@ void setup() {
   //hour and date setup
   //Time 23:59:55
   //Date 31/12/2016
-  setTime(22, 58, 48, 07, 01, 2016);
+  setTime(23, 26, 15, 07, 01, 2016);
 }
 
 void loop(void) {
