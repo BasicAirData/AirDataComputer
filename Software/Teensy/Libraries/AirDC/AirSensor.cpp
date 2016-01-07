@@ -6,6 +6,7 @@
 #include "AirSensor.h"
 #include <math.h>
 #include <Wire.h>
+#include <OneWire.h>
 #include <SPI.h>
 #define DEBUG 1
 AirSensor::AirSensor(int pid)
@@ -133,10 +134,58 @@ void AirSensor::ReadTAT(AirDC *out,int sensor)
     {
     case 1 :
     {
-        //Total Air Temperature Sensor
+//Total Air Temperature Sensor
 //http://www.basicairdata.blogspot.it/2013/05/resistance-temperature-detectors-for.html
 //DS18x20
-        out->_TAT=288.15;
+//Based on http://playground.arduino.cc/Learning/OneWire
+//Wiring
+//Data to Arduino pin 16
+//Vcc to Arduino +5
+//Gnd to Arduino Gnd
+//on pin 16 (a 4.7K resistor is necessary between data pin and +5V)
+//Fixed Rom Address
+//  byte addr[8]={0x28,0x87,0x80,0x50,0x5, 0x0, 0x0, 0x57};
+
+        OneWire  ds(16);  // on pin 16 (a 4.7K resistor is necessary between data pin and +5V)
+        int HighByte, LowByte, TReading, SignBit, Tc_100, Whole, Fract;
+        double TheMeasure;
+        byte i;
+        byte present = 0;
+        byte data[12];
+        byte addr[8]= {0x28,0x87,0x80,0x50,0x5, 0x0, 0x0, 0x57};
+
+        ds.reset();
+        ds.select(addr);
+        ds.write(0x44,1);         // start conversion, with parasite power on at the end
+
+        delay(1000);     // maybe 750ms is enough, maybe not
+        // we might do a ds.depower() here, but the reset will take care of it.
+
+        present = ds.reset();
+        ds.select(addr);
+        ds.write(0xBE);         // Read Scratchpad
+        for ( i = 0; i < 9; i++)             // we need 9 bytes
+        {
+            data[i] = ds.read();
+        }
+        LowByte = data[0];
+        HighByte = data[1];
+        TReading = (HighByte << 8) + LowByte;
+        SignBit = TReading & 0x8000;  // test most sig bit
+        if (SignBit) // negative
+        {
+            TReading = (TReading ^ 0xffff) + 1; // 2's comp
+        }
+        Tc_100 = (6 * TReading) + TReading / 4;    // multiply by (100 * 0.0625) or 6.25
+
+        Whole = Tc_100 / 100;  // separate off the whole and fractional portions
+        Fract = Tc_100 % 100;
+        TheMeasure=double(Fract)/100+Whole+273.15;
+        if (SignBit) // If its negative
+        {
+            TheMeasure=-1*TheMeasure;
+        }
+        out->_TAT=TheMeasure;
         out->_uTAT=0.5;
         break;
     }

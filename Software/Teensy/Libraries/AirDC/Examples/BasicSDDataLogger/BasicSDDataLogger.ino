@@ -8,11 +8,15 @@
 #include <SD.h> //For SDLogger
 #include <Time.h> //For RTC Time 
 #include <AirSensor.h>
-#define SDSAVE 0 //If 1 then the data is save to Secure Digital Card
+#define SDSAVE 1 //If 1 then the data is saved to Secure Digital Card
 #define TSENSOR 1 //Selects the Temperature sensor DS18B20 see AirSensor.cpp for details
+const int mainperiod=90000; //Main sample period in ms (15 minutes,900000=1000*60*15). Set to your sample period (grater than 1000 ms)
 
 const int chipSelect = 4;
+unsigned long int t1; //Store the current run time in ms
 int TATSensor;
+int InitTime=0; //Flag
+
 #if TSENSOR==1
 #include <OneWire.h>
 OneWire  ds(16);  // on pin 16 (a 4.7K resistor is necessary between data pin and +5V)
@@ -24,6 +28,7 @@ OneWire  ds(16);  // on pin 16 (a 4.7K resistor is necessary between data pin an
 AirDC AirDataComputer(1);
 AirSensor AirDataSensor(1);
 void setup() {
+  InitTime=1;
 #if TSENSOR==1
   TATSensor = 1;
 #endif
@@ -39,27 +44,56 @@ void setup() {
   }
   Serial.println("card initialized.");
 #endif
-  //BasicTimeValue
+  //Init the Time, here a fixed value you can use the time library to synchronize with different sources
   //hour and date setup
-  //ora 23:59:55
-  //data 31/12/2016
-  setTime(23, 59, 55, 31, 12, 2016);
+  //Time 23:59:55
+  //Date 31/12/2016
+  setTime(22, 58, 48, 07, 01, 2016);
 }
 
 void loop(void) {
+  t1=millis();
+#if TSENSOR==1  
+  int HighByte, LowByte, TReading, SignBit, Tc_100, Whole, Fract;
+  byte i;
+  byte present = 0;
+  byte data[12];
+  byte addr[8]={0x28,0x87,0x80,0x50,0x5, 0x0, 0x0, 0x57};
+#endif
   AirDC *ptrAirDC;
   ptrAirDC = &AirDataComputer;
-  //Measurements
+//Measurements
+AirDataComputer._p=101325;
+//Temperature sensor DS18B20, suspensive sensor reading
   AirDataSensor.ReadTAT(ptrAirDC, TATSensor);
-  //Computation
+//Computation
   AirDataComputer.RhoAir(1);// Calculates the air density, Algorithm 1
   AirDataComputer.Viscosity(1);// Calculates the dynamic viscosity, Algorithm 1
-  delay(2000);
-  //Data Output
-  Serial.println("$TEX,Rho,_TAT,_uTAT,hour,minute,second,month,day,year,millis");
+while((millis()-t1)<mainperiod) {
+//Idle until the next sample time
+  }
+  //Header Output
+  Serial.println("");
+  Serial.println("$TEX,Rho[kg/m^3],_TAT[K],_TAT[C],_uTAT[K/C],_p[Pa],Viscosity[Pas1e-6],hour,minute,second,month,day,year,millis");
   Serial.println(AirDataComputer.OutputSerial(51)); // Output for Temperature Logger Example
 #if SDSAVE==1
   //Saves to SD Card
+  if (InitTime==1){
+    InitTime=0;
+  //Write Header
+  File dataFile = SD.open("datalog.csv", FILE_WRITE);
+  // if the file is available, write to it:
+  if (dataFile) {
+    dataFile.println("Logger Example For AirData Library, http://www.basicairdata.eu, JLJ@BasicAirData 2016");
+    dataFile.println("$TEX,Rho[kg/m^3],_TAT[K],_TAT[C],_uTAT[K;C],_p[Pa],Viscosity[Pas1e-6],_hour,minute,second,month,day,year,millis");
+    dataFile.close();
+  }
+  // if the file isn't open, pop up an error:
+  else {
+    Serial.println("error opening datalog.csv");
+  }
+  }
+  else {
   File dataFile = SD.open("datalog.csv", FILE_WRITE);
   // if the file is available, write to it:
   if (dataFile) {
@@ -70,6 +104,7 @@ void loop(void) {
   else {
     Serial.println("error opening datalog.csv");
   }
-#endif
+  }
+  #endif
 
 }

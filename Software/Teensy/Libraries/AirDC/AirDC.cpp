@@ -287,87 +287,7 @@ while ((abs(erralt)>(0.01)) || (i==0))
     }
 
 }
-String AirDC::OutputSerial(int mode)
-{
-    String StreamOut;
-    switch(mode)
-    {
-    case 1: //Measurements output
-    {
-//_p,_T,_RH,_qc,AOA,AOS
-        String s1(_p, 6);
-        String s2(_T, 6);
-        String s3(_RH, 6);
-        String s4(_qc, 6);
-        String s5(_AOA, 6);
-        String s6(_AOS, 6);
-        StreamOut="$TMO,"+s1+','+s2+','+s3+','+s4+','+s5+','+s6;
-//To read string on the other side
-        /*
-          if (Serial.find("$TMO,")) {
-            _p = Serial.parseFloat(); //
-            _T = Serial.parseFloat();//
-            _RH = Serial.parseFloat();//
-            _qc = Serial.parseFloat();//
-        */
-        break;
-    }
-    case 2: //Air data output
-        //_Rho,_IAS,_CAS,_TAS,_TASPCorrected,_M,_TAT,_h,_mu,_Re
-    {
-        String s1(_Rho, 6);
-        String s2(_IAS, 6);
-        String s3(_CAS, 6);
-        String s4(_TAS, 6);
-        String s5(_TASPCorrected, 6);
-        String s6(_M, 6);
-        String s7(_TAT, 6);
-        String s8(_h, 6);
-        String s9(_mu, 6);
-        String s10(_Re, 6);
-        StreamOut="$TAD,"+s1+','+s2+','+s3+','+s4+','+s5+','+s6+','+s7+','+s8+','+s9+','+s10;
-        break;
-    }
-    case 3: //Measurements uncertainty output
-        //_up,_uT,_uRH,_uqc
-    {
-        String s1(_up, 6);
-        String s2(_uT, 6);
-        String s3(_uRH, 6);
-        String s4(_uqc, 6);
-        StreamOut="$TMU,"+s1+','+s2+','+s3+','+s4;
-        break;
-    }
-    case 4: //Air data uncertainty output
-        //_uRho,_uIAS,_uCAS,_uTAS,_uTAT,_uh;
-    {
-        String s1(_uRho, 6);
-        String s2(_uIAS, 6);
-        String s3(_uCAS, 6);
-        String s4(_uTAS, 6);
-        String s5(_uTAT, 6);
-        String s6(_uh, 6);
-        StreamOut="$TAU,"+s1+','+s2+','+s3+','+s4+','+s5+','+s6;
-        break;
-    }
-    case 51: //Output for Temperature Logger Example
-    {
-        String s1(_Rho, 6);
-        String s2(_TAT, 6);
-        String s3(_uTAT, 6);
-        String s4(hour());
-        String s5(minute());
-        String s6(second());
-        String s7(month());
-        String s8(day());
-        String s9(year());
-        String s10(millis());
-        StreamOut="$TEX,"+s1+','+s2+','+s3+','+s4+','+s5+','+s6+','+s7+','+s8+','+s9+','+s10;
-        break;
-    }
-    return StreamOut;
-    }
-}
+
 void AirDC::PitotCorrection(int mode)
 {
 //Based on
@@ -444,5 +364,89 @@ void AirDC::Red(int mode)
     {
         _Re=_Rho*_TAS*_d/_mu;
     }
+    }
+}
+String AirDC::OutputSerial(int mode)
+{
+    String StreamOut;
+    switch(mode)
+    {
+    case 1: //Measurements output
+    {
+//_p,_T,_RH,_qc,AOA,AOS
+        String s1(_p, 6);
+        String s2(_T, 6);
+        String s3(_RH, 6);
+        String s4(_qc, 6);
+        String s5(_AOA, 6);
+        String s6(_AOS, 6);
+        StreamOut="$TMO,"+s1+','+s2+','+s3+','+s4+','+s5+','+s6;
+//To read string on the other side
+        /*
+          if (Serial.find("$TMO,")) {
+            _p = Serial.parseFloat(); //
+            _T = Serial.parseFloat();//
+            _RH = Serial.parseFloat();//
+            _qc = Serial.parseFloat();//
+        */
+        break;
+    }
+    case 2: //Air data output
+        //_Rho,_IAS,_CAS,_TAS,_TASPCorrected,_M,_TAT,_h,_mu,_Re
+    {
+        String s1(_Rho, 6);
+        String s2(_IAS, 6);
+        String s3(_CAS, 6);
+        String s4(_TAS, 6);
+        String s5(_TASPCorrected, 6);
+        String s6(_M, 6);
+        String s7(_TAT, 6);
+        String s8(_h, 6);
+        String s9(_mu, 6);
+        String s10(_Re, 6);
+        StreamOut="$TAD,"+s1+','+s2+','+s3+','+s4+','+s5+','+s6+','+s7+','+s8+','+s9+','+s10;
+        break;
+    }
+    case 3: //Measurements uncertainty output
+        //_up,_uT,_uRH,_uqc
+    {
+        String s1(_up, 6);
+        String s2(_uT, 6);
+        String s3(_uRH, 6);
+        String s4(_uqc, 6);
+        StreamOut="$TMU,"+s1+','+s2+','+s3+','+s4;
+        break;
+    }
+    case 4: //Air data uncertainty output
+        //_uRho,_uIAS,_uCAS,_uTAS,_uTAT,_uh;
+    {
+        String s1(_uRho, 6);
+        String s2(_uIAS, 6);
+        String s3(_uCAS, 6);
+        String s4(_uTAS, 6);
+        String s5(_uTAT, 6);
+        String s6(_uh, 6);
+        StreamOut="$TAU,"+s1+','+s2+','+s3+','+s4+','+s5+','+s6;
+        break;
+    }
+    case 51: //Output for Temperature Logger Example
+    {
+        String s1(_Rho, 6);
+        String s2(_TAT, 2);
+        String s3(_TAT-273.15, 2);
+        String s4(_uTAT, 2);
+        String s5(_p, 2);
+        String s6(_mu, 6);
+        String s7(hour());
+        String s8(minute());
+        String s9(second());
+        String s10(month());
+        String s11(day());
+        String s12(year());
+        String s13(millis());
+        StreamOut="$TEX,"+s1+','+s2+','+s3+','+s4+','+s5+','+s6+','+s7+','+s8+','+s9+','+s10+','+s11+','+s12+','+s13;
+        break;
+    }
+    return StreamOut;
     }
 }
