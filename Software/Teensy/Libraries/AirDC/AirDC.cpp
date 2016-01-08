@@ -227,7 +227,14 @@ void AirDC::OAT(int mode)
 
         _T=_TAT/(1+(gamma-1)/2*pow(_M,2));
         _uT=1/(1+(gamma-1)/2*2*pow(_M,2))*_uTAT;
+	break;
     }
+    case 51: //Test case for Logger example (no wind info available), _T=_TAT
+    {
+        _T=_TAT;
+        _uT=_uTAT;
+    }
+
     }
 
 }

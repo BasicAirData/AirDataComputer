@@ -49,7 +49,7 @@ void setup() {
   //hour and date setup
   //Time 23:59:55
   //Date 31/12/2016
-  setTime(23, 26, 15, 07, 01, 2016);
+  setTime(13, 17, 11, 8, 1, 2016);
 }
 
 void loop(void) {
@@ -68,6 +68,7 @@ AirDataComputer._p=101325;
 //Temperature sensor DS18B20, suspensive sensor reading
   AirDataSensor.ReadTAT(ptrAirDC, TATSensor);
 //Computation
+  AirDataComputer.OAT(51); //Save the TAT as OAT
   AirDataComputer.RhoAir(1);// Calculates the air density, Algorithm 1
   AirDataComputer.Viscosity(1);// Calculates the dynamic viscosity, Algorithm 1
 while((millis()-t1)<mainperiod) {
