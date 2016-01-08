@@ -360,6 +360,12 @@ void AirDC::Viscosity(int mode)
     {
         //Calculate viscosity. Sutherland's formula, note that unit number multiplied 10e6
         _mu= 18.27*(291.15+120)/(_T+120)*pow((_T/291.15),(3/2))*1e-6;
+        break;
+    }
+    case 2: //Unit of measurement Pas1e-6
+    {
+        //Calculate viscosity. Sutherland's formula, note that unit number multiplied
+        _mu= 18.27*(291.15+120)/(_T+120)*pow((_T/291.15),(3/2));
     }
     }
 }
@@ -409,7 +415,7 @@ String AirDC::OutputSerial(int mode)
         String s6(_M, 6);
         String s7(_TAT, 6);
         String s8(_h, 6);
-        String s9(_mu, 6);
+        String s9(_mu, 8);
         String s10(_Re, 6);
         StreamOut="$TAD,"+s1+','+s2+','+s3+','+s4+','+s5+','+s6+','+s7+','+s8+','+s9+','+s10;
         break;

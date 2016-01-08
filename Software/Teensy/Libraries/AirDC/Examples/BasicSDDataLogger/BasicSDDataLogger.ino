@@ -49,7 +49,7 @@ void setup() {
   //hour and date setup
   //Time 23:59:55
   //Date 31/12/2016
-  setTime(13, 17, 11, 8, 1, 2016);
+  setTime(23, 40, 15, 8, 1, 2016);
 }
 
 void loop(void) {
@@ -59,7 +59,7 @@ void loop(void) {
   byte i;
   byte present = 0;
   byte data[12];
-  byte addr[8]={0x28,0x87,0x80,0x50,0x5, 0x0, 0x0, 0x57};
+  byte addr[8]={0x28,0x87,0x80,0x50,0x5, 0x0, 0x0, 0x57}; //Address of the DS18B20 sensor
 #endif
   AirDC *ptrAirDC;
   ptrAirDC = &AirDataComputer;
@@ -70,7 +70,7 @@ AirDataComputer._p=101325;
 //Computation
   AirDataComputer.OAT(51); //Save the TAT as OAT
   AirDataComputer.RhoAir(1);// Calculates the air density, Algorithm 1
-  AirDataComputer.Viscosity(1);// Calculates the dynamic viscosity, Algorithm 1
+  AirDataComputer.Viscosity(2);// Calculates the dynamic viscosity, Algorithm 2 (UOM Pas1e-6) 
 while((millis()-t1)<mainperiod) {
 //Idle until the next sample time
   }
@@ -87,7 +87,7 @@ while((millis()-t1)<mainperiod) {
   // if the file is available, write to it:
   if (dataFile) {
     dataFile.println("Logger Example For AirData Library, http://www.basicairdata.eu, JLJ@BasicAirData 2016");
-    dataFile.println("$TEX,Rho[kg/m^3],_TAT[K],_TAT[C],_uTAT[K;C],_p[Pa],Viscosity[Pas1e-6],_hour,minute,second,month,day,year,millis");
+    dataFile.println("$TEX,Rho[kg/m^3],_TAT[K],_TAT[C],_uTAT[K;C],_p[Pa],Viscosity[Pas1e-6],hour,minute,second,month,day,year,millis");
     dataFile.close();
   }
   // if the file isn't open, pop up an error:
