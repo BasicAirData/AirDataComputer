@@ -1,4 +1,5 @@
 Teensy Air Data Library
+Add CRC check and measurement data flagging
 29/12/2015 First running sketch for Teensy3.0
 29/12/2015 Initial branch
 
