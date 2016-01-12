@@ -1,8 +1,8 @@
 ---
 Add mini command server to the example sketch. With this commands is possible to set the time and date of RTC and dump the SD.
 Commands sents troght USB link : 
-"S" Set time&date
-"T" Read time&date
+"T" Set time&date (Same format of processing reporting time; seconds since Jan 01 1970, standard on many RTC
+"S" Read time&date
 "D" Dump log file to serial
 "R" Remove log file
 "I" Info, report info on unit software. "BasicAirData ADC Firmware x.y.z Release Name"
