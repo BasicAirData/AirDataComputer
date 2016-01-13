@@ -1,8 +1,9 @@
 /*
-  Basic.ino - AirDc Library Example File
+  BasicSDDataLogger.ino - AirDc Library Example File
   Reads a Temperature Sensor DS18B20, printout to serial and to SDCard.
   Created by J. Larragueta, January 2, 2016.
   Refer to http:\\www.basicairdata.eu
+  Code released into the public domain 
 */
 #include <AirDC.h>
 #include <SD.h> //For SDLogger
@@ -10,7 +11,9 @@
 #include <AirSensor.h>
 #define SDSAVE 1 //If 1 then the data is saved to Secure Digital Card
 #define TSENSOR 1 //Selects the Temperature sensor DS18B20 see AirSensor.cpp for details
-const int mainperiod=900000; //Main sample period in ms (15 minutes,900000=1000*60*15). Set to your sample period (grater than 1000 ms)
+#define RTCPRESENT 1 //If 1 the Teensy RTC is present
+int ios=5;//Selected sample period in seconds, keep it above 2.
+const int mainperiod=ios*1000; //Main sample period in ms (15 minutes,900000=1000*60*15). Set to your sample period (grater than 1000 ms)
 
 const int chipSelect = 4;
 unsigned long int t1; //Store the current run time in ms
@@ -45,11 +48,16 @@ void setup() {
   }
   Serial.println("card initialized.");
 #endif
-  //Init the Time, here a fixed value you can use the time library to synchronize with different sources
+#if RTCPRESENT==0  //RTC is not installed set desired time
   //hour and date setup
   //Time 23:59:55
   //Date 31/12/2016
-  setTime(23, 40, 15, 8, 1, 2016);
+  setTime(16, 55, 53, 10, 1, 2016);
+#endif
+#if RTCPRESENT==1  
+//RTC is present (set the date with lib file, IDE File>Examples>Time<TimeTeensy3)
+setSyncProvider(getTeensy3Time);
+#endif
 }
 
 void loop(void) {
@@ -65,6 +73,7 @@ void loop(void) {
   ptrAirDC = &AirDataComputer;
 //Measurements
 AirDataComputer._p=101325;
+AirDataComputer._RH=0;
 //Temperature sensor DS18B20, suspensive sensor reading
   AirDataSensor.ReadTAT(ptrAirDC, TATSensor);
 //Computation
@@ -109,4 +118,8 @@ while((millis()-t1)<mainperiod) {
   }
   #endif
 
+}
+time_t getTeensy3Time()
+{
+  return Teensy3Clock.get();
 }
