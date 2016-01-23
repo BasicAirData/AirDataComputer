@@ -180,12 +180,13 @@ void AirSensor::ReadTAT(AirDC *out,int sensor)
 
         Whole = Tc_100 / 100;  // separate off the whole and fractional portions
         Fract = Tc_100 % 100;
-        TheMeasure=double(Fract)/100+Whole+273.15;
+        TheMeasure=double(Fract)/100+Whole;
         if (SignBit) // If its negative
         {
             TheMeasure=-1*TheMeasure;
         }
-        out->_TAT=TheMeasure;
+        TheMeasure=TheMeasure+273.15;
+	out->_TAT=TheMeasure;
         out->_uTAT=0.5;
         break;
     }
