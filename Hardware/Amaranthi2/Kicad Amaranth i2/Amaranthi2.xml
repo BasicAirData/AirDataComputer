@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export version="D">
+  <design>
+    <source>C:/Users/larraguetajunior/Dropbox/Webresources/ADC/Electronics/Amaranthi1.sch</source>
+    <date>05/02/2016 10:50:25</date>
+    <tool>Eeschema 4.0.1-stable</tool>
+    <sheet number="1" name="/" tstamps="/">
+      <title_block>
+        <title>ADC Amaranth</title>
+        <company>BasicAirData</company>
+        <rev>0</rev>
+        <date>2016-02-01</date>
+        <source>Amaranthi1.sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+  </design>
+  <components>
+    <comp ref="SDSOCKET1">
+      <value>CONN_01X05</value>
+      <footprint>Socket_Strips:Socket_Strip_Straight_1x05</footprint>
+      <libsource lib="conn" part="CONN_01X05"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56AF4CB8</tstamp>
+    </comp>
+    <comp ref="SDSOCKET2">
+      <value>CONN_01X05</value>
+      <footprint>Socket_Strips:Socket_Strip_Straight_1x05</footprint>
+      <libsource lib="conn" part="CONN_01X05"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56AF4EA2</tstamp>
+    </comp>
+    <comp ref="BLUESMIRF1">
+      <value>CONN_01X06</value>
+      <footprint>Socket_Strips:Socket_Strip_Straight_1x06</footprint>
+      <libsource lib="conn" part="CONN_01X06"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56AF4F17</tstamp>
+    </comp>
+    <comp ref="ABSP1">
+      <value>CONN_01X04</value>
+      <footprint>Socket_Strips:Socket_Strip_Angled_1x04</footprint>
+      <libsource lib="conn" part="CONN_01X04"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56AF5F5C</tstamp>
+    </comp>
+    <comp ref="DELTAP1">
+      <value>CONN_01X04</value>
+      <footprint>Socket_Strips:Socket_Strip_Angled_1x04</footprint>
+      <libsource lib="conn" part="CONN_01X04"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56AF5FB9</tstamp>
+    </comp>
+    <comp ref="R3">
+      <value>4700</value>
+      <footprint>Resistors_SMD:R_1206</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56AFD586</tstamp>
+    </comp>
+    <comp ref="R4">
+      <value>4700</value>
+      <footprint>Resistors_SMD:R_1206</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56AFDC37</tstamp>
+    </comp>
+    <comp ref="R1">
+      <value>4700</value>
+      <footprint>Resistors_SMD:R_1206</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56AFE5A1</tstamp>
+    </comp>
+    <comp ref="R2">
+      <value>4700</value>
+      <footprint>Resistors_SMD:R_1206</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56AFE61A</tstamp>
+    </comp>
+    <comp ref="TSWTWO1">
+      <value>CONN_01X14</value>
+      <footprint>Socket_Strips:Socket_Strip_Straight_1x14</footprint>
+      <libsource lib="conn" part="CONN_01X14"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56B09909</tstamp>
+    </comp>
+    <comp ref="TSONE1">
+      <value>CONN_01X14</value>
+      <footprint>Socket_Strips:Socket_Strip_Straight_1x14</footprint>
+      <libsource lib="conn" part="CONN_01X14"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56B09F71</tstamp>
+    </comp>
+    <comp ref="G1">
+      <value>CONN_01X01</value>
+      <footprint>Pin_Headers:Pin_Header_Straight_1x01</footprint>
+      <libsource lib="conn" part="CONN_01X01"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56B222DF</tstamp>
+    </comp>
+    <comp ref="G2">
+      <value>CONN_01X01</value>
+      <footprint>Pin_Headers:Pin_Header_Straight_1x01</footprint>
+      <libsource lib="conn" part="CONN_01X01"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56B226B0</tstamp>
+    </comp>
+    <comp ref="G3">
+      <value>CONN_01X01</value>
+      <footprint>Pin_Headers:Pin_Header_Straight_1x01</footprint>
+      <libsource lib="conn" part="CONN_01X01"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56B22756</tstamp>
+    </comp>
+  </components>
+  <libparts>
+    <libpart lib="conn" part="CONN_01X01">
+      <description>Connector 01x01</description>
+      <footprints>
+        <fp>Pin_Header_Straight_1X01</fp>
+        <fp>Pin_Header_Angled_1X01</fp>
+        <fp>Socket_Strip_Straight_1X01</fp>
+        <fp>Socket_Strip_Angled_1X01</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">P</field>
+        <field name="Value">CONN_01X01</field>
+      </fields>
+      <pins>
+        <pin num="1" name="P1" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="conn" part="CONN_01X04">
+      <description>Connector 01x04</description>
+      <footprints>
+        <fp>Pin_Header_Straight_1X04</fp>
+        <fp>Pin_Header_Angled_1X04</fp>
+        <fp>Socket_Strip_Straight_1X04</fp>
+        <fp>Socket_Strip_Angled_1X04</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">P</field>
+        <field name="Value">CONN_01X04</field>
+      </fields>
+      <pins>
+        <pin num="1" name="P1" type="passive"/>
+        <pin num="2" name="P2" type="passive"/>
+        <pin num="3" name="P3" type="passive"/>
+        <pin num="4" name="P4" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="conn" part="CONN_01X05">
+      <description>Connector 01x05</description>
+      <footprints>
+        <fp>Pin_Header_Straight_1X05</fp>
+        <fp>Pin_Header_Angled_1X05</fp>
+        <fp>Socket_Strip_Straight_1X05</fp>
+        <fp>Socket_Strip_Angled_1X05</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">P</field>
+        <field name="Value">CONN_01X05</field>
+      </fields>
+      <pins>
+        <pin num="1" name="P1" type="passive"/>
+        <pin num="2" name="P2" type="passive"/>
+        <pin num="3" name="P3" type="passive"/>
+        <pin num="4" name="P4" type="passive"/>
+        <pin num="5" name="P5" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="conn" part="CONN_01X06">
+      <description>Connector 01x06</description>
+      <footprints>
+        <fp>Pin_Header_Straight_1X06</fp>
+        <fp>Pin_Header_Angled_1X06</fp>
+        <fp>Socket_Strip_Straight_1X06</fp>
+        <fp>Socket_Strip_Angled_1X06</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">P</field>
+        <field name="Value">CONN_01X06</field>
+      </fields>
+      <pins>
+        <pin num="1" name="P1" type="passive"/>
+        <pin num="2" name="P2" type="passive"/>
+        <pin num="3" name="P3" type="passive"/>
+        <pin num="4" name="P4" type="passive"/>
+        <pin num="5" name="P5" type="passive"/>
+        <pin num="6" name="P6" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="conn" part="CONN_01X14">
+      <description>Connector 01x14</description>
+      <footprints>
+        <fp>Pin_Header_Straight_1X14</fp>
+        <fp>Pin_Header_Angled_1X14</fp>
+        <fp>Socket_Strip_Straight_1X14</fp>
+        <fp>Socket_Strip_Angled_1X14</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">P</field>
+        <field name="Value">CONN_01X14</field>
+      </fields>
+      <pins>
+        <pin num="1" name="P1" type="passive"/>
+        <pin num="2" name="P2" type="passive"/>
+        <pin num="3" name="P3" type="passive"/>
+        <pin num="4" name="P4" type="passive"/>
+        <pin num="5" name="P5" type="passive"/>
+        <pin num="6" name="P6" type="passive"/>
+        <pin num="7" name="P7" type="passive"/>
+        <pin num="8" name="P8" type="passive"/>
+        <pin num="9" name="P9" type="passive"/>
+        <pin num="10" name="P10" type="passive"/>
+        <pin num="11" name="P11" type="passive"/>
+        <pin num="12" name="P12" type="passive"/>
+        <pin num="13" name="P13" type="passive"/>
+        <pin num="14" name="P14" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="device" part="R">
+      <description>Resistor</description>
+      <footprints>
+        <fp>R_*</fp>
+        <fp>Resistor_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">R</field>
+        <field name="Value">R</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+  </libparts>
+  <libraries>
+    <library logical="device">
+      <uri>C:\Program Files\KiCad\share\kicad\library\device.lib</uri>
+    </library>
+    <library logical="conn">
+      <uri>C:\Program Files\KiCad\share\kicad\library\conn.lib</uri>
+    </library>
+  </libraries>
+  <nets>
+    <net code="1" name="Net-(BLUESMIRF1-Pad1)">
+      <node ref="BLUESMIRF1" pin="6"/>
+      <node ref="BLUESMIRF1" pin="1"/>
+    </net>
+    <net code="2" name="Net-(DELTAP1-Pad3)">
+      <node ref="DELTAP1" pin="3"/>
+      <node ref="R4" pin="2"/>
+      <node ref="TSWTWO1" pin="6"/>
+    </net>
+    <net code="3" name="Net-(ABSP1-Pad3)">
+      <node ref="ABSP1" pin="3"/>
+      <node ref="TSWTWO1" pin="3"/>
+      <node ref="R2" pin="2"/>
+    </net>
+    <net code="4" name="Net-(DELTAP1-Pad4)">
+      <node ref="DELTAP1" pin="4"/>
+      <node ref="R3" pin="2"/>
+      <node ref="TSWTWO1" pin="7"/>
+    </net>
+    <net code="5" name="Net-(ABSP1-Pad4)">
+      <node ref="R1" pin="2"/>
+      <node ref="TSWTWO1" pin="2"/>
+      <node ref="ABSP1" pin="4"/>
+    </net>
+    <net code="6" name="Net-(BLUESMIRF1-Pad4)">
+      <node ref="TSONE1" pin="2"/>
+      <node ref="BLUESMIRF1" pin="4"/>
+    </net>
+    <net code="7" name="Net-(TSWTWO1-Pad4)">
+      <node ref="TSWTWO1" pin="4"/>
+    </net>
+    <net code="8" name="Net-(TSWTWO1-Pad5)">
+      <node ref="TSWTWO1" pin="5"/>
+    </net>
+    <net code="9" name="Net-(TSWTWO1-Pad8)">
+      <node ref="TSWTWO1" pin="8"/>
+    </net>
+    <net code="10" name="Net-(SDSOCKET1-Pad2)">
+      <node ref="SDSOCKET1" pin="2"/>
+    </net>
+    <net code="11" name="Net-(SDSOCKET1-Pad3)">
+      <node ref="SDSOCKET1" pin="3"/>
+    </net>
+    <net code="12" name="Net-(SDSOCKET1-Pad4)">
+      <node ref="SDSOCKET1" pin="4"/>
+    </net>
+    <net code="13" name="Net-(SDSOCKET2-Pad2)">
+      <node ref="SDSOCKET2" pin="2"/>
+      <node ref="TSONE1" pin="12"/>
+    </net>
+    <net code="14" name="Net-(SDSOCKET2-Pad3)">
+      <node ref="TSWTWO1" pin="1"/>
+      <node ref="SDSOCKET2" pin="3"/>
+    </net>
+    <net code="15" name="Net-(SDSOCKET2-Pad4)">
+      <node ref="TSONE1" pin="13"/>
+      <node ref="SDSOCKET2" pin="4"/>
+    </net>
+    <net code="16" name="Net-(SDSOCKET2-Pad5)">
+      <node ref="TSONE1" pin="14"/>
+      <node ref="SDSOCKET2" pin="5"/>
+    </net>
+    <net code="17" name="Net-(TSWTWO1-Pad9)">
+      <node ref="TSWTWO1" pin="9"/>
+    </net>
+    <net code="18" name="Net-(ABSP1-Pad2)">
+      <node ref="BLUESMIRF1" pin="2"/>
+      <node ref="SDSOCKET1" pin="5"/>
+      <node ref="ABSP1" pin="2"/>
+      <node ref="TSWTWO1" pin="12"/>
+      <node ref="R2" pin="1"/>
+      <node ref="DELTAP1" pin="2"/>
+      <node ref="R3" pin="1"/>
+      <node ref="R4" pin="1"/>
+      <node ref="R1" pin="1"/>
+    </net>
+    <net code="19" name="Net-(BLUESMIRF1-Pad5)">
+      <node ref="TSONE1" pin="3"/>
+      <node ref="BLUESMIRF1" pin="5"/>
+    </net>
+    <net code="20" name="Net-(ABSP1-Pad1)">
+      <node ref="SDSOCKET2" pin="1"/>
+      <node ref="G2" pin="1"/>
+      <node ref="TSONE1" pin="1"/>
+      <node ref="BLUESMIRF1" pin="3"/>
+      <node ref="ABSP1" pin="1"/>
+      <node ref="G1" pin="1"/>
+      <node ref="G3" pin="1"/>
+      <node ref="DELTAP1" pin="1"/>
+    </net>
+    <net code="21" name="Net-(TSONE1-Pad5)">
+      <node ref="TSONE1" pin="5"/>
+    </net>
+    <net code="22" name="Net-(TSWTWO1-Pad10)">
+      <node ref="TSWTWO1" pin="10"/>
+    </net>
+    <net code="23" name="Net-(TSWTWO1-Pad11)">
+      <node ref="TSWTWO1" pin="11"/>
+    </net>
+    <net code="24" name="Net-(TSWTWO1-Pad13)">
+      <node ref="TSWTWO1" pin="13"/>
+    </net>
+    <net code="25" name="Net-(TSWTWO1-Pad14)">
+      <node ref="TSWTWO1" pin="14"/>
+    </net>
+    <net code="26" name="Net-(TSONE1-Pad4)">
+      <node ref="TSONE1" pin="4"/>
+    </net>
+    <net code="27" name="Net-(SDSOCKET1-Pad1)">
+      <node ref="SDSOCKET1" pin="1"/>
+    </net>
+    <net code="28" name="Net-(TSONE1-Pad6)">
+      <node ref="TSONE1" pin="6"/>
+    </net>
+    <net code="29" name="Net-(TSONE1-Pad7)">
+      <node ref="TSONE1" pin="7"/>
+    </net>
+    <net code="30" name="Net-(TSONE1-Pad8)">
+      <node ref="TSONE1" pin="8"/>
+    </net>
+    <net code="31" name="Net-(TSONE1-Pad9)">
+      <node ref="TSONE1" pin="9"/>
+    </net>
+    <net code="32" name="Net-(TSONE1-Pad10)">
+      <node ref="TSONE1" pin="10"/>
+    </net>
+    <net code="33" name="Net-(TSONE1-Pad11)">
+      <node ref="TSONE1" pin="11"/>
+    </net>
+  </nets>
+</export>

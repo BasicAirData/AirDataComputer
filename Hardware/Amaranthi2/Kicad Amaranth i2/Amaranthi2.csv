@@ -1,0 +1,9 @@
+"Id";"Designator";"Package";"Quantity";"Designation";"Supplier and ref";
+1;"TSONE1,TSWTWO1";"Socket_Strip_Straight_1x14";2;"CONN_01X14";;;
+2;"SDSOCKET1,SDSOCKET2";"Socket_Strip_Straight_1x05";2;"CONN_01X05";;;
+3;"DELTAP1,ABSP1";"Socket_Strip_Angled_1x04";2;"CONN_01X04";;;
+4;"R1,R2,R3,R4";"R_1206_HandSoldering";4;"4700";;;
+5;"REF**,REF**,REF**";"MountingHole_3mm";3;"MountingHole_3mm";;;
+6;"G1,G2,G3";"1pin";3;"CONN_01X01";;;
+7;"BLUESMIRF1";"Socket_Strip_Straight_1x06";1;"CONN_01X06";;;
+8;"P1";"Socket_Strip_Angled_1x02";1;"CONN_01X02";;;
