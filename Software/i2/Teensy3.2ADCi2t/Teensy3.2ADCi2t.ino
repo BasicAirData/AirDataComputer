@@ -62,7 +62,7 @@ void loop()
       *ch = Serial1.read();                    // read char from serial
       if (*ch == DELIMITER) {
         endmsg = true;                        // found DELIMITER
-        *ch == 0;
+        *ch = 0;
       }
       else ++ch;                              // increment index
     }
