@@ -9,9 +9,6 @@ This is the software library for the air data computer. Library is focused on Te
 
 If you use the Arduino IDE or Arduino IDE and Teensyduino you should simple copy the library folder to your local library folder. You find detailed information [in this link](https://www.arduino.cc/en/Guide/Libraries) section Manual.
 
-##Structure##
-You find two main folders "Arduino" and "Teensy" each folder is dedicated to the specific board. Inside each library you find the accompanying examples. Specific documentation and hookup information is linked within each example.
-
 ##Info##
 [Contact information](http://www.basicairdata.eu/social.html)
 
