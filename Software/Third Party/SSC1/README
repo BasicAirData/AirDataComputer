@@ -1,0 +1,35 @@
+Honeywell TruStability High Accuracy Silicon Ceramic (HSC) Series and Standard 
+Accuracy Silicon Ceramic (SSC) Series are piezoresistive silicon pressure 
+sensors offering a digital output for reading pressure over the specified full 
+scale pressure span and temperature range. They are available in standard 
+pressure ranges from 1 psi to 150 psi (60 mbar to 10 bar) and are intended for 
+use with non-corrosive, non-ionic gases, such as air and other dry gases. 
+The liquid media option extends the performance of these sensors to 
+non-corrosive, non-ionic liquids.
+
+The library uses I2C to connect to the sensor (see the Wire library). 
+SPI can also be used (with some sensors, see datasheet), but is not implemented 
+in this library.
+
+If you have multiple devices connected to the I2C bus, remember that this 
+device screws up the bus when it is not powered.
+One solution is to keep the device powered all the time.
+Another possible solution is to add an analog switch to physically disconnect 
+the GND and Vsupply line or SCL and SDA line to the device. 
+This needs more testing.
+
+Check your sensor before you begin: some of them work with 3.3V some with 5V.
+
+This library has been tested, but might still contain bugs, so please be careful.
+
+Bugs, suggestions, comments are always welcome. 
+
+See also:
+
+http://sensing.honeywell.com/product%20page?pr_id=141750
+http://sensing.honeywell.com/product%20page?pr_id=141561
+http://sensing.honeywell.com/hsc%20and%20ssc%20series%20install_digital_50044171-5-en_final_08aug12.pdf
+http://www.honeywellscportal.com/i2c%20comms%20digital%20output%20pressure%20sensors_tn_008201-3-en_final_30may12.pdf
+
+Author: Tomas Van Verrewegen <tomasvanverrewegen@telenet.be>
+
