@@ -2,7 +2,7 @@
   Teensy3.2ADCi2t.ino - Arduino Sketch for testing
  Bluetooth communication with Android devices using BluetoothHelper java class
  with the example android app and with the Air Data Computer Amaranth i2.
- Firmware tested on Teensy 3.1
+ Firmware for Teensy 3.1/3.2
  
  Created by G.Capelli and JLJ. 
  BasicAirData Team. 
