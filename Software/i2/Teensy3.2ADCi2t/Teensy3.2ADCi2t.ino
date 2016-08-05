@@ -41,7 +41,7 @@ bool endmsg = false;
 //  create an SSC sensor with I2C address 0x28. Differential pressure on first I2C BUS
 SSC ssc(0x28, 8);
 //  create an SSC sensor with I2C address 0x28 on second I2C bus
-SSC ssc1(0x28, 8);
+SSC1 ssc1(0x28, 8);
 
 void setup()
 {
@@ -77,7 +77,7 @@ void loop()
         value = atoi(command);                // Read the value after the comma, for example "1". Integer conversion
 
         // If we receive "$STR,1" the ADC switch to sensor test mode. Starts tests and reports.
-        if(value=1) testme();
+        if (value == 1) testme();
 
         counter = counter + value;
         if (counter > 1000) counter = 0;      // A reset, for the serial gamers :)
@@ -107,38 +107,38 @@ void testme()
   Serial1.println("card initialized.");
   //Is Differential Pressure sensor present and working? (First I2C bus)
   //Setup of the sensor parameters
-  Serial.println("Differential pressure measurement");
+  Serial1.println("Differential pressure measurement");
   ssc.setMinRaw(0);
   ssc.setMaxRaw(16383);
   ssc.setMinPressure(0.0);
   ssc.setMaxPressure(1.6);
   //  update pressure / temperature
-  Serial.print("update()\t");
-  Serial.println(ssc.update());
+  Serial1.print("update()\t");
+  Serial1.println(ssc.update());
   // print pressure
-  Serial.print("pressure()\t");
-  Serial.println(ssc.pressure());  
+  Serial1.print("pressure()\t");
+  Serial1.println(ssc.pressure());  
   // print temperature
-  Serial.print("temperature()\t");
-  Serial.println(ssc.temperature());
+  Serial1.print("temperature()\t");
+  Serial1.println(ssc.temperature());
   delay(100);
+  
   //Is Absolute Pressure sensor present and working?(Second I2C bus)
   //Setup of the sensor parameters
-  Serial.println("Absolute pressure measurement");
+  Serial1.println("Absolute pressure measurement");
   ssc1.setMinRaw(0);
   ssc1.setMaxRaw(16383);
   ssc1.setMinPressure(0.0);
   ssc1.setMaxPressure(0.0689476);
   //  update pressure / temperature
-  Serial.print("update()\t");
-  Serial.println(ssc.update());
-
+  Serial1.print("update()\t");
+  Serial1.println(ssc1.update());
   // print pressure
-  Serial.print("pressure()\t");
-  Serial.println(ssc.pressure());
+  Serial1.print("pressure()\t");
+  Serial1.println(ssc1.pressure());
   // print temperature
-  Serial.print("temperature()\t");
-  Serial.println(ssc.temperature());
+  Serial1.print("temperature()\t");
+  Serial1.println(ssc1.temperature());
   delay(100);
 }
 
