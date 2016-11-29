@@ -3,7 +3,7 @@
 [The reference page for the project](http://www.basicairdata.eu/projects/airdatacomputer/)
 [BasicAirData](http://www.basicairdata.eu) Open and free DIY air data instrumentation and telemetry
 
-[What is BasicAirData?](http://www.basicairdata.eu/attachments/others/BAD%20Brochure.pdf)
+[What is BasicAirData?](https://goo.gl/wiVi11)
 
 ![ADCmark2](https://cloud.githubusercontent.com/assets/7497614/7475591/d1a1be7e-f348-11e4-87ee-d39615d35f27.jpg)
 
