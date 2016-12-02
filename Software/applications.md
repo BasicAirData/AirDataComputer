@@ -3,8 +3,8 @@ In this file you find the applications that are currently suitable for the ADC a
 ###RC/Miniature aircraft/Telemetry/Airborne###
 
 1. True air speed measurement
-2. Outside temperature measurement
-3. Air properties measurement
+2. [Outside temperature measurement](http://www.basicairdata.eu/projects/airdatacomputer/library-use-case-sd-enabled-temperature-logger/)
+3. [Air properties measurement](http://www.basicairdata.eu/projects/airdatacomputer/library-use-case-sd-enabled-temperature-logger/)
 4. Meteorological probes
 5. [In-flight thrust measurement*](http://arc.aiaa.org/doi/abs/10.2514/3.43575?journalCode=ja)
  * Propeller
