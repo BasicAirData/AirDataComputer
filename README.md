@@ -9,5 +9,8 @@
 
 [BasicAirData Air Data Computer](http://www.basicairdata.eu/projects/airdatacomputer/)
 
+##Typical Applications##
+[Typical applications](https://github.com/BasicAirData/AirDataComputer/blob/master/Software/applications.md)
+
 ##License and General Information
 [License and general info](https://github.com/BasicAirData/Document-Templates/blob/master/general-info.md)
