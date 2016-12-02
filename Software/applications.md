@@ -8,7 +8,10 @@ In this file you find the applications that are currently suitable for the ADC a
 3. [In-flight thrust measurement*](http://arc.aiaa.org/doi/abs/10.2514/3.43575?journalCode=ja)
  * Propeller
  * Turbine
-4. [Total Energy and Netto Variometer*](https://en.wikipedia.org/wiki/Variometer)
+4. [Variometer*](https://en.wikipedia.org/wiki/Variometer)
+ * Uncompensated
+ * With Total Energy probe
+ * Netto
 
 ###Heating, Ventilation, & Air Conditioning###
 
