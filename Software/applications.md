@@ -10,7 +10,7 @@ In this file you find the applications that are currently suitable for the ADC a
  * Turbine
 4. [Variometer*](https://en.wikipedia.org/wiki/Variometer)
  * Uncompensated
- * With Total Energy probe
+ * Total Energy
  * Netto
 
 ###Heating, Ventilation, & Air Conditioning###
