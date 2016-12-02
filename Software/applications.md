@@ -15,17 +15,17 @@ In this file you find the applications that are currently suitable for the ADC a
  * Netto
 7. Control system feed
 8. Aerodynamics parameters identification
-9. Fault detection
+9. Fault detection*
 
 ###Ground/lab based applications
 
-1. Airborne Equipment Calibration
+1. Airborne Equipment Calibration*
 2. Meteorological/Local Meteo Station
-3. Fault detection
+3. Fault detection*
 
 ###Heating, Ventilation, & Air Conditioning###
 
 1. Air speed within piping
-2. Flowrate* calculation
+2. Flowrate calculation*
 3. Thermal Energy measurement*
-4. Fault detection
+4. Fault detection*
