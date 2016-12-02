@@ -1,6 +1,6 @@
 In this file you find the applications that are currently suitable for the ADC and proposed applications* that should be implemented within the software
 
-## RC/Miniature aircraft/Telemetry
+###RC/Miniature aircraft/Telemetry###
 
 True Air speed measurement
 Outside temperature measurement
