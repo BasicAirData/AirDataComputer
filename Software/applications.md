@@ -3,7 +3,7 @@ In this file you find the applications that are currently suitable for the ADC a
 ###RC/Miniature aircraft/Telemetry###
 
 
-1. True Air speed measurement
+1. True air speed measurement
 2. Outside temperature measurement
 3. [In-flight thrust measurement*](http://arc.aiaa.org/doi/abs/10.2514/3.43575?journalCode=ja)
 4. [Total Energy and Netto Variometer*](https://en.wikipedia.org/wiki/Variometer)
