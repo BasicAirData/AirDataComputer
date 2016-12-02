@@ -2,17 +2,14 @@ In this file you find the applications that are currently suitable for the ADC a
 
 ###RC/Miniature aircraft/Telemetry###
 
-True Air speed measurement
-
-Outside temperature measurement
-
-[In-flight thrust measurement*](http://arc.aiaa.org/doi/abs/10.2514/3.43575?journalCode=ja)
+1.True Air speed measurement
+2.Outside temperature measurement
+3.[In-flight thrust measurement*](http://arc.aiaa.org/doi/abs/10.2514/3.43575?journalCode=ja)
+4.Netto Variometer
 
 ###Heating, Ventilation, & Air Conditioning###
 
-Air speed within piping
-
-Flowrate* calculation
-
-Thermal Energy measurement
+1.Air speed within piping
+2.Flowrate* calculation
+3.Thermal Energy measurement
 
