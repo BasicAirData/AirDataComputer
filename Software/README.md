@@ -6,6 +6,7 @@ This is the software library for the air data computer. Library is focused on Te
 [BasicAirData Air Data Computer](http://www.basicairdata.eu/airdatacomputer.html)
 
 ##Typical Applications##
+[Typical applications](https://github.com/BasicAirData/AirDataComputer/blob/master/Software/applications.md)
 
 ##Installation##
 
