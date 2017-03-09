@@ -1,8 +1,7 @@
 #AirDataComputer
 [Check the wiki](https://github.com/BasicAirData/AirDataComputer/wiki)
 
-[The reference page for the project](http://www.basicairdata.eu/projects/airdatacomputer/)
-[BasicAirData](http://www.basicairdata.eu) Open and free DIY air data instrumentation and telemetry
+[Assembly tutorial](http://www.basicairdata.eu/projects/airdatacomputer/amaranth-i2-assembly-tutorial/)
 
 ![ADCmark2](https://cloud.githubusercontent.com/assets/7497614/7475591/d1a1be7e-f348-11e4-87ee-d39615d35f27.jpg)
 
