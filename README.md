@@ -1,4 +1,4 @@
-#AirDataComputer
+#Air Data Computer
 [Check the wiki!](https://github.com/BasicAirData/AirDataComputer/wiki)
 
 ![ADCmark2](https://cloud.githubusercontent.com/assets/7497614/7475591/d1a1be7e-f348-11e4-87ee-d39615d35f27.jpg)
