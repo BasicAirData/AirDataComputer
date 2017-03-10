@@ -1,4 +1,6 @@
 #Air Data Computer
+##Current ADC release is Amaranth i2
+
 [Check the wiki!](https://github.com/BasicAirData/AirDataComputer/wiki)
 
 [Website](http://www.basicairdata.eu/projects/airdatacomputer/)
