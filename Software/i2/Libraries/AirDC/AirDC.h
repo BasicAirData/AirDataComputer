@@ -26,9 +26,9 @@ public:
     int _pid;/**< Class ID */
 //Geometric
     double _d;/**< Reference length for Re number calculation*/
-    double _PitotXcog;/**< Distance along x body axes of the Pitot tip*/
-    double _PitotYcog;/**< Distance along y body axes of the Pitot tip*/
-    double _PitotZcog;/**< Distance along z body axes of the Pitot tip*/
+    double _PitotXcog;/**< Distance along x body axes of the Pitot tip from center of gravity*/
+    double _PitotYcog;/**< Distance along y body axes of the Pitot tip from center of gravity*/
+    double _PitotZcog;/**< Distance along z body axes of the Pitot tip from center of gravity*/
 //Measurements
     double _p;/**< Static Pressure Pa*/
     double _T;/**< Temperature K*/
