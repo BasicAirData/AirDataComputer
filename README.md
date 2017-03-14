@@ -1,4 +1,4 @@
-#Air Data Computer  (Test Build)[![Build Status](https://travis-ci.org/BasicAirData/AirDataComputer.svg?branch=master)](https://travis-ci.org/BasicAirData/AirDataComputer)
+#Air Data Computer  [![Build Status](https://travis-ci.org/BasicAirData/AirDataComputer.svg?branch=master)](https://travis-ci.org/BasicAirData/AirDataComputer)
 
 ##Current ADC release is Amaranth i2
 
