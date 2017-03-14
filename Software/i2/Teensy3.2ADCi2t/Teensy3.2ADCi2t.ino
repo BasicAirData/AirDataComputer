@@ -41,7 +41,7 @@ bool endmsg = false;
 //  create an SSC sensor with I2C address 0x28. Differential pressure on first I2C BUS
 SSC ssc(0x28, 8);
 //  create an SSC sensor with I2C address 0x28 on second I2C bus
-SSC1 ssc1(0x28, 8);
+SSC ssc1(0x28, 8);
 
 void setup()
 {
