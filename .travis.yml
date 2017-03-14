@@ -18,7 +18,7 @@ install:
     - wget https://github.com/PaulStoffregen/OneWire/archive/master.zip -O /tmp/onewire_source.zip
     - unzip /tmp/onewire_source.zip -d /tmp/
 #AirDC
-    - wget https://github.com/BasicAirData/AirDataComputer/tree/master/Software/i2/Libraries/AirDC.zip -O /tmp/airdc_source.zip
+    - wget http://www.basicairdata.eu/temp/AirDC.zip -O /tmp/airdc_source.zip
     - unzip /tmp/airdc_source.zip -d /tmp/
 #I2C Lib with support of the second bus
     - wget https://github.com/BasicAirData/AirDataComputer/tree/master/Software/Third%20Party/i2c_t3-master.zip  -O /tmp/i2c_t3-master.zip
