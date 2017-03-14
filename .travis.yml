@@ -15,8 +15,8 @@ env:
 install:
     - pip install -U platformio
 #AirDC
-    - wget https://github.com/BasicAirData/AirDataComputer/tree/master/Software/i2/Libraries/AirDC.zip -O /tmp/AirDC.zip
-    - unzip /tmp/AirDC -d /tmp
+    - wget https://github.com/BasicAirData/AirDataComputer/tree/master/Software/i2/Libraries/AirDC.zip -O /tmp/airdc_source.zip
+    - unzip /tmp/airdc_source.zip -d /tmp
 #I2C Lib with support of the second bus
     - wget https://github.com/BasicAirData/AirDataComputer/tree/master/Software/Third%20Party/i2c_t3-master.zip  -O /tmp/i2c_t3-master.zip
     - unzip /tmp/i2c_t3-master -d /tmp
