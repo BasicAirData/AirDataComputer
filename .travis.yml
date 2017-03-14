@@ -27,5 +27,5 @@ install:
     - wget http://www.basicairdata.eu/temp/SSC.zip -O /tmp/SSC.zip
     - unzip /tmp/SSC -d /tmp/
 script:
-    - platformio ci --lib="." --lib="/tmp/AirDC" --lib="/tmp/i2c_t3-master" --lib="/tmp/SSC1" --lib="/tmp/SSC" --board=teensy31
+    - platformio ci --lib="." --lib="/tmp/AirDC" --lib="/tmp/i2c_t3-master" --lib="/tmp/SSC1" --lib="/tmp/SSC" --board=teensy32
 #- arduino --verify --board ${BOARD} $PWD/test/Blink/Blink.ino
