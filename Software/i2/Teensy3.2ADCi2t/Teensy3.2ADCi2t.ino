@@ -24,7 +24,7 @@
 #include <SD.h> //For Micro SD support
 #include <i2c_t3.h> //Library for second I2C
 #include <SSC.h>  //Library for SSC series sensors
-#include <SSC1.h>  //Library for sensor on second bus
+//#include <SSC1.h>  //Library for sensor on second bus
 
 #define INPUT_SIZE 1024
 #define DELIMITER '\n'      // Message delimiter. It must match with Android class one;
