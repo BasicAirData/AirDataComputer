@@ -14,6 +14,9 @@ env:
 
 install:
     - pip install -U platformio
+    
+    - wget https://github.com/PaulStoffregen/OneWire/archive/master.zip -O /tmp/onewire_source.zip
+    - unzip /tmp/onewire_source.zip -d /tmp/
 #AirDC
     - wget https://github.com/BasicAirData/AirDataComputer/tree/master/Software/i2/Libraries/AirDC.zip -O /tmp/airdc_source.zip
     - unzip /tmp/airdc_source.zip -d /tmp
