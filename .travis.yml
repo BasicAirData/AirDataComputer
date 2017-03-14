@@ -16,16 +16,16 @@ install:
     - pip install -U platformio
 #AirDC
     - wget https://github.com/BasicAirData/AirDataComputer/tree/master/Software/i2/Libraries/AirDC.zip -O /tmp/AirDC.zip
-    - unzip /tmp/AirDC.zip -d /tmp
+    - unzip /tmp/AirDC -d /tmp
 #I2C Lib with support of the second bus
     - wget https://github.com/BasicAirData/AirDataComputer/tree/master/Software/Third%20Party/i2c_t3-master.zip  -O /tmp/i2c_t3-master.zip
-    - unzip /tmp/i2c_t3-master.zip -d /tmp
+    - unzip /tmp/i2c_t3-master -d /tmp
 #SSC1
     - wget https://github.com/BasicAirData/AirDataComputer/tree/master/Software/Third%20Party/SSC1.zip -O /tmp/SSC1.zip
-    - unzip /tmp/SSC1.zip -d /tmp
+    - unzip /tmp/SSC1 -d /tmp
 #SSC
     - wget https://github.com/BasicAirData/AirDataComputer/tree/master/Software/Third%20Party/SSC.zip -O /tmp/SSC.zip
-    - unzip /tmp/SSC.zip -d /tmp
+    - unzip /tmp/SSC -d /tmp
 script:
     - platformio ci --lib="." --lib="/tmp/AirDC" --lib="/tmp/i2c_t3-master" --lib="/tmp/SSC1" --lib="/tmp/SSC"--board=teensy31
 #- arduino --verify --board ${BOARD} $PWD/test/Blink/Blink.ino
