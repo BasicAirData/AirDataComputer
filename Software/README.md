@@ -1,5 +1,5 @@
 ## Status
-(Work in progress, refer to Wiki)[https://github.com/BasicAirData/AirDataComputer/wiki]
+(Work in progress, refer to the Wiki)[https://github.com/BasicAirData/AirDataComputer/wiki]
 Check the 
 ## Introduction##
 This is the software library for the air data computer. Library is focused on Teensy board and is usable, in part, with Arduino boards. Despite the original purpose you can use the library in a plethora of applications. You find a general intro in this link
