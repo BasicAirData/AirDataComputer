@@ -1,6 +1,6 @@
 In this file you find the applications that are currently suitable for the ADC and proposed applications* that should be implemented within the software
 
-###RC/Miniature aircraft/Telemetry/Airborne/Bicycle###
+### RC/Miniature aircraft/Telemetry/Airborne/Bicycle
 
 1. True air speed measurement
 2. [Outside temperature measurement](http://www.basicairdata.eu/projects/airdatacomputer/library-use-case-sd-enabled-temperature-logger/)
@@ -17,13 +17,13 @@ In this file you find the applications that are currently suitable for the ADC a
 8. Aerodynamics parameters identification
 9. Fault detection*
 
-###Ground/lab based applications
+### Ground/lab based applications
 
 1. Airborne Equipment Calibration*
 2. Meteorological/Local Meteo Station
 3. Fault detection*
 
-###Heating, Ventilation, & Air Conditioning###
+### Heating, Ventilation, & Air Conditioning
 
 1. Air speed within piping
 2. Flowrate calculation*
