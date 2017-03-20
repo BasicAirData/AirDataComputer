@@ -110,8 +110,8 @@ void testme()
   Serial1.println("Differential pressure measurement");
   ssc.setMinRaw(0);
   ssc.setMaxRaw(16383);
-  ssc.setMinPressure(0.0);
-  ssc.setMaxPressure(1.6);
+  ssc.setMinPressure(-0.0689476);
+  ssc.setMaxPressure(0.0689476);
   //  update pressure / temperature
   Serial1.print("update()\t");
   Serial1.println(ssc.update());
