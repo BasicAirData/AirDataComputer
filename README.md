@@ -4,6 +4,8 @@
 
 [Check the wiki!](https://github.com/BasicAirData/AirDataComputer/wiki)
 
+[Picture Gallery](http://www.basicairdata.eu/projects/airdatacomputer/amaranth-i2-assembly-tutorial/pictures-gallery-for-amaranth-adc/)
+
 [Website](http://www.basicairdata.eu/projects/airdatacomputer/)
 
 ![Amaranth i2](http://www.basicairdata.eu/wp-content/gallery/amaranth-i2-updated-pictures/IMGP5093.jpg)
