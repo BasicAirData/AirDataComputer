@@ -1,8 +1,8 @@
-/*
-  AirSensor.cpp - Library for Basic Air Data calculations
-  Created by J. Larragueta, December 3, 2015.
-  Refer to http:\\www.basicairdata.eu
+/**
+ * AirSensor.cpp - Library for sensor interfacing
+ * Created by J.L.J., December 3, 2015.\n Refer to http:\\www.basicairdata.eu
 */
+
 #include "AirSensor.h"
 #include <math.h>
 #include <Wire.h>
@@ -11,9 +11,17 @@
 #define DEBUG 1
 AirSensor::AirSensor(int pid)
 {
-    //Default parameters values
+/** AirDC Default
+constructor*/
     _pid = pid;
 }
+/** Read the current differential pressure sensor value and copy the value to AirDC
+* @param  *out, assign an AirDC class for data output
+* @param  sensor 1, sensor HLCA12X5
+* @param  sensor 2, sensor LDES205U
+* @param  sensor 3, sensor MPXV7002
+* @return Void
+ */
 void AirSensor::ReadDifferentialPressure(AirDC *out,int sensor)
 {
     switch (sensor)
@@ -115,12 +123,17 @@ void AirSensor::ReadDifferentialPressure(AirDC *out,int sensor)
     break;
     }
 }
-
+/** Read the current static pressure value and copy the value to AirDC
+* implementation is not completed
+* @param  *out, assign an AirDC class for data output
+* @param  sensor 99, debug mode _p=90000 Pa and _up=100 Pa
+* @return Void
+ */
 void AirSensor::ReadStaticPressure(AirDC *out,int sensor)
 {
     switch (sensor)
     {
-    case 1 :
+    case 99 :
     {
         out->_p=90000;
         out->_up=100;
@@ -128,6 +141,11 @@ void AirSensor::ReadStaticPressure(AirDC *out,int sensor)
     }
     }
 }
+/** Read the current total air temperature and copy the value to AirDC
+* @param  *out, assign an AirDC class for data output
+* @param  sensor 1, sensor DS18X20
+* @return Void
+ */
 void AirSensor::ReadTAT(AirDC *out,int sensor)
 {
     switch (sensor)
@@ -192,10 +210,15 @@ void AirSensor::ReadTAT(AirDC *out,int sensor)
     }
     }
 }
+/** Acquire relative humidity and copy the value to AirDC
+* @param  *out, assign an AirDC class for data output
+* @param  sensor 99, debug mode RH=0.5 _uRH=0.05
+* @return Void
+ */
 void AirSensor::ReadRH(AirDC *out,int sensor){
     switch (sensor)
     {
-    case 1 :
+    case 99 :
     {
         out->_RH=0.5;
         out->_uRH=0.05;
