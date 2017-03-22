@@ -1,7 +1,7 @@
 # Air Data Computer<br>[![Build Status](https://travis-ci.org/BasicAirData/AirDataComputer.svg?branch=master)](https://travis-ci.org/BasicAirData/AirDataComputer)
 
-## Current ADC release is Amaranth i2
-## Release under development is Asgard
+## The Current ADC release is Amaranth i2
+## The Release under development is Asgard
 
 [Check the wiki!](https://github.com/BasicAirData/AirDataComputer/wiki)
 
