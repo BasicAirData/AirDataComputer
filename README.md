@@ -3,7 +3,7 @@
 ## The Current ADC release is Amaranth i2
 ## The release under development is Asgard
 
-[Check the wiki!](https://github.com/BasicAirData/AirDataComputer/wiki)
+## [Check the wiki!](https://github.com/BasicAirData/AirDataComputer/wiki)
 
 [Picture Gallery](http://www.basicairdata.eu/projects/airdatacomputer/amaranth-i2-assembly-tutorial/pictures-gallery-for-amaranth-adc/)
 
