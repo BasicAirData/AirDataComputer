@@ -1,4 +1,4 @@
-update=27/03/2017 14:57:54
+update=27/03/2017 17:21:12
 version=1
 last_client=kicad
 [pcbnew]
@@ -20,6 +20,21 @@ SolderMaskMinWidth=0.000000000000
 DrawSegmentWidth=0.200000000000
 BoardOutlineThickness=0.100000000000
 ModuleOutlineThickness=0.150000000000
+[schematic_editor]
+version=1
+PageLayoutDescrFile=
+PlotDirectoryName=
+SubpartIdSeparator=0
+SubpartFirstId=65
+NetFmtName=Pcbnew
+SpiceForceRefPrefix=0
+SpiceUseNetNumbers=0
+LabSize=60
+[cvpcb]
+version=1
+NetIExt=net
+[general]
+version=1
 [eeschema]
 version=1
 LibDir=
@@ -53,19 +68,4 @@ LibName26=opto
 LibName27=atmel
 LibName28=contrib
 LibName29=valves
-LibName30=KiCad libraries/teensy_3.1/teensy_3.1
-[schematic_editor]
-version=1
-PageLayoutDescrFile=
-PlotDirectoryName=
-SubpartIdSeparator=0
-SubpartFirstId=65
-NetFmtName=Pcbnew
-SpiceForceRefPrefix=0
-SpiceUseNetNumbers=0
-LabSize=60
-[cvpcb]
-version=1
-NetIExt=net
-[general]
-version=1
+LibName30=KiCad libraries/teensy/teensy
