@@ -81,4 +81,9 @@
     (scale (xyz 0.3937 0.3937 0.3937))
     (rotate (xyz -90 0 90))
   )
+  (model "../../../../../../Users/larraguetajunior/Documents/GitHub/AirDataComputer/Hardware/Asgard/kicad/Asgard/KiCad libraries/teensy/3DShapes/TeensyV3.6socket.wrl"
+    (at (xyz 0.3 -2.3 -0.05))
+    (scale (xyz 0.3937 0.3937 0.3937))
+    (rotate (xyz -90 0 90))
+  )
 )
