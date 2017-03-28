@@ -15888,8 +15888,6 @@ F 3 "" H 4850 3500 50  0001 C CNN
 	1    4850 3500
 	0    1    1    0   
 $EndComp
-Text Notes 4300 1800 0    59   ~ 0
-3.3V
 $Comp
 L Teensy3.6fsocket TEENSYV3.6
 U 1 1 58DA384C
@@ -15901,8 +15899,6 @@ F 3 "" H 2650 4250 60  0000 C CNN
 	1    2650 4250
 	1    0    0    -1  
 $EndComp
-Text Notes 4050 1800 0    60   ~ 0
-GND
 Wire Wire Line
 	4350 1850 4350 5750
 Wire Wire Line
@@ -15926,7 +15922,7 @@ Wire Wire Line
 Wire Wire Line
 	5000 3500 5200 3500
 Wire Wire Line
-	4150 1850 4150 5550
+	4150 1600 4150 5550
 Wire Wire Line
 	3650 2950 5150 2950
 Wire Wire Line
@@ -16533,4 +16529,30 @@ Wire Wire Line
 	3000 6150 3000 5550
 Wire Wire Line
 	3000 5550 4150 5550
+$Comp
+L GND #PWR01
+U 1 1 58DA5935
+P 3900 1650
+F 0 "#PWR01" H 3900 1400 50  0001 C CNN
+F 1 "GND" H 3900 1500 50  0000 C CNN
+F 2 "" H 3900 1650 50  0001 C CNN
+F 3 "" H 3900 1650 50  0001 C CNN
+	1    3900 1650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4150 1600 3900 1600
+Wire Wire Line
+	3900 1600 3900 1650
+$Comp
+L +3.3V #PWR02
+U 1 1 58DA5ABD
+P 4350 1850
+F 0 "#PWR02" H 4350 1700 50  0001 C CNN
+F 1 "+3.3V" H 4350 1990 50  0000 C CNN
+F 2 "" H 4350 1850 50  0001 C CNN
+F 3 "" H 4350 1850 50  0001 C CNN
+	1    4350 1850
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
