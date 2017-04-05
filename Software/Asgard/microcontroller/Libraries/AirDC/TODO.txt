@@ -1,0 +1,6 @@
+Add explicit calculation of molecular weigth for moist air.
+Add explicit calculation of gamma (cp/cv)
+Compensate Relative Humidity sensor dynamic
+
+CHECK/VALIDATE
+Pitot Position, angular rates, correction routine. Add angular acceleration terms.
