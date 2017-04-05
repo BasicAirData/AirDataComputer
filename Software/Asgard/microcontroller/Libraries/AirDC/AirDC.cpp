@@ -419,6 +419,7 @@ void AirDC::CalibrationFactor(int mode)
         //c0=1.0007625874125878
         //m=-7.961198906081004E-5
         //c=m*_TAS+c0
+        //Remember 9 m/s <_TAS <42 m/s
         _c=-7.961198906081004E-5*_TAS+1.0007625874125878;
         break;
     }
