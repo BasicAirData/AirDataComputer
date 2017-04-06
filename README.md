@@ -4,6 +4,8 @@
 ## The release under development is Asgard
 
 ## [Check the wiki!](https://github.com/BasicAirData/AirDataComputer/wiki)
+## [To get updates subscribe to Newsletter](http://eepurl.com/by-8RH)
+## [Mailing List](http://vps139588.ovh.net/cgi-bin/mailman/listinfo/basicairdata)
 
 [Picture Gallery](http://www.basicairdata.eu/projects/airdatacomputer/amaranth-i2-assembly-tutorial/pictures-gallery-for-amaranth-adc/)
 
