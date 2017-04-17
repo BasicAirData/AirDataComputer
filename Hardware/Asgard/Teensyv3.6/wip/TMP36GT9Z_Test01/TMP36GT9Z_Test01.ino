@@ -4,11 +4,11 @@ Reads an Analog Devices TMP36GT9Z temperature sensor on A9
 and converts the voltage value to temperature. 
 
 Connect Pin 1 to 3.3V
-Connect Pin 2 to A9
+Connect Pin 2 to A0
 Connect Pin 3 to GND  
 */
 
-int TsensorPin = A9;       // select the input pin for the sensor
+int TsensorPin = A0;       // select the input pin for the sensor
 int ledPin = 13;           // select the pin for the LED
 int waiton = 50;            // wait time between measurements
 int waitoff = 450;            // wait time between measurements
