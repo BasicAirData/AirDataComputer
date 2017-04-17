@@ -126,10 +126,10 @@ void testme()
   //Is Absolute Pressure sensor present and working?(Second I2C bus)
   //Setup of the sensor parameters
   Serial1.println("Absolute pressure measurement");
-  ssc1.setMinRaw(0);
-  ssc1.setMaxRaw(16383);
+  ssc1.setMinRaw(1638);
+  ssc1.setMaxRaw(14745);
   ssc1.setMinPressure(0.0);
-  ssc1.setMaxPressure(0.0689476);
+  ssc1.setMaxPressure(1.6);
   //  update pressure / temperature
   Serial1.print("update()\t");
   Serial1.println(ssc1.update());
