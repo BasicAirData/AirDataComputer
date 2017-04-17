@@ -1,7 +1,7 @@
-/* 
-  ABSPressure.2ADCi2t.ino - Arduino Sketch for testing
- ABSPressure sensor test
-
+/*
+DELTAPressure.ino - Arduino Sketch for testing
+DELTAP Sensor Test
+ 
  Created by G.Capelli and JLJ. 
  BasicAirData Team. 
  
@@ -20,15 +20,16 @@
  */
 
 #include <i2c_t3.h> //Library for second I2C
-#include <SSC1.h>  //Library for sensor on second bus
+#include <SSC.h>  //Library for SSC series sensors
 
-//  create an SSC sensor with I2C address 0x28 on second I2C bus
-SSC1 ssc(0x28, 8);
+//  create an SSC sensor with I2C address 0x28. Differential pressure on first I2C BUS
+SSC ssc(0x28, 8);
 
 void setup()
 {
   Serial.begin(57600);
-  Wire1.begin(); //Second I2C Bus
+  Wire.begin(); // First I2C Bus
+
 }
 
 
@@ -36,12 +37,12 @@ void loop()
 {
   //Is Absolute Pressure sensor present and working?(Second I2C bus)
   //Setup of the sensor parameters
-  Serial.println("Absolute pressure measurement");
+  Serial.println("Differential Pressure measurement");
   ssc.setMinRaw(1638);
 //  ssc.setMaxRaw(16383);
   ssc.setMaxRaw(14745);
-  ssc.setMinPressure(0.0);
-  ssc.setMaxPressure(1.6);
+  ssc.setMinPressure(-0.0689476);
+  ssc.setMaxPressure(0.0689476);
   //  update pressure / temperature
   Serial.print("update()\t");
   Serial.println(ssc.update());
