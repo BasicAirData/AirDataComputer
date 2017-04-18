@@ -108,42 +108,42 @@ void testme()
   Serial1.println("card initialized.");
   //Outside Temperature Sensor
   temperature = TMP36GT_AI_value_to_Celsius(analogRead(TsensorPin)); // read temperature
-  Serial.print("Temperature = ");
-  Serial.print(temperature, 1);             // write temperature to Serial
-  Serial.println(" °C");
+  Serial1.print("Temperature = ");
+  Serial1.print(temperature, 1);             // write temperature to Serial
+  Serial1.println(" °C");
   //Is Differential Pressure sensor present and working? (First I2C bus)
   //Setup of the sensor parameters
-  Serial.println("Differential Pressure measurement");
+  Serial1.println("Differential Pressure measurement");
   ssc.setMinRaw(1638);
   ssc.setMaxRaw(14745);
   ssc.setMinPressure(-0.0689476);
   ssc.setMaxPressure(0.0689476);
   //  update pressure / temperature
-  Serial.print("update()\t");
-  Serial.println(ssc.update());
+  Serial1.print("update()\t");
+  Serial1.println(ssc.update());
   // print pressure
-  Serial.print("pressure()\t");
-  Serial.println(ssc.pressure());
+  Serial1.print("pressure()\t");
+  Serial1.println(ssc.pressure());
   // print temperature
-  Serial.print("temperature()\t");
-  Serial.println(ssc.temperature());
+  Serial1.print("temperature()\t");
+  Serial1.println(ssc.temperature());
   delay(500);
 
   //Is Absolute Pressure sensor present and working?(Second I2C bus)
   Serial.println("Absolute pressure measurement");
-  ssc.setMinRaw(1638);
-  ssc.setMaxRaw(14745);
-  ssc.setMinPressure(0.0);
-  ssc.setMaxPressure(1.6);
+  ssc1.setMinRaw(1638);
+  ssc1.setMaxRaw(14745);
+  ssc1.setMinPressure(0.0);
+  ssc1.setMaxPressure(1.6);
   //  update pressure / temperature
-  Serial.print("update()\t");
-  Serial.println(ssc.update());
+  Serial1.print("update()\t");
+  Serial1.println(ssc1.update());
   // print pressure
-  Serial.print("pressure()\t");
-  Serial.println(ssc.pressure());
+  Serial1.print("pressure()\t");
+  Serial1.println(ssc1.pressure());
   // print temperature
-  Serial.print("temperature()\t");
-  Serial.println(ssc.temperature());
+  Serial1.print("temperature()\t");
+  Serial1.println(ssc1.temperature());
   delay(500);
 }
 double TMP36GT_AI_value_to_Celsius(int AI_value)
