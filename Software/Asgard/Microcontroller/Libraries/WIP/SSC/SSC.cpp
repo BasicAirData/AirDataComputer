@@ -1,12 +1,13 @@
 #include "SSC.h"
 
+
 SSC::SSC(uint8_t address, uint8_t busno)
     : a(address), q(busno), f(0), p(0), t(0), rmin(0), rmax(16383), pmin(0.0), pmax(1.6)
 {
 
     if(q < 10)
     {
-        if(q==0)
+     /*   if(q==0)
         {
             Wire.begin(); // I2C bus 0
         }
@@ -15,8 +16,9 @@ SSC::SSC(uint8_t address, uint8_t busno)
             Wire1.begin(); // I2C bus 1
 
         }
+        */
     }
-
+}
     uint8_t SSC::update()
     {
         uint8_t x, y, s;
@@ -125,12 +127,12 @@ SSC::SSC(uint8_t address, uint8_t busno)
                 return commandReply(stream, update());
 
             //  start
-            case '1':
-                return commandReply(stream, start());
+         //   case '1':
+            //    return commandReply(stream, start());
 
             //  stop
-            case '0':
-                return commandReply(stream, stop());
+        //    case '0':
+          //      return commandReply(stream, stop());
 
             //  get min pressure
             case 'b':
@@ -189,3 +191,4 @@ SSC::SSC(uint8_t address, uint8_t busno)
         }
         return commandReply(stream, 255);
     }
+

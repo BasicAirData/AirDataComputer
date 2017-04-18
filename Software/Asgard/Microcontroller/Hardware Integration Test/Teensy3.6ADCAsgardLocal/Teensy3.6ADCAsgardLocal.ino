@@ -33,8 +33,22 @@ double temperature = 0.0;
 
 void setup()
 {
-  pinMode(TsensorPin, INPUT);                       // and set pins to input.
-  Serial1.begin(9600);// Begin the serial monitor at 9600bps
+ // pinMode(TsensorPin, INPUT);                       // and set pins to input.
+  Serial.begin(57600);
+  Wire.begin();
+  Wire1.begin();
+    while (!Serial) {
+    ; // wait for serial port to connect. Needed for native USB port only
+  }
+  //Setup sensors parameters
+  diffp.setMinRaw(0);
+  diffp.setMaxRaw(16383);
+  diffp.setMinPressure(-6984.760);
+  diffp.setMaxPressure(6984.760);
+  absp.setMinRaw(0);
+  absp.setMaxRaw(16383);
+  absp.setMinPressure(0.0);
+  absp.setMaxPressure(160000.0);
 }
 
 
@@ -49,18 +63,16 @@ void testme()
 
   //Outside Temperature Sensor
   temperature = TMP36GT_AI_value_to_Celsius(analogRead(TsensorPin)); // read temperature
-  Serial.print("Temperature = ");
+  Serial.println("Outside Temperature Measurement");
   Serial.print(temperature, 1);             // write temperature to Serial
   Serial.println(" °C");
   //Is Differential Pressure sensor present and working? (First I2C bus)
   //Setup of the sensor parameters
-  Serial.println("Differential Pressure measurement");
-  diffp.setMinRaw(0);
-  diffp.setMaxRaw(16383);
+  Serial.println("Differential pressure sensor measurements");
+
   //diffp.setMinPressure(-0.0689476);
   //diffp.setMaxPressure(0.0689476);
-  diffp.setMinPressure(-6984.760);
-  diffp.setMaxPressure(6984.760);
+
   //  update pressure / temperature
   Serial.print("update()\t");
   Serial.println(diffp.update());
@@ -69,20 +81,13 @@ void testme()
   Serial.println(diffp.pressure());
     // print raw pressure
   Serial.print("pressure_Raw()\t");
-  Serial.println(diffp.pressure());
+  Serial.println(diffp.pressure_Raw());
   // print temperature
   Serial.print("temperature()\t");
   Serial.println(diffp.temperature());
   delay(500);
-
   //Is Absolute Pressure sensor present and working?(Second I2C bus)
-  Serial.println("Absolute pressure measurement");
- // absp.setMinRaw(1638);
- // absp.setMaxRaw(14745);
-  absp.setMinRaw(0);
-  absp.setMaxRaw(16383);
-  absp.setMinPressure(0.0);
-  absp.setMaxPressure(160000.0);
+  Serial.println("Absolute pressure sensor measurements");
   //  update pressure / temperature
   Serial.print("update()\t");
   Serial.println(absp.update());
@@ -91,7 +96,7 @@ void testme()
   Serial.println(absp.pressure());
    // print raw pressure
   Serial.print("pressure_Raw()\t");
-  Serial.println(absp.pressure());
+  Serial.println(absp.pressure_Raw());
   // print temperature
   Serial.print("temperature()\t");
   Serial.println(absp.temperature());
