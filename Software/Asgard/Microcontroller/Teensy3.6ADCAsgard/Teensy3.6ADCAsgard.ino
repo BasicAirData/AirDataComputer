@@ -1,3 +1,4 @@
+
 /*  Work in progress 18-04-2017
  * Teensy3.6ADCAsgard.ino - Arduino Sketch for Air Data Computer first bootstrap and test
  * Firmware for Teensy 3.6
@@ -17,8 +18,9 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
-#include <SPI.h>
-#include <SD.h> //For Micro SD support
+//#include <SPI.h>
+#include <SD.h>
+#include <SD_t3.h>
 #include <i2c_t3.h> //Library for second I2C
 #include <SSC.h>  //Library for SSC series sensors  <- A new library is needed instead
 #include <SSC1.h>  //Library for sensor on second bus <- A new library is needed instead
@@ -103,7 +105,7 @@ void testme()
   Serial1.print("Checking for SD Card: ");
   if (!SD.begin(chipSelect)) {
     Serial1.println("Card failed, or not present");
-    return;
+    return;  // <- If SD is not found the prog breaks, a little wild. To be modified
   }
   Serial1.println("card initialized.");
   //Outside Temperature Sensor
@@ -133,8 +135,10 @@ void testme()
   Serial.println("Absolute pressure measurement");
   ssc1.setMinRaw(1638);
   ssc1.setMaxRaw(14745);
+ // ssc1.setMinRaw(0);
+ // ssc1.setMaxRaw(16383);
   ssc1.setMinPressure(0.0);
-  ssc1.setMaxPressure(1.6);
+  ssc1.setMaxPressure(160000);
   //  update pressure / temperature
   Serial1.print("update()\t");
   Serial1.println(ssc1.update());
