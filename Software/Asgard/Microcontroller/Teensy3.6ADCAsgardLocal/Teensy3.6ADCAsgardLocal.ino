@@ -20,24 +20,13 @@
 */
 //#include <SPI.h>
 
-#include <i2c_t3.h> //Library for second I2C
-#include <SSC.h>  //Library for SSC series sensors  <- A new library is needed instead
-#include <SSC1.h>  //Library for sensor on second bus <- A new library is needed instead
+#include <i2c_t3.h> //Library for second I2C 
+#include <SSC.h>  //Library for SSC series sensors, support two bus I2C
 
-#define INPUT_SIZE 1024
-#define DELIMITER '\n'      // Message delimiter. It must match with Android class one;
-SSC ssc(0x28, 8);
-//  create an SSC sensor with I2C address 0x28 on second I2C bus
-SSC1 ssc1(0x28, 8);
-const int chipSelect = BUILTIN_SDCARD; //HW pin for micro SD adaptor CS
-
-int counter = 0;
-int value = 0;
-
-char input[INPUT_SIZE + 1];
-char *ch;
-bool endmsg = false;
-
+//  create an SSC sensor with I2C address 0x28 on I2C bus 0
+SSC diffp(0x28, 0);
+//  create an SSC sensor with I2C address 0x28 on I2C bus 1
+SSC absp(0x28, 1);
 int TsensorPin = A0;       // select the input pin for the Temperature sensor
 double temperature = 0.0;
 
@@ -45,17 +34,13 @@ double temperature = 0.0;
 void setup()
 {
   pinMode(TsensorPin, INPUT);                       // and set pins to input.
-  ch = &input[0]; //Var init
   Serial1.begin(9600);// Begin the serial monitor at 9600bps
-
-  Wire.begin(); // First I2C Bus
-  Wire1.begin(); //Second I2C Bus
 }
 
 
 void loop()
 {
-  delay(100);
+ delay(100);
  testme();
 }
 void testme()
@@ -70,38 +55,38 @@ void testme()
   //Is Differential Pressure sensor present and working? (First I2C bus)
   //Setup of the sensor parameters
   Serial.println("Differential Pressure measurement");
-  ssc.setMinRaw(1638);
-  ssc.setMaxRaw(14745);
-  ssc.setMinPressure(-0.0689476);
-  ssc.setMaxPressure(0.0689476);
+  diffp.setMinRaw(1638);
+  diffp.setMaxRaw(14745);
+  diffp.setMinPressure(-0.0689476);
+  diffp.setMaxPressure(0.0689476);
   //  update pressure / temperature
   Serial.print("update()\t");
-  Serial.println(ssc.update());
+  Serial.println(diffp.update());
   // print pressure
   Serial.print("pressure()\t");
-  Serial.println(ssc.pressure());
+  Serial.println(diffp.pressure());
   // print temperature
   Serial.print("temperature()\t");
-  Serial.println(ssc.temperature());
+  Serial.println(diffp.temperature());
   delay(500);
 
   //Is Absolute Pressure sensor present and working?(Second I2C bus)
   Serial.println("Absolute pressure measurement");
-  ssc1.setMinRaw(1638);
-  pippo.setMaxRaw(14745);
- // ssc1.setMinRaw(0);
- // ssc1.setMaxRaw(16383);
-  pippo.setMinPressure(0.0);
-  pippo.setMaxPressure(1.6);
+ // absp.setMinRaw(1638);
+ // absp.setMaxRaw(14745);
+  absp.setMinRaw(0);
+  absp.setMaxRaw(16383);
+  absp.setMinPressure(0.0);
+  absp.setMaxPressure(1.6);
   //  update pressure / temperature
   Serial.print("update()\t");
-  Serial.println(pippo.update());
+  Serial.println(absp.update());
   // print pressure
   Serial.print("pressure()\t");
-  Serial.println(pippo.pressure());
+  Serial.println(absp.pressure());
   // print temperature
   Serial.print("temperature()\t");
-  Serial.println(pippo.temperature());
+  Serial.println(absp.temperature());
   delay(500);
 }
 double TMP36GT_AI_value_to_Celsius(int AI_value)
