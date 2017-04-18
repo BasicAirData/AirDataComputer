@@ -55,10 +55,12 @@ void testme()
   //Is Differential Pressure sensor present and working? (First I2C bus)
   //Setup of the sensor parameters
   Serial.println("Differential Pressure measurement");
-  diffp.setMinRaw(1638);
-  diffp.setMaxRaw(14745);
-  diffp.setMinPressure(-0.0689476);
-  diffp.setMaxPressure(0.0689476);
+  diffp.setMinRaw(0);
+  diffp.setMaxRaw(16383);
+  //diffp.setMinPressure(-0.0689476);
+  //diffp.setMaxPressure(0.0689476);
+  diffp.setMinPressure(-6984.760);
+  diffp.setMaxPressure(6984.760);
   //  update pressure / temperature
   Serial.print("update()\t");
   Serial.println(diffp.update());
@@ -80,7 +82,7 @@ void testme()
   absp.setMinRaw(0);
   absp.setMaxRaw(16383);
   absp.setMinPressure(0.0);
-  absp.setMaxPressure(1.6);
+  absp.setMaxPressure(160000.0);
   //  update pressure / temperature
   Serial.print("update()\t");
   Serial.println(absp.update());
