@@ -1,6 +1,6 @@
 #ifndef HONEYWELL_SSC_H
 #define HONEYWELL_SSC_H
-
+//  Modification by Basic Air Data 2017 
 //  Author: Tomas Van Verrewegen <tomasvanverrewegen@telenet.be>
 //  Version: 0.2
 
