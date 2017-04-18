@@ -65,6 +65,9 @@ void testme()
   // print pressure
   Serial.print("pressure()\t");
   Serial.println(diffp.pressure());
+    // print raw pressure
+  Serial.print("pressure_Raw()\t");
+  Serial.println(diffp.pressure());
   // print temperature
   Serial.print("temperature()\t");
   Serial.println(diffp.temperature());
@@ -83,6 +86,9 @@ void testme()
   Serial.println(absp.update());
   // print pressure
   Serial.print("pressure()\t");
+  Serial.println(absp.pressure());
+   // print raw pressure
+  Serial.print("pressure_Raw()\t");
   Serial.println(absp.pressure());
   // print temperature
   Serial.print("temperature()\t");
