@@ -54,7 +54,7 @@ void setup()
   Serial1.begin(9600);// Begin the serial monitor at 9600 bps over BT module
 #endif
 #ifndef BT_PRESENT
-  Serial.begin(57600);// Begin the serial monitor at 57600 bps over the USB
+  Serial.begin(115200);// Begin the serial monitor at 57600 bps over the USB
 #endif
   Wire.begin(); // I2C Bus 0
   Wire1.begin(); //I2C Bus 1
@@ -70,7 +70,7 @@ void setup()
 }
 void loop()
 {
-  delay(500);
+ // delay(1);
 #ifdef BT_PRESENT
   capcom();
 #endif
@@ -230,7 +230,7 @@ void acquisition()
  //Differential Pressure sensor
   diffp.update();
   dp=diffp.pressure();
-  delay(10);
+ // delay(10);
   //Absolute Pressure 
   absp.update();
   pstatic=absp.pressure();

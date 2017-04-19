@@ -503,14 +503,16 @@ String AirDC::OutputSerial(int mode)
         String s8(_IAS,2);
         String s9(_TAS,2);
         String s10(_c,2);
-        String s11(hour());
-        String s12(minute());
-        String s13(second());
-        String s14(month());
-        String s15(day());
-        String s16(year());
-        String s17(millis());
-        StreamOut="$TEX,"+s1+','+s2+','+s3+','+s4+','+s5+','+s6+','+s7+','+s8+','+s9+','+s10+','+s11+','+s12+','+s13+','+s14+','+s15+','+s16+','+s17;
+        String s11(_h,2);
+        String s12(_Re,2);
+        String s13(hour());
+        String s14(minute());
+        String s15(second());
+        String s16(month());
+        String s17(day());
+        String s18(year());
+        String s19(millis());
+        StreamOut="$TEX,"+s1+','+s2+','+s3+','+s4+','+s5+','+s6+','+s7+','+s8+','+s9+','+s10+','+s11+','+s12+','+s13+','+s14+','+s15+','+s16+','+s17+','+s18+','+s19;
         break;
     }
     case 51: //Output for Temperature Logger Example
