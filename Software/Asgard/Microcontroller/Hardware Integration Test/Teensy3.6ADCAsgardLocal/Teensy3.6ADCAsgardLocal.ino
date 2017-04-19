@@ -1,10 +1,10 @@
 
 /*  Work in progress 18-04-2017
- * Teensy3.6ADCAsgard.ino - Arduino Sketch for Air Data Computer first bootstrap and test
- * Firmware for Teensy 3.6
- *
- * Created by JLJ and G.C.
- * BasicAirData Team.
+   Teensy3.6ADCAsgard.ino - Arduino Sketch for Air Data Computer first bootstrap and test
+   Firmware for Teensy 3.6
+
+   Created by JLJ and G.C.
+   BasicAirData Team.
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -33,11 +33,11 @@ double temperature = 0.0;
 
 void setup()
 {
- // pinMode(TsensorPin, INPUT);                       // and set pins to input.
+  // pinMode(TsensorPin, INPUT);                       // and set pins to input.
   Serial.begin(57600);
   Wire.begin();
   Wire1.begin();
-    while (!Serial) {
+  while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
   }
   //Setup sensors parameters
@@ -54,13 +54,11 @@ void setup()
 
 void loop()
 {
- delay(100);
- testme();
+  delay(100);
+  testme();
 }
 void testme()
 {
-  //  create an SSC sensor with I2C address 0x28. Differential pressure on first I2C BUS
-
   //Outside Temperature Sensor
   temperature = TMP36GT_AI_value_to_Celsius(analogRead(TsensorPin)); // read temperature
   Serial.println("Outside Temperature Measurement");
@@ -79,7 +77,7 @@ void testme()
   // print pressure
   Serial.print("pressure()\t");
   Serial.println(diffp.pressure());
-    // print raw pressure
+  // print raw pressure
   Serial.print("pressure_Raw()\t");
   Serial.println(diffp.pressure_Raw());
   // print temperature
@@ -94,7 +92,7 @@ void testme()
   // print pressure
   Serial.print("pressure()\t");
   Serial.println(absp.pressure());
-   // print raw pressure
+  // print raw pressure
   Serial.print("pressure_Raw()\t");
   Serial.println(absp.pressure_Raw());
   // print temperature
