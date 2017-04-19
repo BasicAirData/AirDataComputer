@@ -2,7 +2,9 @@
 #include "AirDC.h"
 #include "MatrixMath.h"
 #include <math.h>
-#include <Time.h>
+#include <arduino.h>
+#include <TimeLib.h>
+
 AirDC::AirDC(int pid)
 {
 /** AirDC Default
@@ -425,7 +427,7 @@ void AirDC::CalibrationFactor(int mode)
     }
     }
 }
-/** Output formatter
+/* Output formatter
 * @param  Mode 1 Measurements output
 * @param  Mode 2 Air data output
 * @param  Mode 3 Measurements uncertainty output
@@ -448,14 +450,7 @@ String AirDC::OutputSerial(int mode)
         String s5(_AOA, 6);
         String s6(_AOS, 6);
         StreamOut="$TMO,"+s1+','+s2+','+s3+','+s4+','+s5+','+s6;
-//To read string on the other side
-        /*
-          if (Serial.find("$TMO,")) {
-            _p = Serial.parseFloat(); //
-            _T = Serial.parseFloat();//
-            _RH = Serial.parseFloat();//
-            _qc = Serial.parseFloat();//
-        */
+
         break;
     }
     case 2: //Air data output
@@ -496,6 +491,28 @@ String AirDC::OutputSerial(int mode)
         StreamOut="$TAU,"+s1+','+s2+','+s3+','+s4+','+s5+','+s6;
         break;
     }
+      case 50: //Output for Debug purposes
+    {
+        String s1(_Rho, 6);
+        String s2(_TAT, 2);
+        String s3(_TAT-273.15, 2);
+        String s4(_p, 2);
+        String s5(_mu, 6);
+        String s6(_qc,2);
+        String s7(_T,2);
+        String s8(_IAS,2);
+        String s9(_TAS,2);
+        String s10(_c,2);
+        String s11(hour());
+        String s12(minute());
+        String s13(second());
+        String s14(month());
+        String s15(day());
+        String s16(year());
+        String s17(millis());
+        StreamOut="$TEX,"+s1+','+s2+','+s3+','+s4+','+s5+','+s6+','+s7+','+s8+','+s9+','+s10+','+s11+','+s12+','+s13+','+s14+','+s15+','+s16+','+s17;
+        break;
+    }
     case 51: //Output for Temperature Logger Example
     {
         String s1(_Rho, 6);
@@ -517,3 +534,4 @@ String AirDC::OutputSerial(int mode)
     return StreamOut;
     }
 }
+

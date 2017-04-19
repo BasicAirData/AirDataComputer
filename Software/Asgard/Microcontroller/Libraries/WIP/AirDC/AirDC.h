@@ -6,7 +6,9 @@
 
 #ifndef AirDC_h
 #define AirDC_h
-#include "Arduino.h"
+#include <arduino.h>
+#include <TimeLib.h>
+
 class AirDC
 {
 public:
@@ -18,7 +20,7 @@ public:
     void Mach(int mode);
     void OAT(int mode);
     void ISAAltitude(int mode);
-    String OutputSerial(int mode);
+   String OutputSerial(int mode);
 //Correction and Auxiliary
     void PitotCorrection(int mode);
     void Viscosity(int mode);
