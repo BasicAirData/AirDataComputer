@@ -53,12 +53,12 @@ void setup()
   Wire.begin(); // I2C Bus 0
   Wire1.begin(); //I2C Bus 1
     //Setup sensors parameters
-  diffp.setMinRaw(0);
-  diffp.setMaxRaw(16383);
+  diffp.setMinRaw(1638.3);
+  diffp.setMaxRaw(14744.7);
   diffp.setMinPressure(-6984.760);
   diffp.setMaxPressure(6984.760);
-  absp.setMinRaw(0);
-  absp.setMaxRaw(16383);
+  absp.setMinRaw(1638.3);
+  absp.setMaxRaw(14744.7);
   absp.setMinPressure(0.0);
   absp.setMaxPressure(160000.0);
 }
