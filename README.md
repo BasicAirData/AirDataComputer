@@ -1,7 +1,6 @@
 # Air Data Computer
-[Project Tracker](http://www.basicairdata.eu/panorama/asgard-air-data-computer/)
 
-## The release under development is Asgard ADC
+## The release under development is Asgard ADC [->Project Tracker](http://www.basicairdata.eu/panorama/asgard-air-data-computer/)
 
 ## [Check the wiki!](https://github.com/BasicAirData/AirDataComputer/wiki)
 ## [Newsletter](http://eepurl.com/by-8RH)
