@@ -179,7 +179,7 @@ void AirDC::CAS(int mode)
     {
     case 1:
         //Here the calibration table should be lookup.
-        _CAS=_IAS;
+        _CAS=_c*_IAS;
         _uCAS=_uIAS;
         break;
     }
