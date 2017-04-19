@@ -33,6 +33,8 @@ char *ch;
 bool endmsg = false;
 int TsensorPin = A0;       // select the input pin for the Temperature sensor
 double temperature = 0.0;
+double dp=0.0;
+double pstatic=0.0;
 SSC diffp(0x28, 0);
 //  create an SSC sensor with I2C address 0x28 on I2C bus 1
 SSC absp(0x28, 1);
