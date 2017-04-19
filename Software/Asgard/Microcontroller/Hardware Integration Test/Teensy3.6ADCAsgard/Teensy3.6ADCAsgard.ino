@@ -18,13 +18,14 @@
    You should have received a copy of the GNU General Public License
    along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
+//#define BT_PRESENT true;
+
 #include <SD.h>
 #include <SD_t3.h>
 #include <i2c_t3.h> //Library for second I2C 
 #include <SSC.h>  //Library for SSC series sensors, support two bus I2C
 #define INPUT_SIZE 1024
 #define DELIMITER '\n'      // Message delimiter. It must match with Android class one;
-//#define BT_PRESENT true;
 const int chipSelect = BUILTIN_SDCARD; //HW pin for micro SD adaptor CS
 int counter = 0;
 int value = 0;
@@ -44,17 +45,26 @@ void setup()
   pinMode(TsensorPin, INPUT);                       // and set pins to input.
   ch = &input[0]; //Var init
 #ifdef BT_PRESENT
-  Serial1.begin(57600);// Begin the serial monitor at 57600 bps over BT module
+  Serial1.begin(9600);// Begin the serial monitor at 9600 bps over BT module
 #endif
 #ifndef BT_PRESENT
   Serial.begin(57600);// Begin the serial monitor at 57600 bps over the USB
 #endif
   Wire.begin(); // I2C Bus 0
   Wire1.begin(); //I2C Bus 1
+    //Setup sensors parameters
+  diffp.setMinRaw(0);
+  diffp.setMaxRaw(16383);
+  diffp.setMinPressure(-6984.760);
+  diffp.setMaxPressure(6984.760);
+  absp.setMinRaw(0);
+  absp.setMaxRaw(16383);
+  absp.setMinPressure(0.0);
+  absp.setMaxPressure(160000.0);
 }
 void loop()
 {
-  delay(100);
+  delay(500);
 #ifdef BT_PRESENT
   capcom();
 #endif
