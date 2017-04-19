@@ -1,4 +1,4 @@
-/*  Work in progress 19-04-2017
+/* Release 0.1 - 19/04/2017
    Teensy3.6ADCAsgard.ino - Arduino Sketch for Air Data Computer first bootstrap and test
    Firmware for Teensy 3.6.
    Please specify if the BT module is present. If BT is present uncomment the line "#define BT_PRESENT true".
