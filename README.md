@@ -1,4 +1,5 @@
-# Air Data Computer<br>[![Build Status](https://travis-ci.org/BasicAirData/AirDataComputer.svg?branch=master)](https://travis-ci.org/BasicAirData/AirDataComputer)
+# Air Data Computer
+[Project Tracker](http://www.basicairdata.eu/panorama/asgard-air-data-computer/)
 
 ## The release under development is Asgard ADC
 
