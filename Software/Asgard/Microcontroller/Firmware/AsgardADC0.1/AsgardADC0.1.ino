@@ -3,6 +3,8 @@
    AsgardADC0.1.ino - Air Data Computer Firmware
    Firmware for Teensy 3.6 MCU.
    Please specify if the BT module is present. If BT is present uncomment the line "#define BT_PRESENT true".
+   #Define SDSAVE  regulates the use of the SD card
+   #define SENDOUTTOSERIAL regulates the use of the serial report
 
    Created by JLJ and G.C.
    BasicAirData Team.
@@ -21,16 +23,22 @@
 */
 
 //#define BT_PRESENT true;
+#define SDSAVE 1 //If 1 then the data is saved to Secure Digital Card
+#define SENDOUTTOSERIAL 0 //If 1 then the data is saved to Secure Digital Card
+
 #include <AirDC.h>
+#if SDSAVE==1
 #include <SD.h>
+#include <SPI.h>
+#endif
 #include <SD_t3.h>
 #include <i2c_t3.h> //Library for second I2C 
 #include <SSC.h>  //Library for SSC series sensors, support two bus I2C
 #define INPUT_SIZE 1024
 #define DELIMITER '\n'      // Message delimiter. It must match with Android class one;
-
-AirDC AirDataComputer(1);
 const int chipSelect = BUILTIN_SDCARD; //HW pin for micro SD adaptor CS
+AirDC AirDataComputer(1);
+int InitTime=0; //To handle first time opened SD card
 int counter = 0;
 int value = 0;
 char input[INPUT_SIZE + 1];
@@ -48,6 +56,7 @@ boolean sd_present = false;
 double iTAS, ip1TAS, res, iof;
 void setup()
 {
+  InitTime=1; //First run
   pinMode(TsensorPin, INPUT);                       // and set pins to input.
   ch = &input[0]; //Var init
 #ifdef BT_PRESENT
@@ -70,7 +79,7 @@ void setup()
 }
 void loop()
 {
- // delay(1);
+ // delay(10);
 #ifdef BT_PRESENT
   capcom();
 #endif
@@ -81,7 +90,42 @@ void loop()
 #endif
 }
 void sendout(){
-  Serial.println(AirDataComputer.OutputSerial(50)); //Send out formatted data
+  int reportno=50; //Selects the required data
+  #if SENDOUTTOSERIAL==1
+  Serial.println(AirDataComputer.OutputSerial(reportno)); //Send out formatted data
+  #endif
+  #if SDSAVE==1
+  //Saves to SD Card
+  if (InitTime==1){
+    InitTime=0;
+  //Write Header
+  File dataFile = SD.open("datalog.csv", FILE_WRITE);
+  // if the file is available, write to it:
+  if (dataFile) {
+    dataFile.print("Logger File, Basic Air Data Team, JLJ@BasicAirData 2076 ");
+    dataFile.println(String(reportno));
+    dataFile.println("$TEX,Rho[kg/m^3],_TAT[K],_TAT[C],_p[Pa],Viscosity[Pas1e-6],_qc[Pa],_T[°K],_IAS[m/s],_TAS[m/s],_c,_m[m MSL],Re,hour,minute,second,month,day,year,millis");
+    dataFile.close();
+  }
+  // if the file isn't open, pop up an error:
+  else {
+    Serial.println("error opening datalog.csv");
+  }
+  }
+  else {
+  File dataFile = SD.open("datalog.csv", FILE_WRITE);
+  // if the file is available, write to it:
+  if (dataFile) {
+    dataFile.println(AirDataComputer.OutputSerial(reportno));
+    dataFile.close();
+  }
+  // if the file isn't open, pop up an error:
+  else {
+    Serial.println("error opening datalog.csv");
+  }
+  }
+  #endif
+  
 }
 void computation() {
   // put your main code here, to run repeatedly:
