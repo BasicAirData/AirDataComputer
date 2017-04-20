@@ -7,6 +7,7 @@
 */
 #include "CapCom.h"
 #include <stdio.h>
+#include <string.h>
 
 CapCom::CapCom(int pid)
 {
@@ -24,13 +25,32 @@ void CapCom::HandleMessage(AirDC *airdata,char *msg)
 {
 //char tmp[20];
 char *tmp;
+//char cmd[4];
 char del[2]=","; //delimiter
 //first field is the command
 tmp = strtok(msg,del);
-// bla bla
+//It is safe code even if we have a wrong tmp string
+//What if the first field is numeric?
+//It will be possible to make one atoi and the a switch
+
+if (strcmp(tmp,"$HBQ")){ //ID 0 message
 for(tmp=strtok(NULL,del); tmp!=NULL; tmp=strtok(NULL,del))
 {
 }
+}
+if (strcmp(tmp,"$HBA")){ //ID 1 message
+for(tmp=strtok(NULL,del); tmp!=NULL; tmp=strtok(NULL,del))
+{
+}
+}
+//bla bla all the others IDs
+if (strcmp(tmp,"$LGA")){ //ID 19 message
+for(tmp=strtok(NULL,del); tmp!=NULL; tmp=strtok(NULL,del))
+{
+}
+}
+
+
 
 
 /*for(tmp=strtok(msg,del); tmp!=NULL; tmp=strtok(NULL,del))
