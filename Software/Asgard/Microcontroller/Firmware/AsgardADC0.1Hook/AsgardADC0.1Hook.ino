@@ -82,6 +82,14 @@ void setup()
   absp.setMaxPressure(160000.0);
   //Timing
   myTimer.begin(sendout, 1000000);  // 1000000 microseconds, 1 s
+  #if SDSAVE==1
+  if (!SD.begin(chipSelect)) {
+    Serial.println("initialization failed!");
+    return;
+  }
+  Serial.println("initialization done.");
+}
+#endif
 }
 void loop()
 {
@@ -109,7 +117,7 @@ void sendout(){
   File dataFile = SD.open("datalog.csv", FILE_WRITE);
   // if the file is available, write to it:
   if (dataFile) {
-    dataFile.print("Logger File, Basic Air Data Team, JLJ@BasicAirData 2076 ");
+    dataFile.print("Logger File, Basic Air Data Team, JLJ@BasicAirData 2017 ");
     dataFile.println(String(reportno));
     dataFile.println("$TEX,Rho[kg/m^3],_TAT[K],_TAT[C],_p[Pa],Viscosity[Pas1e-6],_qc[Pa],_T[°K],_IAS[m/s],_TAS[m/s],_c,_m[m MSL],Re,hour,minute,second,month,day,year,millis");
     dataFile.close();
