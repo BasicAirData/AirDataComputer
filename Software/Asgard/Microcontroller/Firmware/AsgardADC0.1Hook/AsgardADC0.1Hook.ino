@@ -25,7 +25,6 @@
 //#define BT_PRESENT true;
 #define SDSAVE 1 //If 1 then the data is saved to Secure Digital Card
 #define SENDOUTTOSERIAL 0 //If 1 then the data is saved to Secure Digital Card
-IntervalTimer myTimer;
 
 #include <AirDC.h>
 #if SDSAVE==1
@@ -37,7 +36,10 @@ IntervalTimer myTimer;
 #include <SSC.h>  //Library for SSC series sensors, support two bus I2C
 #define INPUT_SIZE 1024
 #define DELIMITER '\n'      // Message delimiter. It must match with Android class one;
+#if SDSAVE==1
 const int chipSelect = BUILTIN_SDCARD; //HW pin for micro SD adaptor CS
+#endif
+IntervalTimer myTimer;
 AirDC AirDataComputer(1);
 int InitTime=0; //To handle first time opened SD card
 int counter = 0;
@@ -55,9 +57,6 @@ SSC absp(0x28, 1);
 boolean sd_present = false;
 //Accessory variables for Air Data calculations
 double iTAS, ip1TAS, res, iof;
-String toreportout; //String that contain the data to be sent out
-int reportno=50; //Selects the required data format for output
-
 void setup()
 {
   InitTime=1; //First run
@@ -80,34 +79,44 @@ void setup()
   absp.setMaxRaw(14744.7);
   absp.setMinPressure(0.0);
   absp.setMaxPressure(160000.0);
-  //Timing
-  myTimer.begin(sendout, 1000000);  // 1000000 microseconds, 1 s
-  #if SDSAVE==1
+myTimer.begin(sendout, 20000);
+  //Init SDCard
+  Serial.print("Initializing SD card...");
+#if SDSAVE==1
   if (!SD.begin(chipSelect)) {
     Serial.println("initialization failed!");
     return;
   }
   Serial.println("initialization done.");
-}
 #endif
+
 }
+
+
 void loop()
 {
- // delay(10);
+ delay(1);
 #ifdef BT_PRESENT
   capcom();
 #endif
 #ifndef BT_PRESENT
-  acquisition();
 noInterrupts();
+Serial.println("mark"); //Send out formatted data
+Serial.println(millis()); //Send out formatted data
+  acquisition();
+Serial.println(millis()); //Send out formatted data
   computation();
-interrupts();
-//  sendout();
+Serial.println(millis()); //Send out formatted data  
+interrupts(); 
+ // sendout();
 #endif
 }
 void sendout(){
+  Serial.println("sendout"); //Send out formatted data
+  Serial.println(millis()); //Send out formatted data
+  int reportno=50; //Selects the required data
   #if SENDOUTTOSERIAL==1
-  Serial.println(toreportout); //Send out formatted data <- Generation of report data is better out of the ISR, directly after computation
+  Serial.println(AirDataComputer.OutputSerial(reportno)); //Send out formatted data
   #endif
   #if SDSAVE==1
   //Saves to SD Card
@@ -117,7 +126,7 @@ void sendout(){
   File dataFile = SD.open("datalog.csv", FILE_WRITE);
   // if the file is available, write to it:
   if (dataFile) {
-    dataFile.print("Logger File, Basic Air Data Team, JLJ@BasicAirData 2017 ");
+    dataFile.print("Logger File, Basic Air Data Team, JLJ@BasicAirData 2017");
     dataFile.println(String(reportno));
     dataFile.println("$TEX,Rho[kg/m^3],_TAT[K],_TAT[C],_p[Pa],Viscosity[Pas1e-6],_qc[Pa],_T[°K],_IAS[m/s],_TAS[m/s],_c,_m[m MSL],Re,hour,minute,second,month,day,year,millis");
     dataFile.close();
@@ -131,7 +140,7 @@ void sendout(){
   File dataFile = SD.open("datalog.csv", FILE_WRITE);
   // if the file is available, write to it:
   if (dataFile) {
-    dataFile.println(toreportout);
+    dataFile.println(AirDataComputer.OutputSerial(reportno));
     dataFile.close();
   }
   // if the file isn't open, pop up an error:
@@ -161,7 +170,7 @@ void computation() {
 
   //Wild iteration
   iof = 1;
-  while ((res > 0.005) || (iof < 100)) {
+  while ((res > 0.05) || (iof < 10)) {
     AirDataComputer.RhoAir(1);// Calculates the air density
     AirDataComputer.Viscosity(2);// Calculates the dynamic viscosity, Algorithm 2 (UOM Pas1e-6)
     AirDataComputer.CalibrationFactor(2); //Update calibration fator vat at TAS
@@ -185,7 +194,6 @@ void computation() {
   AirDataComputer.ISAAltitude(1);
   AirDataComputer._d=8e-3;
   AirDataComputer.Red(1);
-  toreportout=AirDataComputer.OutputSerial(reportno);
 }
 void capcom()
 {
@@ -230,7 +238,7 @@ void capcom()
   }
 }
 void testme()
-{
+{/*
   //Version with BT card, send the output to serial 1
   //Is SDCard present and working?
   Serial1.print("Checking for SD Card: ");
@@ -282,6 +290,7 @@ void testme()
   Serial1.print("temperature()\t");
   Serial1.println(absp.temperature());
   delay(500);
+*/
 }
 void acquisition()
 {
@@ -302,4 +311,3 @@ double TMP36GT_AI_value_to_Celsius(int AI_value)
   return ((Voltage - 750) / 10) + 25;           // Temperature according to datasheet: 750 mV @ 25 °C
   // 10 mV / °C
 }
-

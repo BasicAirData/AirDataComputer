@@ -23,7 +23,7 @@
 */
 
 //#define BT_PRESENT true;
-#define SDSAVE 1 //If 1 then the data is saved to Secure Digital Card
+#define SDSAVE 0 //If 1 then the data is saved to Secure Digital Card
 #define SENDOUTTOSERIAL 0 //If 1 then the data is saved to Secure Digital Card
 
 #include <AirDC.h>
@@ -36,7 +36,9 @@
 #include <SSC.h>  //Library for SSC series sensors, support two bus I2C
 #define INPUT_SIZE 1024
 #define DELIMITER '\n'      // Message delimiter. It must match with Android class one;
+#if SDSAVE==1
 const int chipSelect = BUILTIN_SDCARD; //HW pin for micro SD adaptor CS
+#endif
 AirDC AirDataComputer(1);
 int InitTime=0; //To handle first time opened SD card
 int counter = 0;
@@ -84,8 +86,9 @@ void setup()
     return;
   }
   Serial.println("initialization done.");
-}
 #endif
+}
+
 
 void loop()
 {
@@ -94,14 +97,14 @@ void loop()
   capcom();
 #endif
 #ifndef BT_PRESENT
-//Serial.println("mark"); //Send out formatted data
-//Serial.println(millis()); //Send out formatted data
+Serial.println("mark"); //Send out formatted data
+Serial.println(millis()); //Send out formatted data
   acquisition();
-//Serial.println(millis()); //Send out formatted data
+Serial.println(millis()); //Send out formatted data
   computation();
-//Serial.println(millis()); //Send out formatted data  
+Serial.println(millis()); //Send out formatted data  
   sendout();
-//Serial.println(millis()); //Send out formatted data
+Serial.println(millis()); //Send out formatted data
 #endif
 }
 void sendout(){
@@ -161,7 +164,7 @@ void computation() {
 
   //Wild iteration
   iof = 1;
-  while ((res > 0.005) || (iof < 100)) {
+  while ((res > 0.05) || (iof < 10)) {
     AirDataComputer.RhoAir(1);// Calculates the air density
     AirDataComputer.Viscosity(2);// Calculates the dynamic viscosity, Algorithm 2 (UOM Pas1e-6)
     AirDataComputer.CalibrationFactor(2); //Update calibration fator vat at TAS
@@ -229,7 +232,7 @@ void capcom()
   }
 }
 void testme()
-{
+{/*
   //Version with BT card, send the output to serial 1
   //Is SDCard present and working?
   Serial1.print("Checking for SD Card: ");
@@ -281,6 +284,7 @@ void testme()
   Serial1.print("temperature()\t");
   Serial1.println(absp.temperature());
   delay(500);
+*/
 }
 void acquisition()
 {
