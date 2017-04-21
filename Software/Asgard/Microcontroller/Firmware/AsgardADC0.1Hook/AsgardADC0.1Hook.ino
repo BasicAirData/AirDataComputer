@@ -23,7 +23,7 @@
 */
 
 //#define BT_PRESENT true;
-#define SDSAVE 1 //If 1 then the data is saved to Secure Digital Card
+#define SDSAVE 0 //If 1 then the data is saved to Secure Digital Card
 #define SENDOUTTOSERIAL 0 //If 1 then the data is saved to Secure Digital Card
 
 #include <AirDC.h>
@@ -65,9 +65,9 @@ void setup()
 #ifdef BT_PRESENT
   Serial1.begin(9600);// Begin the serial monitor at 9600 bps over BT module
 #endif
-#ifndef BT_PRESENT
-  Serial.begin(115200);// Begin the serial monitor at 57600 bps over the USB
-#endif
+//#ifndef BT_PRESENT
+  Serial.begin(57600);// Begin the serial monitor at 57600 bps over the USB
+//#endif
   Wire.begin(); // I2C Bus 0
   Wire1.begin(); //I2C Bus 1
   //Setup sensors parameters
@@ -79,10 +79,10 @@ void setup()
   absp.setMaxRaw(14744.7);
   absp.setMinPressure(0.0);
   absp.setMaxPressure(160000.0);
-myTimer.begin(sendout, 20000);
+//myTimer.begin(sendout, 20000);
   //Init SDCard
-  Serial.print("Initializing SD card...");
 #if SDSAVE==1
+  Serial.print("Initializing SD card...");
   if (!SD.begin(chipSelect)) {
     Serial.println("initialization failed!");
     return;
@@ -96,24 +96,24 @@ myTimer.begin(sendout, 20000);
 void loop()
 {
  delay(1);
-#ifdef BT_PRESENT
+//#ifdef BT_PRESENT
   capcom();
-#endif
+//#endif
 #ifndef BT_PRESENT
 noInterrupts();
-Serial.println("mark"); //Send out formatted data
-Serial.println(millis()); //Send out formatted data
+//Serial.println("mark"); //Send out formatted data
+//Serial.println(millis()); //Send out formatted data
   acquisition();
-Serial.println(millis()); //Send out formatted data
+//Serial.println(millis()); //Send out formatted data
   computation();
-Serial.println(millis()); //Send out formatted data  
+//Serial.println(millis()); //Send out formatted data  
 interrupts(); 
  // sendout();
 #endif
 }
 void sendout(){
-  Serial.println("sendout"); //Send out formatted data
-  Serial.println(millis()); //Send out formatted data
+ // Serial.println("sendout"); //Send out formatted data
+ // Serial.println(millis()); //Send out formatted data
   int reportno=50; //Selects the required data
   #if SENDOUTTOSERIAL==1
   Serial.println(AirDataComputer.OutputSerial(reportno)); //Send out formatted data
@@ -197,10 +197,11 @@ void computation() {
 }
 void capcom()
 {
-  if (Serial1.available()) // If the bluetooth has received any character
+  Serial.println("allora");
+  if (Serial.available()) // If the bluetooth has received any character
   {
-    while (Serial1.available() && (!endmsg)) { // until (end of buffer) or (newline)
-      *ch = Serial1.read();                    // read char from serial
+    while (Serial.available() && (!endmsg)) { // until (end of buffer) or (newline)
+      *ch = Serial.read();                    // read char from serial
       if (*ch == DELIMITER) {
         endmsg = true;                        // found DELIMITER
         *ch = 0;
@@ -225,9 +226,9 @@ void capcom()
         //--------------------------------------------------------------------------
 
         // Answer with a string
-        Serial1.print("$ANS,");
-        Serial1.print(counter);
-        Serial1.write(DELIMITER);
+        Serial.print("$ANS,");
+        Serial.print(counter);
+        Serial.write(DELIMITER);
       }
     }
     if (endmsg) {

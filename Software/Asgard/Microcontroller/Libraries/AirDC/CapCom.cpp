@@ -8,11 +8,13 @@
 #include "CapCom.h"
 #include <stdio.h>
 #include <string.h>
+#define DELIMITER '\n'
+#define INPUT_SIZE 1024
 
 CapCom::CapCom(int pid)
 {
     /** CapCom Default
-constructor*/
+    constructor*/
     //Default parameters values
     _pid = pid;
 }
@@ -21,54 +23,59 @@ constructor*/
 * @param  *msg Pointer to message to process
 * @return Void
  */
-void CapCom::HandleMessage(AirDC *airdata,char *msg)
+void CapCom::HandleMessage(AirDC *airdata)
 {
-//char tmp[20];
-char *tmp;
-//char cmd[4];
-char del[2]=","; //delimiter
-//first field is the command
-tmp = strtok(msg,del);
-//Most used messaged should be put first
+    bool endmsg = false;
+    int counter = 0;
+    int value = 0;
+    char input[INPUT_SIZE + 1];
+    char *ch;
+    ch = &input[0]; //Var init
+    if (Serial.available()) // If the bluetooth has received any character
+    {
+        while (Serial.available() && (!endmsg))   // until (end of buffer) or (newline)
+        {
+            *ch = Serial.read();                    // read char from serial
+            if (*ch == DELIMITER)
+            {
+                endmsg = true;                        // found DELIMITER
+                *ch = 0;
+            }
+            else ++ch;                              // increment index
+        }
 
-if (strcmp(tmp,"$HBQ")){ //ID 0 message
-for(tmp=strtok(NULL,del); tmp!=NULL; tmp=strtok(NULL,del))
-{
-}
-goto outlook;
-}
-if (strcmp(tmp,"$HBA")){ //ID 1 message
-for(tmp=strtok(NULL,del); tmp!=NULL; tmp=strtok(NULL,del))
-{
-}
-goto outlook;
-}
-//bla bla all the others IDs
-if (strcmp(tmp,"$LGA")){ //ID 19 message
-for(tmp=strtok(NULL,del); tmp!=NULL; tmp=strtok(NULL,del))
-{
-}
-goto outlook;
-}
-outlook:
+        if ((endmsg) && (ch != &input[0]))        // end of (non empty) message !!!
+        {
 
 
+            char *command = strtok(input, ",");
 
-/*for(tmp=strtok(msg,del); tmp!=NULL; tmp=strtok(NULL,del))
-{
-}*/
+            if (!strcmp(command, "$STR"))           // Received a command, for example "$STR,1"
+            {
+                command = strtok (NULL, ",");
+                value = atoi(command);                // Read the value after the comma, for example "1". Integer conversion
 
+                // If we receive "$STR,1" the ADC switch to sensor test mode. Starts tests and reports.
+                // if (value == 1) testme();
 
+                counter = counter + value;
+                if (counter > 1000) counter = 0;      // A reset, for the serial gamers :)
+                //--------------------------------------------------------------------------
 
+                // Answer with a string
+                Serial.print("$ANS,");
+                Serial.print(counter);
+                Serial.write(DELIMITER);
+            }
+        }
+        if (endmsg)
+        {
+            endmsg = false;
+            *ch = 0;
+            ch = &input[0];                         // Return to first index, ready for the new message;
+        }
+    }
 
-//To read string on the other side
-        /*
-          if (Serial.find("$TMO,")) {
-            _p = Serial.parseFloat(); //
-            _T = Serial.parseFloat();//
-            _RH = Serial.parseFloat();//
-            _qc = Serial.parseFloat();//
-        */
 }
 
 

@@ -14,7 +14,7 @@ class CapCom
 {
   public:
     CapCom(int pid);
-    void HandleMessage(AirDC *airdata,char *msg);
+    void HandleMessage(AirDC *airdata);
     int _pid;
 };
 #endif

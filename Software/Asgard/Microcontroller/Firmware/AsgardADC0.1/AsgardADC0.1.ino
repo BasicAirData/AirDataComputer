@@ -27,6 +27,7 @@
 #define SENDOUTTOSERIAL 0 //If 1 then the data is saved to Secure Digital Card
 
 #include <AirDC.h>
+#include <CapCom.h>
 #if SDSAVE==1
 #include <SD.h>
 #include <SPI.h>
@@ -34,18 +35,15 @@
 #include <SD_t3.h>
 #include <i2c_t3.h> //Library for second I2C 
 #include <SSC.h>  //Library for SSC series sensors, support two bus I2C
-#define INPUT_SIZE 1024
-#define DELIMITER '\n'      // Message delimiter. It must match with Android class one;
+//#define DELIMITER '\n'      // Message delimiter. It must match with Android class one;
 #if SDSAVE==1
 const int chipSelect = BUILTIN_SDCARD; //HW pin for micro SD adaptor CS
 #endif
 AirDC AirDataComputer(1);
+AirDC *ptrAirDC = &AirDataComputer;
+CapCom CC(1);
 int InitTime=0; //To handle first time opened SD card
-int counter = 0;
-int value = 0;
-char input[INPUT_SIZE + 1];
-char *ch;
-bool endmsg = false;
+
 int TsensorPin = A0;       // select the input pin for the Temperature sensor
 double temperature = 0.0;
 double dp = 0.0;
@@ -60,7 +58,7 @@ void setup()
 {
   InitTime=1; //First run
   pinMode(TsensorPin, INPUT);                       // and set pins to input.
-  ch = &input[0]; //Var init
+  
 #ifdef BT_PRESENT
   Serial1.begin(9600);// Begin the serial monitor at 9600 bps over BT module
 #endif
@@ -92,19 +90,19 @@ void setup()
 
 void loop()
 {
- delay(1);
-#ifdef BT_PRESENT
-  capcom();
-#endif
+ delay(100);
+//#ifdef BT_PRESENT
+  comm();
+//#endif
 #ifndef BT_PRESENT
-Serial.println("mark"); //Send out formatted data
-Serial.println(millis()); //Send out formatted data
+//Serial.println("mark"); //Send out formatted data
+//Serial.println(millis()); //Send out formatted data
   acquisition();
-Serial.println(millis()); //Send out formatted data
+//Serial.println(millis()); //Send out formatted data
   computation();
-Serial.println(millis()); //Send out formatted data  
+//Serial.println(millis()); //Send out formatted data  
   sendout();
-Serial.println(millis()); //Send out formatted data
+//Serial.println(millis()); //Send out formatted data
 #endif
 }
 void sendout(){
@@ -189,102 +187,9 @@ void computation() {
   AirDataComputer._d=8e-3;
   AirDataComputer.Red(1);
 }
-void capcom()
+void comm()
 {
-  if (Serial1.available()) // If the bluetooth has received any character
-  {
-    while (Serial1.available() && (!endmsg)) { // until (end of buffer) or (newline)
-      *ch = Serial1.read();                    // read char from serial
-      if (*ch == DELIMITER) {
-        endmsg = true;                        // found DELIMITER
-        *ch = 0;
-      }
-      else ++ch;                              // increment index
-    }
-
-    if ((endmsg) && (ch != &input[0]))        // end of (non empty) message !!!
-    {
-      char *command = strtok(input, ",");
-
-      if (!strcmp(command, "$STR"))           // Received a command, for example "$STR,1"
-      {
-        command = strtok (NULL, ",");
-        value = atoi(command);                // Read the value after the comma, for example "1". Integer conversion
-
-        // If we receive "$STR,1" the ADC switch to sensor test mode. Starts tests and reports.
-        if (value == 1) testme();
-
-        counter = counter + value;
-        if (counter > 1000) counter = 0;      // A reset, for the serial gamers :)
-        //--------------------------------------------------------------------------
-
-        // Answer with a string
-        Serial1.print("$ANS,");
-        Serial1.print(counter);
-        Serial1.write(DELIMITER);
-      }
-    }
-    if (endmsg) {
-      endmsg = false;
-      *ch = 0;
-      ch = &input[0];                         // Return to first index, ready for the new message;
-    }
-  }
-}
-void testme()
-{/*
-  //Version with BT card, send the output to serial 1
-  //Is SDCard present and working?
-  Serial1.print("Checking for SD Card: ");
-  sd_present = true;
-  if (!SD.begin(chipSelect)) {
-    Serial1.println("Card failed to init, or not present");
-    sd_present = false;
-  }
-  if (sd_present == true) {
-    Serial1.println("card initialized");
-  }
-
-  //Outside Temperature Sensor
-  temperature = TMP36GT_AI_value_to_Celsius(analogRead(TsensorPin)); // read temperature
-  Serial1.println("Outside Temperature Measurement");
-  Serial1.print(temperature, 1);             // write temperature to Serial
-  Serial1.println(" °C");
-  Serial1.print("Raw sensor reading ");
-  Serial1.print(analogRead(TsensorPin) * (3300.0 / 1024), 1);
-  Serial1.println(" mV");
-  //Is Differential Pressure sensor present and working? (First I2C bus)
-  //Setup of the sensor parameters
-  Serial1.println("Differential pressure sensor measurements");
-  //  update pressure / temperature
-  Serial1.print("update()\t");
-  Serial1.println(diffp.update());
-  // print pressure
-  Serial1.print("pressure()\t");
-  Serial1.println(diffp.pressure());
-  // print raw pressure
-  Serial1.print("pressure_Raw()\t");
-  Serial1.println(diffp.pressure_Raw());
-  // print temperature
-  Serial1.print("temperature()\t");
-  Serial1.println(diffp.temperature());
-  delay(500);
-  //Is Absolute Pressure sensor present and working?(Second I2C bus)
-  Serial1.println("Absolute pressure sensor measurements");
-  //  update pressure / temperature
-  Serial1.print("update()\t");
-  Serial1.println(absp.update());
-  // print pressure
-  Serial1.print("pressure()\t");
-  Serial1.println(absp.pressure());
-  // print raw pressure
-  Serial1.print("pressure_Raw()\t");
-  Serial1.println(absp.pressure_Raw());
-  // print temperature
-  Serial1.print("temperature()\t");
-  Serial1.println(absp.temperature());
-  delay(500);
-*/
+  CC.HandleMessage(ptrAirDC);
 }
 void acquisition()
 {
