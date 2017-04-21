@@ -29,27 +29,28 @@ char *tmp;
 char del[2]=","; //delimiter
 //first field is the command
 tmp = strtok(msg,del);
-//It is safe code even if we have a wrong tmp string
-//What if the first field is numeric?
-//It will be possible to make one atoi and the a switch
+//Most used messaged should be put first
 
 if (strcmp(tmp,"$HBQ")){ //ID 0 message
 for(tmp=strtok(NULL,del); tmp!=NULL; tmp=strtok(NULL,del))
 {
 }
+goto outlook;
 }
 if (strcmp(tmp,"$HBA")){ //ID 1 message
 for(tmp=strtok(NULL,del); tmp!=NULL; tmp=strtok(NULL,del))
 {
 }
+goto outlook;
 }
 //bla bla all the others IDs
 if (strcmp(tmp,"$LGA")){ //ID 19 message
 for(tmp=strtok(NULL,del); tmp!=NULL; tmp=strtok(NULL,del))
 {
 }
+goto outlook;
 }
-
+outlook:
 
 
 
