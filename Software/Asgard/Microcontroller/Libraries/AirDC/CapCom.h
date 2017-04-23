@@ -10,11 +10,23 @@
 #ifndef CapCom_h
 #define CapCom_h
 #include <AirDC.h>
+#define PEERDEVICE_SIZE 20
+#define PEERDEVICE_SIZE_VER 10
+#define DELIMITER '\n'
+#define SEPARATOR ","
+#define INPUT_SIZE 1024
+#define ADC_NAME "Asgard"
+#define FIRMWARE_V "1.0b"
+
 class CapCom
 {
   public:
     CapCom(int pid);
     void HandleMessage(AirDC *airdata);
-    int _pid;
+    //General use
+    int _pid;/**< Class ID */
+    //ADC Software Related
+    char _PeerDevice[PEERDEVICE_SIZE];/**< Device actually connected for communication with ADC */
+    char _PeerDeviceVer[PEERDEVICE_SIZE_VER];/**< Device actually connected for communication with ADC */
 };
 #endif

@@ -1,5 +1,5 @@
-/* Work in progress Asgard ADC Firmware 19/04/2017
- * This is not a release. Probably it does not compile.
+/* Work in progress Asgard ADC Firmware 23/04/2017
+ * This is not a release. Probably it does not compile. Working on the comm library.
    AsgardADC0.1.ino - Air Data Computer Firmware
    Firmware for Teensy 3.6 MCU.
    Please specify if the BT module is present. If BT is present uncomment the line "#define BT_PRESENT true".
@@ -77,8 +77,8 @@ void setup()
   absp.setMinPressure(0.0);
   absp.setMaxPressure(160000.0);
   //Init SDCard
-  Serial.print("Initializing SD card...");
 #if SDSAVE==1
+  Serial.print("Initializing SD card...");
   if (!SD.begin(chipSelect)) {
     Serial.println("initialization failed!");
     return;
