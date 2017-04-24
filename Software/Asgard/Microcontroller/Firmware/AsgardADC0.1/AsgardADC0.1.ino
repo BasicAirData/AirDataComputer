@@ -1,5 +1,5 @@
 /* Work in progress Asgard ADC Firmware 23/04/2017
- * This is not a release. Probably it does not compile. Working on the comm library.
+   This is not a release. Probably it does not compile. Working on the comm library.
    AsgardADC0.1.ino - Air Data Computer Firmware
    Firmware for Teensy 3.6 MCU.
    Please specify if the BT module is present. If BT is present uncomment the line "#define BT_PRESENT true".
@@ -42,7 +42,7 @@ const int chipSelect = BUILTIN_SDCARD; //HW pin for micro SD adaptor CS
 AirDC AirDataComputer(1);
 AirDC *ptrAirDC = &AirDataComputer;
 CapCom CC(1);
-int InitTime=0; //To handle first time opened SD card
+int InitTime = 0; //To handle first time opened SD card
 
 int TsensorPin = A0;       // select the input pin for the Temperature sensor
 double temperature = 0.0;
@@ -54,11 +54,16 @@ SSC absp(0x28, 1);
 boolean sd_present = false;
 //Accessory variables for Air Data calculations
 double iTAS, ip1TAS, res, iof;
+//Communication related vars
+bool endmsg = false;
+char input[INPUT_SIZE + 1];
+char outputb[OUTPUT_SIZE + 1];
+char *ch;
 void setup()
 {
-  InitTime=1; //First run
+  InitTime = 1; //First run
   pinMode(TsensorPin, INPUT);                       // and set pins to input.
-  
+
 #ifdef BT_PRESENT
   Serial1.begin(9600);// Begin the serial monitor at 9600 bps over BT module
 #endif
@@ -90,68 +95,68 @@ void setup()
 
 void loop()
 {
- delay(100);
-//#ifdef BT_PRESENT
+  delay(100);
+  //#ifdef BT_PRESENT
   comm();
-//#endif
+  //#endif
 #ifndef BT_PRESENT
-//Serial.println("mark"); //Send out formatted data
-//Serial.println(millis()); //Send out formatted data
+  //Serial.println("mark"); //Send out formatted data
+  //Serial.println(millis()); //Send out formatted data
   acquisition();
-//Serial.println(millis()); //Send out formatted data
+  //Serial.println(millis()); //Send out formatted data
   computation();
-//Serial.println(millis()); //Send out formatted data  
+  //Serial.println(millis()); //Send out formatted data
   sendout();
-//Serial.println(millis()); //Send out formatted data
+  //Serial.println(millis()); //Send out formatted data
 #endif
 }
-void sendout(){
-  int reportno=50; //Selects the required data
-  #if SENDOUTTOSERIAL==1
+void sendout() {
+  int reportno = 50; //Selects the required data
+#if SENDOUTTOSERIAL==1
   Serial.println(AirDataComputer.OutputSerial(reportno)); //Send out formatted data
-  #endif
-  #if SDSAVE==1
+#endif
+#if SDSAVE==1
   //Saves to SD Card
-  if (InitTime==1){
-    InitTime=0;
-  //Write Header
-  File dataFile = SD.open("datalog.csv", FILE_WRITE);
-  // if the file is available, write to it:
-  if (dataFile) {
-    dataFile.print("Logger File, Basic Air Data Team, JLJ@BasicAirData 2017");
-    dataFile.println(String(reportno));
-    dataFile.println("$TEX,Rho[kg/m^3],_TAT[K],_TAT[C],_p[Pa],Viscosity[Pas1e-6],_qc[Pa],_T[°K],_IAS[m/s],_TAS[m/s],_c,_m[m MSL],Re,hour,minute,second,month,day,year,millis");
-    dataFile.close();
+  if (InitTime == 1) {
+    InitTime = 0;
+    //Write Header
+    File dataFile = SD.open("datalog.csv", FILE_WRITE);
+    // if the file is available, write to it:
+    if (dataFile) {
+      dataFile.print("Logger File, Basic Air Data Team, JLJ@BasicAirData 2017");
+      dataFile.println(String(reportno));
+      dataFile.println("$TEX,Rho[kg/m^3],_TAT[K],_TAT[C],_p[Pa],Viscosity[Pas1e-6],_qc[Pa],_T[°K],_IAS[m/s],_TAS[m/s],_c,_m[m MSL],Re,hour,minute,second,month,day,year,millis");
+      dataFile.close();
+    }
+    // if the file isn't open, pop up an error:
+    else {
+      Serial.println("error opening datalog.csv");
+    }
   }
-  // if the file isn't open, pop up an error:
   else {
-    Serial.println("error opening datalog.csv");
+    File dataFile = SD.open("datalog.csv", FILE_WRITE);
+    // if the file is available, write to it:
+    if (dataFile) {
+      dataFile.println(AirDataComputer.OutputSerial(reportno));
+      dataFile.close();
+    }
+    // if the file isn't open, pop up an error:
+    else {
+      Serial.println("error opening datalog.csv");
+    }
   }
-  }
-  else {
-  File dataFile = SD.open("datalog.csv", FILE_WRITE);
-  // if the file is available, write to it:
-  if (dataFile) {
-    dataFile.println(AirDataComputer.OutputSerial(reportno));
-    dataFile.close();
-  }
-  // if the file isn't open, pop up an error:
-  else {
-    Serial.println("error opening datalog.csv");
-  }
-  }
-  #endif
-  
+#endif
+
 }
 void computation() {
   // put your main code here, to run repeatedly:
   AirDataComputer._p = pstatic;
   AirDataComputer._qc = dp;
   AirDataComputer._RH = 0; //No sensor for RH, we are selecting dry air but the library will handle moist air if required
-  AirDataComputer._TAT = temperature+273.15;//Total Air Temperature
+  AirDataComputer._TAT = temperature + 273.15; //Total Air Temperature
   //Computation
   //Init
-  AirDataComputer._T = temperature+273.15;
+  AirDataComputer._T = temperature + 273.15;
   AirDataComputer.RhoAir(1);// Calculates the air density
   AirDataComputer.Viscosity(2);// Calculates the dynamic viscosity, Algorithm 2 (UOM Pas1e-6)
   AirDataComputer.CalibrationFactor(1); //Calibration factor set to 1
@@ -184,41 +189,57 @@ void computation() {
   }
   //Uncorrected ISA Altitude _h
   AirDataComputer.ISAAltitude(1);
-  AirDataComputer._d=8e-3;
+  AirDataComputer._d = 8e-3;
   AirDataComputer.Red(1);
 }
 void comm()
 {
-  /* Maybe it's better to have communication outside the library? In such a way we can handle multiple communication channels, the lib will only do computation tasks.
-    if (Serial.available()) // If the bluetooth has received any character
+noInterrupts();
+#ifndef BT_PRESENT  //Data is routed to USB serial
+  ch = &input[0]; //Var init
+  if (Serial.available()) // If the bluetooth has received any character
+  {
+    while (Serial.available() && (!endmsg))   // until (end of buffer) or (newline)
     {
-        while (Serial.available() && (!endmsg))   // until (end of buffer) or (newline)
-        {
-            *ch = Serial.read();                    // read char from serial
-            if (*ch == DELIMITER)
-            {
-                endmsg = true;                        // found DELIMITER
-                *ch = 0;
-            }
-            else ++ch;                              // increment index
-        }
-
-        if ((endmsg) && (ch != &input[0]))        // end of (non empty) message !!!
-        {
-   */
-  CC.HandleMessage(ptrAirDC);
+      *ch = Serial.read();                    // read char from serial
+      if (*ch == DELIMITER)
+      {
+        endmsg = true;                        // found DELIMITER
+        *ch = 0;
+      }
+      else {
+        ++ch;                              // increment index
+      }
+    }
+  }
+#endif
+  if (!((endmsg) && (ch != &input[0]))) {
+    goto fine;
+  }
+  CC.HandleMessage(ptrAirDC, input, outputb);
+  if (endmsg) {
+    endmsg = false;
+    *ch = 0;
+    ch = &input[0];// Return to first index, ready for the new message;
+  }
+#ifndef BT_PRESENT
+  Serial.println(outputb);
+#endif
+fine:;
+interrupts();
 }
+
 void acquisition()
 {
   //Outside Temperature Sensor
   temperature = TMP36GT_AI_value_to_Celsius(analogRead(TsensorPin)); // read temperature
- //Differential Pressure sensor
+  //Differential Pressure sensor
   diffp.update();
-  dp=diffp.pressure();
- // delay(10);
-  //Absolute Pressure 
+  dp = diffp.pressure();
+  // delay(10);
+  //Absolute Pressure
   absp.update();
-  pstatic=absp.pressure();
+  pstatic = absp.pressure();
 }
 double TMP36GT_AI_value_to_Celsius(int AI_value)
 { // Convert Analog-input value to temperature

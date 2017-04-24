@@ -14,7 +14,8 @@
 #define PEERDEVICE_SIZE_VER 10
 #define DELIMITER '\n'
 #define SEPARATOR ","
-#define INPUT_SIZE 1024
+#define INPUT_SIZE 512
+#define OUTPUT_SIZE 512
 #define ADC_NAME "Asgard"
 #define FIRMWARE_V "1.0b"
 
@@ -22,7 +23,7 @@ class CapCom
 {
   public:
     CapCom(int pid);
-    void HandleMessage(AirDC *airdata);
+    void HandleMessage(AirDC *airdata, char *inmsg, char*outstr);
     //General use
     int _pid;/**< Class ID */
     //ADC Software Related
