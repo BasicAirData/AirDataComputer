@@ -189,6 +189,23 @@ void computation() {
 }
 void comm()
 {
+  /* Maybe it's better to have communication outside the library? In such a way we can handle multiple communication channels, the lib will only do computation tasks.
+    if (Serial.available()) // If the bluetooth has received any character
+    {
+        while (Serial.available() && (!endmsg))   // until (end of buffer) or (newline)
+        {
+            *ch = Serial.read();                    // read char from serial
+            if (*ch == DELIMITER)
+            {
+                endmsg = true;                        // found DELIMITER
+                *ch = 0;
+            }
+            else ++ch;                              // increment index
+        }
+
+        if ((endmsg) && (ch != &input[0]))        // end of (non empty) message !!!
+        {
+   */
   CC.HandleMessage(ptrAirDC);
 }
 void acquisition()
