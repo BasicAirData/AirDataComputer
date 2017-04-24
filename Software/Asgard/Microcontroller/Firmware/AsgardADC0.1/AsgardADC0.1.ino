@@ -59,6 +59,7 @@ bool endmsg = false;
 char input[INPUT_SIZE + 1];
 char outputb[OUTPUT_SIZE + 1];
 char *ch;
+
 void setup()
 {
   InitTime = 1; //First run
