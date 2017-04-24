@@ -95,7 +95,7 @@ void setup()
 
 void loop()
 {
-  delay(100);
+  delay(10);
   //#ifdef BT_PRESENT
   comm();
   //#endif
@@ -164,7 +164,6 @@ void computation() {
   AirDataComputer._TAS = AirDataComputer._IAS;
   AirDataComputer.Mach(1); //Calculates Mach No
   AirDataComputer.OAT(1); //Outside Air Temperature
-
   //Wild iteration
   iof = 1;
   while ((res > 0.05) || (iof < 10)) {
@@ -195,9 +194,9 @@ void computation() {
 void comm()
 {
 noInterrupts();
+ch = &input[0]; //Var init
 #ifndef BT_PRESENT  //Data is routed to USB serial
-  ch = &input[0]; //Var init
-  if (Serial.available()) // If the bluetooth has received any character
+  if (Serial.available()) //
   {
     while (Serial.available() && (!endmsg))   // until (end of buffer) or (newline)
     {
@@ -213,6 +212,24 @@ noInterrupts();
     }
   }
 #endif
+#ifdef BT_PRESENT  //Data is routed to Bluetooth module
+  if (Serial1.available()) // 
+  {
+    while (Serial1.available() && (!endmsg))   // until (end of buffer) or (newline)
+    {
+      *ch = Serial1.read();                    // read char from serial
+      if (*ch == DELIMITER)
+      {
+        endmsg = true;                        // found DELIMITER
+        *ch = 0;
+      }
+      else {
+        ++ch;                              // increment index
+      }
+    }
+  }
+#endif
+
   if (!((endmsg) && (ch != &input[0]))) {
     goto fine;
   }
@@ -222,6 +239,9 @@ noInterrupts();
     *ch = 0;
     ch = &input[0];// Return to first index, ready for the new message;
   }
+#ifdef BT_PRESENT
+  Serial1.println(outputb);
+#endif
 #ifndef BT_PRESENT
   Serial.println(outputb);
 #endif
