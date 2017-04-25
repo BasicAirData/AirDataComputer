@@ -151,6 +151,31 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
         strcat (outstr,workbuff);
         strcat (outstr,uDELIMITER);
     }
+
+//#8 - DTS - DATA_SET
+/*
+    if (!strcmp(command, "$DTS"))
+    {
+        int giro;
+        for (giro=0; giro<8; giro++)
+        {
+            command = strtok (NULL, SEPARATOR);
+            if (strlen(command)<1)
+            {
+                goto furout;
+            }
+            airdata->_status[giro]=command[0];
+            workbuff[2*giro]=command[0];
+            workbuff[2*giro+1]=',';
+        }
+        airdata->_status[giro+1]='\0';
+        workbuff[2*giro-1]='\0';
+        //Reply #7 - STA - STATUS_ASSERT
+        strcpy (outstr,"$STA,");
+        strcat (outstr,workbuff);
+        strcat (outstr,uDELIMITER);
+    }
+*/
 //Service message
     if (!strcmp(command, "$STR"))           // Received a command, for example "$STR,1"
     {
