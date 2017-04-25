@@ -30,7 +30,7 @@ public:
 //General use
     int _pid;/**< Class ID */
 //Hardware Configuration
-    char _status[9]={'N','N','N','N','N','N','N','N','\0'};/**< Hardware Status vector see Communication protocol msg #5*/
+    char _status[10]={'N','N','N','N','N','N','N','N','N','\0'};/**< Hardware Status vector see Communication protocol msg #5*/
 //Geometric
     double _d;/**< Reference length for Re number calculation*/
     double _PitotXcog;/**< Distance along x body axes of the Pitot tip from center of gravity*/

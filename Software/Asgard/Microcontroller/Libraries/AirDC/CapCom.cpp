@@ -8,6 +8,7 @@
 #include "CapCom.h"
 #include <stdio.h>
 #include <string.h>
+#include <SD.h>
 
 CapCom::CapCom(int pid)
 {
@@ -96,7 +97,7 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
     if (!strcmp(command, "$STS"))
     {
         int giro;
-        for (giro=0; giro<8; giro++)
+        for (giro=0; giro<9; giro++)
         {
 
             /*Receive the fields from 1 to 8
@@ -108,6 +109,7 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
             6	Absolute pressure sensor temperature
             7	Real time clock battery
             8	Error/Warning
+            9   BT interface
             */
             command = strtok (NULL, SEPARATOR);
             if (strlen(command)<1)
@@ -129,7 +131,7 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
     if (!strcmp(command, "$STQ"))
     {
         int giro;
-        for (giro=0; giro<8; giro++)
+        for (giro=0; giro<9; giro++)
         {
 
             /*Receive the fields from 1 to 8
@@ -141,6 +143,7 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
             6	Absolute pressure sensor temperature
             7	Real time clock battery
             8	Error/Warning
+            9   BT interface
             */
             workbuff[2*giro]=airdata->_status[giro];
             workbuff[2*giro+1]=',';
@@ -153,11 +156,11 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
     }
 
 //#8 - DTS - DATA_SET
-/*
+
     if (!strcmp(command, "$DTS"))
     {
         int giro;
-        for (giro=0; giro<8; giro++)
+        for (giro=0; giro<7; giro++)
         {
             command = strtok (NULL, SEPARATOR);
             if (strlen(command)<1)
@@ -170,12 +173,60 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
         }
         airdata->_status[giro+1]='\0';
         workbuff[2*giro-1]='\0';
-        //Reply #7 - STA - STATUS_ASSERT
-        strcpy (outstr,"$STA,");
-        strcat (outstr,workbuff);
-        strcat (outstr,uDELIMITER);
+        //Save to the SD the configuration data
+        if(airdata->_status[0]=='1')   //If SD is installed
+        {
+            File dataFile = SD.open("config.csv", FILE_WRITE);
+            // if the file is available, write to it:
+            if (dataFile)
+            {
+                dataFile.println("Config File, Basic Air Data Team, JLJ@BasicAirData 2017");  //Write Status to SD
+                dataFile.print("$STA,");
+                dataFile.println(workbuff);
+                dataFile.close();
+            }
+            // if the file isn't open, pop up an error:
+            else
+            {
+                goto furout;
+            }
+        }
+        //Incomplete : here we need to respond with a #10 message
     }
-*/
+
+
+    //#17 - LGD - LOG_FILE_DELETE
+    if (!strcmp(command, "$LGD"))
+    {
+        SD.remove("datalog.csv");
+    }
+//#18 - LGQ - LOG_FILE_REQ
+    if (!strcmp(command, "$LGQ"))
+    {
+        File dataFile = SD.open("datalog.csv");
+
+        // if the file is available
+        if (dataFile)
+        {
+            while (dataFile.available()) //To be modified?
+            {
+                if (airdata->_status[7]==0){ //Serial port only
+                Serial.write(dataFile.read()); //<- Incomplete : To change that part to handle serial + BT
+                }
+                if (airdata->_status[7]==1){ //BT module installed on Serial1
+                Serial1.write(dataFile.read()); //<- Incomplete : To change that part to handle serial + BT
+                }
+            }
+            dataFile.close();
+            //Serial.println("Dump done!");
+        }
+        // if the file isn't open, pop up an error:
+        else
+        {
+            //Serial.println("error opening datalog.csv");
+            goto furout;
+        }
+    }
 //Service message
     if (!strcmp(command, "$STR"))           // Received a command, for example "$STR,1"
     {

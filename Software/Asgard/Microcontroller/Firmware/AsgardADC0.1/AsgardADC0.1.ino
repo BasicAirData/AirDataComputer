@@ -23,8 +23,8 @@
 */
 
 //#define BT_PRESENT true;
-#define SDSAVE 0 //If 1 then the data is saved to Secure Digital Card
-#define SENDOUTTOSERIAL 0 //If 1 then the data is saved to Secure Digital Card
+#define SDSAVE 1 //If 1 then the data is saved to Secure Digital Card
+#define SENDOUTTOSERIAL 1 //If 1 then the data is sent to serial port /USB
 
 #include <AirDC.h>
 #include <CapCom.h>
@@ -91,6 +91,15 @@ void setup()
   }
   Serial.println("initialization done.");
 #endif
+//Setup the installed HW ADC. 1 present; 0 not installed
+AirDataComputer._status[0]=0; //SD Card
+AirDataComputer._status[1]=1; //Deltap pressure sensor
+AirDataComputer._status[2]=1; //Absolute pressure sensor
+AirDataComputer._status[3]=1; //External temperature sensor
+AirDataComputer._status[4]=1; //Deltap sensor temperature
+AirDataComputer._status[5]=1; //Absolute pressure sensor temperature
+AirDataComputer._status[6]=0; //Real time clock temperature temperature
+AirDataComputer._status[7]=0; //BT Module present on serial1
 }
 
 
@@ -107,7 +116,7 @@ void loop()
   //Serial.println(millis()); //Send out formatted data
   computation();
   //Serial.println(millis()); //Send out formatted data
-  sendout();
+  //sendout();
   //Serial.println(millis()); //Send out formatted data
 #endif
 }
