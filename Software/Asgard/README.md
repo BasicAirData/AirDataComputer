@@ -12,6 +12,6 @@ In [Libraries](https://github.com/BasicAirData/AirDataComputer/tree/master/Softw
 
 In this [folder](https://github.com/BasicAirData/AirDataComputer/tree/master/Software/Asgard/Android) you find the Androids application to interface to the ADC via Bluetooth.
 
-### Documentation
+### Editable Documentation and Diagrams
 
-Collected into [this folder](https://github.com/BasicAirData/AirDataComputer/tree/master/Software/Asgard/Microcontroller/Hardware%20Assembly%20Test/Teensy3.6ADCAsgard)
+Collected into [this folder](https://github.com/BasicAirData/AirDataComputer/tree/master/Software/Asgard/Documentation)
