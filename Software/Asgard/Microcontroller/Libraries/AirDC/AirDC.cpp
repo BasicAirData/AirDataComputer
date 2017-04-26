@@ -427,7 +427,64 @@ void AirDC::CalibrationFactor(int mode)
     }
     }
 }
-/* Output formatter
+/** Order all the data within an array
+* @return Void
+ */
+void AirDC::PrepareData(void) //Refresh and reorder data following #10 message order
+{
+/*
+1  Timestamp see msg #4
+2  Deltap [Sensor units, counts]
+3  Absolute Pressure [Sensor units, counts]
+4  Ext Temperature [Sensor units, counts]
+5  Temp deltap [Sensor units, counts]
+6  Temp absolute [Sensor units, counts]
+7  Deltap [Pa]
+8  Absolute Pressure [Pa]
+9  Ext Temperature [K]
+10 Temp deltap [K]
+11 Temp absolute [K]
+12 IAS [m/s]
+13 TAS [m/s]
+14 Altitude [m]
+15 OAT [K]
+16 Relative time micro millis [s*10^-6]
+17 Uncertainty IAS [m/s]
+18 Uncertainty TAS [m/s]
+19 Uncertainty Altitude [m]
+20 Uncertainty OAT [K]
+21 Air Density [kg/m^3]
+22 Air Viscosity[Pas*10^-6]
+23 Re
+24 c factor
+*/
+//time is updated
+_dataout[0]=(double)(now()); //Time
+_dataout[1]=_qcRaw;//Differential pressure count
+_dataout[2]=_pRaw;//Absolute pressure count
+_dataout[3]=_TRaw;//External Temperature sensor
+_dataout[4]=_TdeltapRaw;//Temperature differential pressure sensor
+_dataout[5]=_TabspRaw;//Temperature absolute pressure  sensor
+_dataout[6]=_qc;//Diffrential pressure Pa
+_dataout[7]=_p;//Static pressure Pa
+_dataout[8]=_TAT;//TAT External Temperature K
+_dataout[9]=_Tdeltap;//Temperature differential pressure sensor K
+_dataout[10]=_Tabsp;//Temperature absolute pressure  sensor K
+_dataout[11]=_IAS;//Indicated Air Speed m/s
+_dataout[12]=_TAS;//True Air Speed m/s
+_dataout[13]=_h;//Barometric altitude m/s
+_dataout[14]=_T;//OAT K
+_dataout[15]=millis();//Internal time rMilliseconds
+_dataout[16]=_uIAS;//Uncertainty IAS [m/s]
+_dataout[17]=_uTAS;//Uncertainty TAS [m/s]
+_dataout[18]=_uh;//Uncertainty Altitude [m]
+_dataout[19]=_uT;//Uncertainty OAT [K]
+_dataout[20]=_Rho;//Uncertainty OAT [K]
+_dataout[21]=_mu ;//Dynamic Air Viscosity[Pas*10^-6]]
+_dataout[22]=_Re ;//Reynolds number
+_dataout[23]=_c ;//c factor
+}
+/** Output formatter
 * @param  Mode 1 Measurements output
 * @param  Mode 2 Air data output
 * @param  Mode 3 Measurements uncertainty output
@@ -536,4 +593,3 @@ String AirDC::OutputSerial(int mode)
     return StreamOut;
     }
 }
-

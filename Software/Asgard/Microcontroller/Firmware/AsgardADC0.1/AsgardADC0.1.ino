@@ -14,7 +14,7 @@
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   but WITHOUT ANY WARRANTY; without even the implie  d warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
@@ -266,9 +266,15 @@ void acquisition()
   //Differential Pressure sensor
   diffp.update();
   dp = diffp.pressure();
+  AirDataComputer._qcRaw =diffp.pressure_Raw();
+  AirDataComputer._Tdeltap =diffp.temperature();
+  AirDataComputer._TdeltapRaw =diffp.temperature_Raw();
   // delay(10);
   //Absolute Pressure
   absp.update();
+  AirDataComputer._pRaw =absp.pressure_Raw();
+  AirDataComputer._Tabsp =absp.temperature();
+  AirDataComputer._TabspRaw =absp.temperature_Raw();
   pstatic = absp.pressure();
 }
 double TMP36GT_AI_value_to_Celsius(int AI_value)

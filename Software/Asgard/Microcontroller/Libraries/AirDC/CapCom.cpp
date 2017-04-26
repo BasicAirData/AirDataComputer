@@ -30,7 +30,7 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
     char uDELIMITER[2];  //Delimiter for output string
     uDELIMITER[0]=DELIMITER;
     uDELIMITER[1]='\0';
-    char workbuff[32]; //General purpose buffer, used for itoa conversion
+    char workbuff[200]; //General purpose buffer, used for itoa conversion
 //Here we trap each message and react
 //This section should be reordered with the most used message first
     char *command = strtok(inmsg,SEPARATOR);
@@ -59,7 +59,7 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
         strcat (outstr,SEPARATOR);
         strcat (outstr,FIRMWARE_V);
         strcat (outstr,uDELIMITER);
-    }
+            }
 //#2 - TMS - TIMESET
     if (!strcmp(command, "$TMS"))
     {
@@ -100,7 +100,7 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
         for (giro=0; giro<9; giro++)
         {
 
-            /*Receive the fields from 1 to 8
+            /*Receive the fields from 1 to 9
             1	SD card present
             2	Deltap sensor
             3	Absolute pressure sensor
@@ -134,7 +134,7 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
         for (giro=0; giro<9; giro++)
         {
 
-            /*Receive the fields from 1 to 8
+            /*Receive the fields from 1 to 9
             1	SD card present
             2	Deltap sensor
             3	Absolute pressure sensor
@@ -191,9 +191,47 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
                 goto furout;
             }
         }
-        //Incomplete : here we need to respond with a #10 message
+        //Modified #10 reply message. No data will be transmitted. It is a plain acknowledge.
+        strcpy (outstr,"$DTA,");
+        strcat (outstr,uDELIMITER);
     }
+//#9 - DTQ - DATA_REQ -> WIP
+    if (!strcmp(command, "$DTQ"))
+    {
+        int giro;
+        for (giro=0; giro<24; giro++)
+        {
+            //Receive the fields from 1 to 24
+            command = strtok (NULL, SEPARATOR);
+            if (strlen(command)<1)
+            {
+                goto furout;
+            }
+            airdata->_datasel[giro]=command[0];
+        }
+        airdata->_datasel[giro+1]='\0';
+//Prepare to send #10 - DTA - DATA_ASSERT message
+        strcpy (outstr,"$DTA");
+        for (giro=0; giro<24; giro++)
+        {
+//Check the fields from 1 to 24
+       strcat (outstr,SEPARATOR); //Add the separator
+            if (airdata->_datasel[giro]=='1')
+            {
+                //sprintf(string, "%d", number);
+                //(airdata->_dataout[giro]);
+//        strcat (outstr,workbuff);
+//         airdata->_datasel[giro]=command[0];
+            }
+            else
+            {
 
+            }
+
+        }
+        // strcat (outstr,workbuff);
+        // strcat (outstr,uDELIMITER);
+    }
 
     //#17 - LGD - LOG_FILE_DELETE
     if (!strcmp(command, "$LGD"))

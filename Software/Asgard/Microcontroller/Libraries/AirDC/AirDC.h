@@ -27,23 +27,36 @@ public:
     void Red(int mode);
 //Calibration factor
     void CalibrationFactor(int mode);
+//Prepare data for output
+    void PrepareData(void);
 //General use
     int _pid;/**< Class ID */
-//Hardware Configuration
-    char _status[10]={'N','N','N','N','N','N','N','N','N','\0'};/**< Hardware Status vector see Communication protocol msg #5*/
+//Hardware configuration
+    char _status[10]={'N','N','N','N','N','N','N','N','N','\0'};/**< Hardware Status vector see communication protocol msg #5*/
+//Message handling configuration
+
+    char _datasel[25]={'0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','\0'};/**< Data selection vector see communication protocol msg #9*/
+    double _dataout[25]; //Double array that contains data ready to be send out
 //Geometric
     double _d;/**< Reference length for Re number calculation*/
     double _PitotXcog;/**< Distance along x body axes of the Pitot tip from center of gravity*/
     double _PitotYcog;/**< Distance along y body axes of the Pitot tip from center of gravity*/
     double _PitotZcog;/**< Distance along z body axes of the Pitot tip from center of gravity*/
 //Measurements
-    double _p;/**< Static Pressure Pa*/
+    double _p;/**< Static pressure Pa*/
+    double _pRaw;/**< Static pressure raw sensor value*/
     double _T;/**< Temperature K*/
+    double _TRaw;/**< Temperature sensor counts*/
     double _RH;/**< Relative Humidity*/
-    double _qc;/**< Differential pressure at Pitot, Impact pressure minus static pressure Pa*/
+    double _qc;/**< Differential pressure at Pitot, sensor counts*/
+    double _qcRaw;/**< Raw sensor value of differential pressure at Pitot, Impact pressure minus static pressure Pa*/
     double _AOA;/**< Angle of Attack, rads*/
     double _AOS;/**< Angle of Sideslip, rads*/
     double _pSeaLevel; /**< Value of pressure at sea level Pa*/
+    double _Tdeltap;/**<Temperature at deltap sensor*/
+    double _Tabsp;/**<Temperature at absolute p sensor*/
+    double _TdeltapRaw;/**<Raw temperature at deltap sensor*/
+    double _TabspRaw;/**<Raw temperature at absolute p sensor*/
 //AirData
     double _Rho;/**< Air Density kg/m^3*/
     double _IAS;/**< Indicated Air speed m/s*/
