@@ -24,6 +24,7 @@ class CapCom
   public:
     CapCom(int pid);
     void HandleMessage(AirDC *airdata, char *inmsg, char*outstr);
+    void DTA(AirDC *airdata, char*outstr);
     //General use
     int _pid;/**< Class ID */
     //ADC Software Related

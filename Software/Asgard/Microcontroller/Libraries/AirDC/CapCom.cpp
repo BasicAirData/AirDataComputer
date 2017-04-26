@@ -209,26 +209,7 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
             }
             airdata->_datasel[giro]=command[0];
         }
-       // airdata->_datasel[giro+1]='\0';
-//Prepare to send #10 - DTA - DATA_ASSERT message
-        strcpy (outstr,"$DTA");
-        for (giro=0; giro<24; giro++)
-        {
-//Check the fields from 1 to 24
-            strcat (outstr,SEPARATOR); //Add the separator
-            if (airdata->_datasel[giro]=='1')
-            {
-                airdata->PrepareData();
-                sprintf(workbuff, "%f", (airdata->_dataout[giro]));
-                strcat (outstr,workbuff);
-
-            }
-            else
-            {
-            }
-
-        }
-        strcat (outstr,uDELIMITER);
+        DTA(airdata,outstr);
     }
 
     //#17 - LGD - LOG_FILE_DELETE
@@ -254,7 +235,6 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
                 }
             }
             dataFile.close();
-            //Serial.println("Dump done!");
         }
         // if the file isn't open, pop up an error:
         else
@@ -283,6 +263,37 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
 furout:
     ;
 }
+/** Generates a message #10 DTA
+* @param  *airdata Pointer  to the AirDataComputer to use to gather data
+* @param  *outstr Pointer to reply message
+* @return Void
+ */
+void CapCom::DTA(AirDC *airdata, char*outstr)
+{
+    char uDELIMITER[2];  //Delimiter for output string
+    uDELIMITER[0]=DELIMITER;
+    uDELIMITER[1]='\0';
+    char workbuff[200]; //General purpose buffer, used for itoa conversion
+    int giro;
+//Prepare to send #10 - DTA - DATA_ASSERT message
 
+        strcpy (outstr,"$DTA");
+        for (giro=0; giro<24; giro++)
+        {
+//Check the fields from 1 to 24
+            strcat (outstr,SEPARATOR); //Add the separator
+            if (airdata->_datasel[giro]=='1')
+            {
+                airdata->PrepareData();
+                sprintf(workbuff, "%f", (airdata->_dataout[giro]));
+                strcat (outstr,workbuff);
+
+            }
+            else
+            {
+            }
+        }
+        strcat (outstr,uDELIMITER);
+}
 
 
