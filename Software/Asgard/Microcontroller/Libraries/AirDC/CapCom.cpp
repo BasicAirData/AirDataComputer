@@ -195,7 +195,7 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
         strcpy (outstr,"$DTA,");
         strcat (outstr,uDELIMITER);
     }
-//#9 - DTQ - DATA_REQ -> WIP
+    //#9 - DTQ - DATA_REQ -> WIP
     if (!strcmp(command, "$DTQ"))
     {
         int giro;
@@ -209,28 +209,26 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
             }
             airdata->_datasel[giro]=command[0];
         }
-        airdata->_datasel[giro+1]='\0';
+       // airdata->_datasel[giro+1]='\0';
 //Prepare to send #10 - DTA - DATA_ASSERT message
         strcpy (outstr,"$DTA");
         for (giro=0; giro<24; giro++)
         {
 //Check the fields from 1 to 24
-       strcat (outstr,SEPARATOR); //Add the separator
+            strcat (outstr,SEPARATOR); //Add the separator
             if (airdata->_datasel[giro]=='1')
             {
-                //sprintf(string, "%d", number);
-                //(airdata->_dataout[giro]);
-//        strcat (outstr,workbuff);
-//         airdata->_datasel[giro]=command[0];
+                airdata->PrepareData();
+                sprintf(workbuff, "%f", (airdata->_dataout[giro]));
+                strcat (outstr,workbuff);
+
             }
             else
             {
-
             }
 
         }
-        // strcat (outstr,workbuff);
-        // strcat (outstr,uDELIMITER);
+        strcat (outstr,uDELIMITER);
     }
 
     //#17 - LGD - LOG_FILE_DELETE

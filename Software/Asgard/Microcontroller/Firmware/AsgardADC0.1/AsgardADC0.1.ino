@@ -1,5 +1,5 @@
-/* Work in progress Asgard ADC Firmware 23/04/2017
-   This is not a release. Probably it does not compile. Working on the comm library.
+/* Work in progress Asgard ADC Firmware 26/04/2017
+   This is not a release. It works but sometimes may not compile or misbehave.
    AsgardADC0.1.ino - Air Data Computer Firmware
    Firmware for Teensy 3.6 MCU.
    Please specify if the BT module is present. If BT is present uncomment the line "#define BT_PRESENT true".
@@ -23,8 +23,8 @@
 */
 
 //#define BT_PRESENT true;
-#define SDSAVE 1 //If 1 then the data is saved to Secure Digital Card
-#define SENDOUTTOSERIAL 1 //If 1 then the data is sent to serial port /USB
+#define SDSAVE 0 //If 1 then the data is saved to Secure Digital Card
+#define SENDOUTTOSERIAL 0 //If 1 then the data is sent to serial port /USB
 
 #include <AirDC.h>
 #include <CapCom.h>
