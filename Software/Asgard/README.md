@@ -1,4 +1,4 @@
-## Asgard
+## Asgard Air Data Computer
 [Check the Wiki](https://github.com/BasicAirData/AirDataComputer/wiki)
 
 ### Microcontroller Teensy 3.6
