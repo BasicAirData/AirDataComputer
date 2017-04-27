@@ -1,8 +1,8 @@
 /**
  * CapCom.h - Library for Basic Air Data Communications
- * Created by J. Larragueta, December 3, 2015.
+ * Created by J.L.J., December 3, 2015.
  * Under renew to fit the new requirements 18-04-2017
- * Created by J. Larragueta, December 3, 2015.
+ * Created by J.L.J., December 3, 2015.
  * https://github.com/BasicAirData/AirDataComputer/wiki/Communication
  * http://www.basicairdata.eu/
 */
@@ -27,6 +27,8 @@ class CapCom
     void DTA(AirDC *airdata, char*outstr);
     //General use
     int _pid;/**< Class ID */
+    int _DataFrequency;/**< Current sample rate for the communications */
+    int _ReqPeriod; /**< Required sample rate for the communications */
     //ADC Software Related
     char _PeerDevice[PEERDEVICE_SIZE];/**< Device actually connected for communication with ADC */
     char _PeerDeviceVer[PEERDEVICE_SIZE_VER];/**< Device actually connected for communication with ADC */

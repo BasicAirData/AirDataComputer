@@ -62,6 +62,7 @@ char *ch;
 // Create an IntervalTimer object for acquisition time base
 IntervalTimer TimeBaseDefault;
 IntervalTimer TimeBase;
+int AcqTime = 500000; //Default time interval between two #10 recurrent messages 
 
 void setup()
 {
@@ -94,7 +95,7 @@ void setup()
   }
   Serial.println("initialization done.");
 #endif
-  //Deafult configuratuin for ADC HW. 1 present; 0 not installed
+  //Deafult configuration for ADC Hardware. 1 present; 0 not installed
   AirDataComputer._status[0] = 0; //SD Card
   AirDataComputer._status[1] = 1; //Deltap pressure sensor
   AirDataComputer._status[2] = 1; //Absolute pressure sensor
@@ -103,7 +104,8 @@ void setup()
   AirDataComputer._status[5] = 1; //Absolute pressure sensor temperature
   AirDataComputer._status[6] = 0; //Real time clock temperature temperature
   AirDataComputer._status[7] = 0; //BT Module present on serial1
-  TimeBaseDefault.begin(sendout, 500000); //Hook an interrupt to sendout routine, default value if not initialized
+  //Recursive transmission interval
+  TimeBaseDefault.begin(sendout, AcqTime); //Hook an interrupt to sendout routine with defaul interval value
   InitTime = 1; //First run
 }
 
@@ -112,11 +114,6 @@ void loop()
 {
   delay(1);
   noInterrupts();
-  /*if (InitTime==1){
-    TimeBaseDefault.end();
-    TimeBaseDefault.begin(sendout, 5000000); //Hook an  interrupt to sendout routine
-    InitTime=0;
-    }*/
   comm();
   acquisition();
   computation();
@@ -254,6 +251,12 @@ void comm()
     goto fine;
   }
   CC.HandleMessage(ptrAirDC, input, outputb);
+  //Update to the required communication sample rate
+  if (AcqTime != CC._ReqPeriod) {
+    TimeBaseDefault.end();
+    TimeBaseDefault.begin(sendout, CC._ReqPeriod);
+    AcqTime = CC._ReqPeriod;
+  }
   if (endmsg) {
     endmsg = false;
     *ch = 0;

@@ -287,13 +287,7 @@ while ((abs(erralt)>(0.01)) || (i==0))
     f=_p-_pSeaLevel*pow((1-0.000022557695644629534*t),(5.255786239252914));
     fdot=_pSeaLevel*0.00011855842635829929*pow((1-0.000022557695644629534*t),(4.255786239252914));
     t1=t0-f/fdot;
-/*    Serial.print("Iteration:");
-    Serial.println(i);
-    Serial.print("Current calculated altitude:");
-    Serial.println(t1);*/
     erralt=t1-t0;
-    /*Serial.print("Altitude error:");
-    Serial.println(erralt);*/
     t0=t1;
     i=i+1;
     }

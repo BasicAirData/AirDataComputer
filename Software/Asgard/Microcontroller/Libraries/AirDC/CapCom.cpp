@@ -1,7 +1,7 @@
 /**
  * CapCom.cpp - Library for Basic Air Data Communications
  * Under renew to fit the new requirements 18-04-2017
- * Created by J. Larragueta, December 3, 2015.
+ * Created by J.L.J., December 3, 2015.
  * https://github.com/BasicAirData/AirDataComputer/wiki/Communication
  * http://www.basicairdata.eu/
 */
@@ -16,6 +16,7 @@ CapCom::CapCom(int pid)
     constructor*/
     //Default parameters values
     _pid = pid;
+    _DataFrequency=1; //One Hertz of default report sample rate
 }
 /** Handles the message to the ADC
 * @param  *airdata Pointer  to the AirDataComputer to use to gather data
@@ -59,7 +60,7 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
         strcat (outstr,SEPARATOR);
         strcat (outstr,FIRMWARE_V);
         strcat (outstr,uDELIMITER);
-            }
+    }
 //#2 - TMS - TIMESET
     if (!strcmp(command, "$TMS"))
     {
@@ -195,7 +196,7 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
         strcpy (outstr,"$DTA,");
         strcat (outstr,uDELIMITER);
     }
-    //#9 - DTQ - DATA_REQ -> WIP
+    //#9 - DTQ - DATA_REQ
     if (!strcmp(command, "$DTQ"))
     {
         int giro;
@@ -212,6 +213,45 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
         DTA(airdata,outstr);
     }
 
+//#14 - DFS - DATA_FREQ_SET
+    if (!strcmp(command, "$DFS"))
+    {
+//Receive the first field(description)
+        command = strtok (NULL, SEPARATOR);
+        if (strlen(command)<1)
+        {
+            goto furout;
+        }
+        //Receive the second field(frequency)
+        command = strtok (NULL, SEPARATOR);
+        if (strlen(command)<1)
+        {
+            goto furout;
+        }
+        _DataFrequency=atoi(command); //Hz
+        _ReqPeriod=(int)(floor(1/_DataFrequency*1000000));
+        itoa(_ReqPeriod,workbuff,10);
+        //Reply #16 -DFA - DATA_FREQ_ASSERT
+        strcpy (outstr,"$DFA,");
+        strcat (outstr,workbuff);
+        strcat (outstr,uDELIMITER);
+    }
+//#15 - DFQ - DATA_FREQ_REQ
+    if (!strcmp(command, "$DFQ"))
+    {
+//Receive the first field(description)
+        command = strtok (NULL, SEPARATOR);
+        if (strlen(command)<1)
+        {
+            goto furout;
+        }
+        _ReqPeriod=(int)(floor(1/_DataFrequency*1000000));
+        itoa(_ReqPeriod,workbuff,10);
+        //Reply #16 -DFA - DATA_FREQ_ASSERT
+        strcpy (outstr,"$DFA,");
+        strcat (outstr,workbuff);
+        strcat (outstr,uDELIMITER);
+    }
     //#17 - LGD - LOG_FILE_DELETE
     if (!strcmp(command, "$LGD"))
     {
@@ -227,11 +267,13 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
         {
             while (dataFile.available()) //To be modified?
             {
-                if (airdata->_status[7]==0){ //Serial port only
-                Serial.write(dataFile.read()); //<- Incomplete : To change that part to handle serial + BT
+                if (airdata->_status[7]==0)  //Serial port only
+                {
+                    Serial.write(dataFile.read()); //<- Incomplete : To change that part to handle serial + BT
                 }
-                if (airdata->_status[7]==1){ //BT module installed on Serial1
-                Serial1.write(dataFile.read()); //<- Incomplete : To change that part to handle serial + BT
+                if (airdata->_status[7]==1)  //BT module installed on Serial1
+                {
+                    Serial1.write(dataFile.read()); //<- Incomplete : To change that part to handle serial + BT
                 }
             }
             dataFile.close();
@@ -277,23 +319,23 @@ void CapCom::DTA(AirDC *airdata, char*outstr)
     int giro;
 //Prepare to send #10 - DTA - DATA_ASSERT message
 
-        strcpy (outstr,"$DTA");
-        for (giro=0; giro<24; giro++)
-        {
+    strcpy (outstr,"$DTA");
+    for (giro=0; giro<24; giro++)
+    {
 //Check the fields from 1 to 24
-            strcat (outstr,SEPARATOR); //Add the separator
-            if (airdata->_datasel[giro]=='1')
-            {
-                airdata->PrepareData();
-                sprintf(workbuff, "%f", (airdata->_dataout[giro]));
-                strcat (outstr,workbuff);
+        strcat (outstr,SEPARATOR); //Add the separator
+        if (airdata->_datasel[giro]=='1')
+        {
+            airdata->PrepareData();
+            sprintf(workbuff, "%f", (airdata->_dataout[giro]));
+            strcat (outstr,workbuff);
 
-            }
-            else
-            {
-            }
         }
-        strcat (outstr,uDELIMITER);
+        else
+        {
+        }
+    }
+    strcat (outstr,uDELIMITER);
 }
 
 
