@@ -1,5 +1,5 @@
-/* Work in progress Asgard ADC Firmware 26/04/2017
-   This is not a release. It works but sometimes may not compile or misbehave.
+/* Work in progress Asgard ADC Firmware Relase 0.1 28/04/2017
+   This is a preliminary release, it should compile.
    AsgardADC0.1.ino - Air Data Computer Firmware
    Firmware for Teensy 3.6 MCU.
    Please specify if the BT module is present. If BT is present uncomment the line "#define BT_PRESENT true".
@@ -24,7 +24,7 @@
 
 //#define BT_PRESENT true;
 #define SDSAVE 0 //If 1 then the data is saved to Secure Digital Card
-#define SENDOUTTOSERIAL 0 //If 1 then the data is sent to serial port /USB
+#define SENDOUTTOSERIAL 1 //If 1 then the data is sent to serial port /USB
 
 #include <AirDC.h>
 #include <CapCom.h>
@@ -59,6 +59,10 @@ bool endmsg = false;
 char input[INPUT_SIZE + 1];
 char outputb[OUTPUT_SIZE + 1];
 char *ch;
+// Create an IntervalTimer object for acquisition time base
+IntervalTimer TimeBaseDefault;
+IntervalTimer TimeBase;
+int AcqTime = 500000; //Default time interval between two #10 recurrent messages 
 
 void setup()
 {
@@ -91,31 +95,44 @@ void setup()
   }
   Serial.println("initialization done.");
 #endif
-//Setup the installed HW ADC. 1 present; 0 not installed
-AirDataComputer._status[0]=0; //SD Card
-AirDataComputer._status[1]=1; //Deltap pressure sensor
-AirDataComputer._status[2]=1; //Absolute pressure sensor
-AirDataComputer._status[3]=1; //External temperature sensor
-AirDataComputer._status[4]=1; //Deltap sensor temperature
-AirDataComputer._status[5]=1; //Absolute pressure sensor temperature
-AirDataComputer._status[6]=0; //Real time clock temperature temperature
-AirDataComputer._status[7]=0; //BT Module present on serial1
+  //Deafult configuration for ADC Hardware. 1 present; 0 not installed
+  AirDataComputer._status[0] = 0; //SD Card
+  AirDataComputer._status[1] = 1; //Deltap pressure sensor
+  AirDataComputer._status[2] = 1; //Absolute pressure sensor
+  AirDataComputer._status[3] = 1; //External temperature sensor
+  AirDataComputer._status[4] = 1; //Deltap sensor temperature
+  AirDataComputer._status[5] = 1; //Absolute pressure sensor temperature
+  AirDataComputer._status[6] = 0; //Real time clock temperature temperature
+  AirDataComputer._status[7] = 0; //BT Module present on serial1
+  //Recursive transmission interval
+  TimeBaseDefault.begin(sendout, AcqTime); //Hook an interrupt to sendout routine with defaul interval value
+  CC._ReqPeriod=AcqTime;
+  InitTime = 1; //First run
 }
 
 
 void loop()
 {
-  delay(10);
+  delay(1);
+  noInterrupts();
   comm();
   acquisition();
   computation();
-#endif
+  interrupts();
 }
 void sendout() {
-  int reportno = 50; //Selects the required data
-#if SENDOUTTOSERIAL==1
-  Serial.println(AirDataComputer.OutputSerial(reportno)); //Send out formatted data
+  //Periodically send out data
+  noInterrupts();
+  //Send out periodic data
+  CC.DTA(ptrAirDC, outputb);
+#if SENDOUTTOSERIAL==1 //Output string sent through Serial/USB
+  Serial.print(outputb); //Send out formatted data
 #endif
+#ifdef BT_PRESENT //Output string sent through Bluetooth
+  Serial1.print(outputb); //Send out formatted data
+#endif
+  interrupts();
+
 #if SDSAVE==1
   //Saves to SD Card
   if (InitTime == 1) {
@@ -194,8 +211,8 @@ void computation() {
 }
 void comm()
 {
-noInterrupts();
-ch = &input[0]; //Var init
+  noInterrupts();
+  ch = &input[0]; //Var init
 #ifndef BT_PRESENT  //Data is routed to USB serial
   if (Serial.available()) //
   {
@@ -214,7 +231,7 @@ ch = &input[0]; //Var init
   }
 #endif
 #ifdef BT_PRESENT  //Data is routed to Bluetooth module
-  if (Serial1.available()) // 
+  if (Serial1.available()) //
   {
     while (Serial1.available() && (!endmsg))   // until (end of buffer) or (newline)
     {
@@ -235,6 +252,12 @@ ch = &input[0]; //Var init
     goto fine;
   }
   CC.HandleMessage(ptrAirDC, input, outputb);
+  //Update to the required communication sample rate
+  if (AcqTime != CC._ReqPeriod) {
+    TimeBaseDefault.end();
+    TimeBaseDefault.begin(sendout, CC._ReqPeriod);
+    AcqTime = CC._ReqPeriod;
+  }
   if (endmsg) {
     endmsg = false;
     *ch = 0;
@@ -247,7 +270,7 @@ ch = &input[0]; //Var init
   Serial.println(outputb);
 #endif
 fine:;
-interrupts();
+  interrupts();
 }
 
 void acquisition()
@@ -257,15 +280,15 @@ void acquisition()
   //Differential Pressure sensor
   diffp.update();
   dp = diffp.pressure();
-  AirDataComputer._qcRaw =diffp.pressure_Raw();
-  AirDataComputer._Tdeltap =diffp.temperature();
-  AirDataComputer._TdeltapRaw =diffp.temperature_Raw();
+  AirDataComputer._qcRaw = diffp.pressure_Raw();
+  AirDataComputer._Tdeltap = diffp.temperature();
+  AirDataComputer._TdeltapRaw = diffp.temperature_Raw();
   // delay(10);
   //Absolute Pressure
   absp.update();
-  AirDataComputer._pRaw =absp.pressure_Raw();
-  AirDataComputer._Tabsp =absp.temperature();
-  AirDataComputer._TabspRaw =absp.temperature_Raw();
+  AirDataComputer._pRaw = absp.pressure_Raw();
+  AirDataComputer._Tabsp = absp.temperature();
+  AirDataComputer._TabspRaw = absp.temperature_Raw();
   pstatic = absp.pressure();
 }
 double TMP36GT_AI_value_to_Celsius(int AI_value)
