@@ -216,41 +216,27 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
 //#14 - DFS - DATA_FREQ_SET
     if (!strcmp(command, "$DFS"))
     {
-//Receive the first field(description)
-        command = strtok (NULL, SEPARATOR);
         if (strlen(command)<1)
         {
             goto furout;
         }
-        //Receive the second field(frequency)
         command = strtok (NULL, SEPARATOR);
-        if (strlen(command)<1)
-        {
-            goto furout;
-        }
-        _DataFrequency=atoi(command); //Hz
-        _ReqPeriod=(int)(floor(1/_DataFrequency*1000000));
-        itoa(_ReqPeriod,workbuff,10);
+        _DataFrequency = atoi(command);                // Read the value after the comma, for example "1". Integer conversion
+        _ReqPeriod=(int)(1/(float)(_DataFrequency)*100000.0);
         //Reply #16 -DFA - DATA_FREQ_ASSERT
         strcpy (outstr,"$DFA,");
+        itoa(_ReqPeriod,workbuff,10);
         strcat (outstr,workbuff);
-        strcat (outstr,uDELIMITER);
+   //     strcat (outstr,uDELIMITER);
     }
 //#15 - DFQ - DATA_FREQ_REQ
     if (!strcmp(command, "$DFQ"))
     {
-//Receive the first field(description)
-        command = strtok (NULL, SEPARATOR);
-        if (strlen(command)<1)
-        {
-            goto furout;
-        }
-        _ReqPeriod=(int)(floor(1/_DataFrequency*1000000));
-        itoa(_ReqPeriod,workbuff,10);
         //Reply #16 -DFA - DATA_FREQ_ASSERT
         strcpy (outstr,"$DFA,");
+        itoa(_ReqPeriod,workbuff,10);
         strcat (outstr,workbuff);
-        strcat (outstr,uDELIMITER);
+       // strcat (outstr,uDELIMITER);
     }
     //#17 - LGD - LOG_FILE_DELETE
     if (!strcmp(command, "$LGD"))

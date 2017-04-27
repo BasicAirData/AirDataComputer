@@ -106,6 +106,7 @@ void setup()
   AirDataComputer._status[7] = 0; //BT Module present on serial1
   //Recursive transmission interval
   TimeBaseDefault.begin(sendout, AcqTime); //Hook an interrupt to sendout routine with defaul interval value
+  CC._ReqPeriod=AcqTime;
   InitTime = 1; //First run
 }
 
