@@ -1,13 +1,11 @@
 /* Work in progress Asgard ADC Firmware Relase 0.1 28/04/2017
    This is a preliminary release, it should compile.
    AsgardADC0.1.ino - Air Data Computer Firmware
-   Firmware for Teensy 3.6 MCU.
-   Please specify if the BT module is present. If BT is present uncomment the line "#define BT_PRESENT true".
-   #Define SDSAVE  regulates the use of the SD card
-   #define SENDOUTTOSERIAL regulates the use of the serial report
+   Firmware for Teensy 3.6 MCU
 
    Created by JLJ and G.C.
    BasicAirData Team.
+
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
@@ -21,24 +19,15 @@
    You should have received a copy of the GNU General Public License
    along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
-
-//#define BT_PRESENT true;
-#define SDSAVE 0 //If 1 then the data is saved to Secure Digital Card
-#define SENDOUTTOSERIAL 1 //If 1 then the data is sent to serial port /USB
-
 #include <AirDC.h>
 #include <CapCom.h>
-#if SDSAVE==1
 #include <SD.h>
 #include <SPI.h>
-#endif
 #include <SD_t3.h>
 #include <i2c_t3.h> //Library for second I2C 
 #include <SSC.h>  //Library for SSC series sensors, support two bus I2C
 //#define DELIMITER '\n'      // Message delimiter. It must match with Android class one;
-#if SDSAVE==1
 const int chipSelect = BUILTIN_SDCARD; //HW pin for micro SD adaptor CS
-#endif
 AirDC AirDataComputer(1);
 AirDC *ptrAirDC = &AirDataComputer;
 CapCom CC(1);
@@ -49,8 +38,7 @@ double temperature = 0.0;
 double dp = 0.0;
 double pstatic = 0.0;
 SSC diffp(0x28, 0);
-//  create an SSC sensor with I2C address 0x28 on I2C bus 1
-SSC absp(0x28, 1);
+SSC absp(0x28, 1);//  create an SSC sensor with I2C address 0x28 on I2C bus 1
 boolean sd_present = false;
 //Accessory variables for Air Data calculations
 double iTAS, ip1TAS, res, iof;
@@ -62,19 +50,27 @@ char *ch;
 // Create an IntervalTimer object for acquisition time base
 IntervalTimer TimeBaseDefault;
 IntervalTimer TimeBase;
-int AcqTime = 500000; //Default time interval between two #10 recurrent messages 
-
+int AcqTime = 500000; //Default time interval between two #10 recurrent messages
 void setup()
 {
+  //Deafult configuration for ADC Hardware. 1 present; 0 not installed
+  AirDataComputer._status[0] = 0; //SD Card
+  AirDataComputer._status[1] = 1; //Deltap pressure sensor
+  AirDataComputer._status[2] = 1; //Absolute pressure sensor
+  AirDataComputer._status[3] = 1; //External temperature sensor
+  AirDataComputer._status[4] = 1; //Deltap sensor temperature
+  AirDataComputer._status[5] = 1; //Absolute pressure sensor temperature
+  AirDataComputer._status[6] = 0; //Real time clock temperature temperature
+  AirDataComputer._status[7] = 0; //BT Module present on serial1
   InitTime = 1; //First run
   pinMode(TsensorPin, INPUT);                       // and set pins to input.
 
-#ifdef BT_PRESENT
-  Serial1.begin(9600);// Begin the serial monitor at 9600 bps over BT module
-#endif
-#ifndef BT_PRESENT
-  Serial.begin(115200);// Begin the serial monitor at 57600 bps over the USB
-#endif
+  if (AirDataComputer._status[7] == 1) { // Serial monitor at 9600 bps over BT module
+    Serial1.begin(9600);
+  }
+  else {
+    Serial.begin(115200);// Begin the serial monitor at 57600 bps over the USB
+  }
   Wire.begin(); // I2C Bus 0
   Wire1.begin(); //I2C Bus 1
   //Setup sensors parameters
@@ -87,30 +83,19 @@ void setup()
   absp.setMinPressure(0.0);
   absp.setMaxPressure(160000.0);
   //Init SDCard
-#if SDSAVE==1
-  Serial.print("Initializing SD card...");
-  if (!SD.begin(chipSelect)) {
-    Serial.println("initialization failed!");
-    return;
+  if (AirDataComputer._status[0] == 1) {
+    Serial.print("Initializing SD card...");
+    if (!SD.begin(chipSelect)) {
+      Serial.println("initialization failed!");
+      return;
+    }
+    Serial.println("initialization done.");
   }
-  Serial.println("initialization done.");
-#endif
-  //Deafult configuration for ADC Hardware. 1 present; 0 not installed
-  AirDataComputer._status[0] = 0; //SD Card
-  AirDataComputer._status[1] = 1; //Deltap pressure sensor
-  AirDataComputer._status[2] = 1; //Absolute pressure sensor
-  AirDataComputer._status[3] = 1; //External temperature sensor
-  AirDataComputer._status[4] = 1; //Deltap sensor temperature
-  AirDataComputer._status[5] = 1; //Absolute pressure sensor temperature
-  AirDataComputer._status[6] = 0; //Real time clock temperature temperature
-  AirDataComputer._status[7] = 0; //BT Module present on serial1
   //Recursive transmission interval
   TimeBaseDefault.begin(sendout, AcqTime); //Hook an interrupt to sendout routine with defaul interval value
-  CC._ReqPeriod=AcqTime;
+  CC._ReqPeriod = AcqTime;
   InitTime = 1; //First run
 }
-
-
 void loop()
 {
   delay(1);
@@ -125,46 +110,27 @@ void sendout() {
   noInterrupts();
   //Send out periodic data
   CC.DTA(ptrAirDC, outputb);
-#if SENDOUTTOSERIAL==1 //Output string sent through Serial/USB
-  Serial.print(outputb); //Send out formatted data
-#endif
-#ifdef BT_PRESENT //Output string sent through Bluetooth
-  Serial1.print(outputb); //Send out formatted data
-#endif
-  interrupts();
-
-#if SDSAVE==1
-  //Saves to SD Card
-  if (InitTime == 1) {
-    InitTime = 0;
+  if (AirDataComputer._status[7] == 1) { //Output string sent through Bluetooth
+    Serial1.print(outputb); //Send out formatted data
+  } else
+  {
+    Serial.print(outputb); //Send out formatted data
+  }
+  if (AirDataComputer._status[0] == 1)
+  { //Saves to SD Card
     //Write Header
     File dataFile = SD.open("datalog.csv", FILE_WRITE);
     // if the file is available, write to it:
     if (dataFile) {
-      dataFile.print("Logger File, Basic Air Data Team, JLJ@BasicAirData 2017");
-      dataFile.println(String(reportno));
-      dataFile.println("$TEX,Rho[kg/m^3],_TAT[K],_TAT[C],_p[Pa],Viscosity[Pas1e-6],_qc[Pa],_T[°K],_IAS[m/s],_TAS[m/s],_c,_m[m MSL],Re,hour,minute,second,month,day,year,millis");
+      dataFile.println(outputb);
       dataFile.close();
     }
-    // if the file isn't open, pop up an error:
+    // pop up an error
     else {
       Serial.println("error opening datalog.csv");
     }
   }
-  else {
-    File dataFile = SD.open("datalog.csv", FILE_WRITE);
-    // if the file is available, write to it:
-    if (dataFile) {
-      dataFile.println(AirDataComputer.OutputSerial(reportno));
-      dataFile.close();
-    }
-    // if the file isn't open, pop up an error:
-    else {
-      Serial.println("error opening datalog.csv");
-    }
-  }
-#endif
-
+  interrupts();
 }
 void computation() {
   // put your main code here, to run repeatedly:
@@ -213,41 +179,40 @@ void comm()
 {
   noInterrupts();
   ch = &input[0]; //Var init
-#ifndef BT_PRESENT  //Data is routed to USB serial
-  if (Serial.available()) //
-  {
-    while (Serial.available() && (!endmsg))   // until (end of buffer) or (newline)
+  if (AirDataComputer._status[7] == 0) {
+    if (Serial.available()) //
     {
-      *ch = Serial.read();                    // read char from serial
-      if (*ch == DELIMITER)
+      while (Serial.available() && (!endmsg))   // until (end of buffer) or (newline)
       {
-        endmsg = true;                        // found DELIMITER
-        *ch = 0;
-      }
-      else {
-        ++ch;                              // increment index
+        *ch = Serial.read();                    // read char from serial
+        if (*ch == DELIMITER)
+        {
+          endmsg = true;                        // found DELIMITER
+          *ch = 0;
+        }
+        else {
+          ++ch;                              // increment index
+        }
       }
     }
   }
-#endif
-#ifdef BT_PRESENT  //Data is routed to Bluetooth module
-  if (Serial1.available()) //
-  {
-    while (Serial1.available() && (!endmsg))   // until (end of buffer) or (newline)
+  if (AirDataComputer._status[7] == 1) { //Data is routed to Bluetooth module
+    if (Serial1.available()) //
     {
-      *ch = Serial1.read();                    // read char from serial
-      if (*ch == DELIMITER)
+      while (Serial1.available() && (!endmsg))   // until (end of buffer) or (newline)
       {
-        endmsg = true;                        // found DELIMITER
-        *ch = 0;
-      }
-      else {
-        ++ch;                              // increment index
+        *ch = Serial1.read();                    // read char from serial
+        if (*ch == DELIMITER)
+        {
+          endmsg = true;                        // found DELIMITER
+          *ch = 0;
+        }
+        else {
+          ++ch;                              // increment index
+        }
       }
     }
   }
-#endif
-
   if (!((endmsg) && (ch != &input[0]))) {
     goto fine;
   }
@@ -263,12 +228,12 @@ void comm()
     *ch = 0;
     ch = &input[0];// Return to first index, ready for the new message;
   }
-#ifdef BT_PRESENT
-  Serial1.println(outputb);
-#endif
-#ifndef BT_PRESENT
-  Serial.println(outputb);
-#endif
+  if (AirDataComputer._status[7] == 1) {
+    Serial1.println(outputb);
+  }
+  if (AirDataComputer._status[7] == 0) {
+    Serial.println(outputb);
+  }
 fine:;
   interrupts();
 }
@@ -295,7 +260,7 @@ double TMP36GT_AI_value_to_Celsius(int AI_value)
 { // Convert Analog-input value to temperature
   float Voltage;
   Voltage = AI_value * (3300.0 / 1024);         // Sensor value in mV:
-  return (((Voltage - 750) / 10) + 25)+273.15;           // [K] Temperature according to datasheet: 750 mV @ 25 °C
+  return (((Voltage - 750) / 10) + 25) + 273.15;         // [K] Temperature according to datasheet: 750 mV @ 25 °C
   // 10 mV / °C
 }
 
