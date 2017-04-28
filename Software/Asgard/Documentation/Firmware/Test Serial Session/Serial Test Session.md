@@ -2,7 +2,7 @@
 
 This sequence of commands can be used, for example, to configure and use a benchtop ADC unit. To be noted that the unit should periodically send to R the data required by the default configuration. To attain an effective communication these messages are removed.
 
-<code>
+
 Remote R unit hails ADC and send his identification "R" and its protocol version is number "0.2"
 
 $HBO,R,0.2
@@ -61,7 +61,6 @@ ADC sends all the lines of the datalog file; A series of $DTA,* lines is transmi
 After receiving the data R requires deleting the log file from ADC
 
 $LGD
-</code>
 
 
 
