@@ -54,18 +54,19 @@ int AcqTime = 500000; //Default time interval between two #10 recurrent messages
 void setup()
 {
   //Deafult configuration for ADC Hardware. 1 present; 0 not installed
-  AirDataComputer._status[0] = 0; //SD Card
-  AirDataComputer._status[1] = 1; //Deltap pressure sensor
-  AirDataComputer._status[2] = 1; //Absolute pressure sensor
-  AirDataComputer._status[3] = 1; //External temperature sensor
-  AirDataComputer._status[4] = 1; //Deltap sensor temperature
-  AirDataComputer._status[5] = 1; //Absolute pressure sensor temperature
-  AirDataComputer._status[6] = 0; //Real time clock temperature temperature
-  AirDataComputer._status[7] = 0; //BT Module present on serial1
+  AirDataComputer._status[0] = '0'; //SD Card
+  AirDataComputer._status[1] = '1'; //Deltap pressure sensor
+  AirDataComputer._status[2] = '1'; //Absolute pressure sensor
+  AirDataComputer._status[3] = '1'; //External temperature sensor
+  AirDataComputer._status[4] = '1'; //Deltap sensor temperature
+  AirDataComputer._status[5] = '1'; //Absolute pressure sensor temperature
+  AirDataComputer._status[6] = '0'; //Real time clock temperature temperature
+  AirDataComputer._status[7] = '0'; //Error/Warning
+  AirDataComputer._status[8] = '0'; //BT Module present on serial1
   InitTime = 1; //First run
   pinMode(TsensorPin, INPUT);                       // and set pins to input.
 
-  if (AirDataComputer._status[7] == 1) { // Serial monitor at 9600 bps over BT module
+  if (AirDataComputer._status[8]=='1') { // Serial monitor at 9600 bps over BT module
     Serial1.begin(9600);
   }
   else {
@@ -83,7 +84,7 @@ void setup()
   absp.setMinPressure(0.0);
   absp.setMaxPressure(160000.0);
   //Init SDCard
-  if (AirDataComputer._status[0] == 1) {
+  if (AirDataComputer._status[0] == '1') {
     Serial.print("Initializing SD card...");
     if (!SD.begin(chipSelect)) {
       Serial.println("initialization failed!");
@@ -98,7 +99,7 @@ void setup()
 }
 void loop()
 {
-  delay(1);
+  delay(4);
   noInterrupts();
   comm();
   acquisition();
@@ -110,13 +111,13 @@ void sendout() {
   noInterrupts();
   //Send out periodic data
   CC.DTA(ptrAirDC, outputb);
-  if (AirDataComputer._status[7] == 1) { //Output string sent through Bluetooth
+  if (AirDataComputer._status[8] == '1') { //Output string sent through Bluetooth
     Serial1.print(outputb); //Send out formatted data
   } else
   {
     Serial.print(outputb); //Send out formatted data
   }
-  if (AirDataComputer._status[0] == 1)
+  if (AirDataComputer._status[0] == '1')
   { //Saves to SD Card
     //Write Header
     File dataFile = SD.open("datalog.csv", FILE_WRITE);
@@ -127,7 +128,7 @@ void sendout() {
     }
     // pop up an error
     else {
-      Serial.println("error opening datalog.csv");
+    //  Serial.println("error opening datalog.csv");
     }
   }
   interrupts();
@@ -179,7 +180,7 @@ void comm()
 {
   noInterrupts();
   ch = &input[0]; //Var init
-  if (AirDataComputer._status[7] == 0) {
+  if (AirDataComputer._status[8] == '0') { //Serial port
     if (Serial.available()) //
     {
       while (Serial.available() && (!endmsg))   // until (end of buffer) or (newline)
@@ -196,7 +197,7 @@ void comm()
       }
     }
   }
-  if (AirDataComputer._status[7] == 1) { //Data is routed to Bluetooth module
+  if (AirDataComputer._status[8] == '1') { //Data is routed to Bluetooth module
     if (Serial1.available()) //
     {
       while (Serial1.available() && (!endmsg))   // until (end of buffer) or (newline)
@@ -228,10 +229,10 @@ void comm()
     *ch = 0;
     ch = &input[0];// Return to first index, ready for the new message;
   }
-  if (AirDataComputer._status[7] == 1) {
+  if (AirDataComputer._status[8] == '1') {
     Serial1.println(outputb);
   }
-  if (AirDataComputer._status[7] == 0) {
+  else {
     Serial.println(outputb);
   }
 fine:;

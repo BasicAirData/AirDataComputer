@@ -26,6 +26,7 @@ CapCom::CapCom(int pid)
  */
 void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
 {
+    noInterrupts();
     int counter = 0;
     int value = 0;
     char uDELIMITER[2];  //Delimiter for output string
@@ -98,6 +99,7 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
     if (!strcmp(command, "$STS"))
     {
         int giro;
+        giro=0;
         for (giro=0; giro<9; giro++)
         {
 
@@ -132,6 +134,7 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
     if (!strcmp(command, "$STQ"))
     {
         int giro;
+        giro=0;
         for (giro=0; giro<9; giro++)
         {
 
@@ -253,11 +256,11 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
         {
             while (dataFile.available()) //To be modified?
             {
-                if (airdata->_status[7]==0)  //Serial port only
+                if (airdata->_status[7]=='0')  //Serial port only
                 {
                     Serial.write(dataFile.read()); //<- Incomplete : To change that part to handle serial + BT
                 }
-                if (airdata->_status[7]==1)  //BT module installed on Serial1
+                if (airdata->_status[7]=='1')  //BT module installed on Serial1
                 {
                     Serial1.write(dataFile.read()); //<- Incomplete : To change that part to handle serial + BT
                 }
@@ -288,8 +291,8 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
         strcat (outstr,workbuff);
         strcat (outstr,uDELIMITER);
     }
-furout:
-    ;
+furout:;
+interrupts();
 }
 /** Generates a message #10 DTA
 * @param  *airdata Pointer  to the AirDataComputer to use to gather data

@@ -17,7 +17,7 @@
 #define INPUT_SIZE 512
 #define OUTPUT_SIZE 512
 #define ADC_NAME "Asgard"
-#define FIRMWARE_V "1.0b"
+#define FIRMWARE_V "0.2"
 
 class CapCom
 {

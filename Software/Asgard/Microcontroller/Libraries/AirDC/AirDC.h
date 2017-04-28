@@ -32,7 +32,7 @@ public:
 //General use
     int _pid;/**< Class ID */
 //Hardware configuration
-    char _status[11]={'N','N','N','N','N','N','N','N','N','\0'};/**< Hardware Status vector see communication protocol msg #5*/
+    char _status[11];/**< Hardware Status vector see communication protocol msg #5*/
 //Message handling configuration
 
     char _datasel[25]={'0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','\0'};/**< Data selection vector see communication protocol msg #9*/
