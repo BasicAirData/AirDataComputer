@@ -295,7 +295,7 @@ double TMP36GT_AI_value_to_Celsius(int AI_value)
 { // Convert Analog-input value to temperature
   float Voltage;
   Voltage = AI_value * (3300.0 / 1024);         // Sensor value in mV:
-  return ((Voltage - 750) / 10) + 25;           // Temperature according to datasheet: 750 mV @ 25 °C
+  return (((Voltage - 750) / 10) + 25)+273.15;           // [K] Temperature according to datasheet: 750 mV @ 25 °C
   // 10 mV / °C
 }
 
