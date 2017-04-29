@@ -60,7 +60,7 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
         strcat (outstr,ADC_NAME);
         strcat (outstr,SEPARATOR);
         strcat (outstr,FIRMWARE_V);
-        strcat (outstr,uDELIMITER);
+//        strcat (outstr,uDELIMITER);
     }
 //#2 - TMS - TIMESET
     if (!strcmp(command, "$TMS"))
@@ -78,7 +78,7 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
         //Reply #4 - TMA - TIME_ASSERT
         strcpy (outstr,"$TMA,");
         strcat (outstr,workbuff);
-        strcat (outstr,uDELIMITER);
+//        strcat (outstr,uDELIMITER);
     }
 //#3 - TMQ - TIME_REQ
     if (!strcmp(command, "$TMQ"))
@@ -92,7 +92,7 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
         //Reply #4 - TMA - TIME_ASSERT
         strcpy (outstr,"$TMA,");
         strcat (outstr,workbuff);
-        strcat (outstr,uDELIMITER);
+ //       strcat (outstr,uDELIMITER);
     }
 
 //#5 - STS - STATUS_SET
@@ -128,7 +128,7 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
         //Reply #7 - STA - STATUS_ASSERT
         strcpy (outstr,"$STA,");
         strcat (outstr,workbuff);
-        strcat (outstr,uDELIMITER);
+//        strcat (outstr,uDELIMITER);
     }
 //#6 - STQ - STATUS_REQ
     if (!strcmp(command, "$STQ"))
@@ -197,7 +197,7 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
         }
         //Modified #10 reply message. No data will be transmitted. It is a plain acknowledge.
         strcpy (outstr,"$DTA,");
-        strcat (outstr,uDELIMITER);
+ //       strcat (outstr,uDELIMITER);
     }
     //#9 - DTQ - DATA_REQ
     if (!strcmp(command, "$DTQ"))
@@ -289,7 +289,7 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
         strcpy (outstr,"$ANS,");
         itoa(counter,workbuff,10);
         strcat (outstr,workbuff);
-        strcat (outstr,uDELIMITER);
+//        strcat (outstr,uDELIMITER);
     }
 furout:;
 interrupts();
@@ -324,7 +324,7 @@ void CapCom::DTA(AirDC *airdata, char*outstr)
         {
         }
     }
-    strcat (outstr,uDELIMITER);
+ //   strcat (outstr,uDELIMITER);
 }
 
 
