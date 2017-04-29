@@ -132,7 +132,7 @@ void testme()
   temperature = TMP36GT_AI_value_to_Celsius(analogRead(TsensorPin)); // read temperature
   Serial1.println("Outside Temperature Measurement");
   Serial1.print(temperature, 1);             // write temperature to Serial
-  Serial1.println(" °C");
+  Serial1.println(" °K");
   Serial1.print("Raw sensor reading ");
   Serial1.print(analogRead(TsensorPin) * (3300.0 / 1024), 1);
   Serial1.println(" mV");
