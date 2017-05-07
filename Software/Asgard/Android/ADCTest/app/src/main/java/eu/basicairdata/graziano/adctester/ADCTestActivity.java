@@ -20,6 +20,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.Spinner;
@@ -46,6 +47,7 @@ public class ADCTestActivity extends AppCompatActivity {
     private TextView mTextViewStatus;
     private TextView mTextViewChat;
     private ScrollView mScrollViewChat;
+    private Button mButtonSend;
 
     private int PreviousMessageSelection = 0;                   // The last message selected
 
@@ -58,9 +60,13 @@ public class ADCTestActivity extends AppCompatActivity {
         if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
             final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE,
                     BluetoothAdapter.ERROR);
+            String text;
             switch (state) {
                 case BluetoothAdapter.STATE_OFF:
                     mTextViewStatus.setText("Bluetooth disabled");
+                    text = "<font color='lightgrey'>Status --> Bluetooth disabled</font><br>";
+                    mTextViewChat.append(Html.fromHtml(text));
+                    mScrollViewChat.fullScroll(View.FOCUS_DOWN);
                     break;
                 case BluetoothAdapter.STATE_TURNING_OFF:
                     if (mBluetooth.isConnected()) mBluetooth.Disconnect();
@@ -69,6 +75,9 @@ public class ADCTestActivity extends AppCompatActivity {
                 case BluetoothAdapter.STATE_ON:
                     PopulateSpinnerAndLists();
                     mTextViewStatus.setText("Disconnected");
+                    text = "<font color='lightgrey'>Status --> Bluetooth enabled</font><br>";
+                    mTextViewChat.append(Html.fromHtml(text));
+                    mScrollViewChat.fullScroll(View.FOCUS_DOWN);
                     break;
                 case BluetoothAdapter.STATE_TURNING_ON:
                     break;
@@ -101,6 +110,7 @@ public class ADCTestActivity extends AppCompatActivity {
         mTextViewStatus = (TextView)findViewById(R.id.id_textviewstatus);
         mTextViewChat = (TextView)findViewById(R.id.id_textviewchat);
         mScrollViewChat = (ScrollView)findViewById(R.id.id_scrollviewchat);
+        mButtonSend = (Button)findViewById(R.id.id_buttonsend);
 
         MessagesChoice.add("$HBQ,ADCTESTER,1");                                 // Set default messages
         MessagesChoice.add("$TMS,<Time>");      // <- Please leave it in second position
@@ -192,6 +202,9 @@ public class ADCTestActivity extends AppCompatActivity {
                 if (pos != 0) {
                     mTextViewStatus.setText("Connecting to " + adapterView.getItemAtPosition(pos).toString() + " ...");
                     mBluetooth.Connect(adapterView.getItemAtPosition(pos).toString());
+                    String text = "<font color='lightgrey'>Status --> Connecting to " + adapterView.getItemAtPosition(pos).toString() + " ...</font><br>";
+                    mTextViewChat.append(Html.fromHtml(text));
+                    mScrollViewChat.fullScroll(View.FOCUS_DOWN);
                 } else {
                     mBluetooth.Disconnect();
                 }
@@ -239,14 +252,21 @@ public class ADCTestActivity extends AppCompatActivity {
 
             @Override
             public void onBluetoothHelperConnectionStateChanged(BluetoothHelper bluetoothhelper, boolean isConnected) {
+                String text;
                 if (isConnected) {
                     mTextViewStatus.setText("Connected");
+                    text = "<font color='lightgrey'>Status --> Connected</font><br>";
+                    mButtonSend.setEnabled(true);
                 } else {
                     mTextViewStatus.setText("Disconnected");
                     mSpinnerDevices.setSelection(0);
+                    text = "<font color='lightgrey'>Status --> Disconnected</font><br>";
+                    mButtonSend.setEnabled(false);
                     // Auto reconnect
                     //if (mSpinnerDevices.getSelectedItem().toString() != "Disconnected") mBluetooth.Connect(mSpinnerDevices.getSelectedItem().toString());
                 }
+                mTextViewChat.append(Html.fromHtml(text));
+                mScrollViewChat.fullScroll(View.FOCUS_DOWN);
             }
         });
 
