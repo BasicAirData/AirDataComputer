@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
@@ -92,6 +93,10 @@ public class ADCTestActivity extends AppCompatActivity {
             // Device does not support Bluetooth
             finish(); // Closes if a BT adapter is not found
         }
+
+        // Register the Broadcast Receiver for Bluetooth state changes
+        IntentFilter filter1 = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+        registerReceiver(mReceiver, filter1);
 
         mTextViewStatus = (TextView)findViewById(R.id.id_textviewstatus);
         mTextViewChat = (TextView)findViewById(R.id.id_textviewchat);
