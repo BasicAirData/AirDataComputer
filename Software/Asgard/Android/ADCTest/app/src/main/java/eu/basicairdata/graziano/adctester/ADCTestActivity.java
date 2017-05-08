@@ -240,7 +240,7 @@ public class ADCTestActivity extends AppCompatActivity {
             @Override
             public void onBluetoothHelperMessageReceived(BluetoothHelper bluetoothhelper, final String message) {
                 // Do something with the message received
-                new Handler().post(new Runnable() {
+                runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         String text = "<font color='gray'>" + message + "</font><br>";
