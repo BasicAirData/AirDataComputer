@@ -62,7 +62,7 @@ void setup()
   AirDataComputer._status[5] = '1'; //Absolute pressure sensor temperature
   AirDataComputer._status[6] = '0'; //Real time clock temperature temperature
   AirDataComputer._status[7] = '0'; //Error/Warning
-  AirDataComputer._status[8] = '0'; //BT Module present on serial1
+  AirDataComputer._status[8] = '1'; //BT Module present on serial1
   InitTime = 1; //First run
   pinMode(TsensorPin, INPUT);                       // and set pins to input.
 
@@ -112,10 +112,10 @@ void sendout() {
   //Send out periodic data
   CC.DTA(ptrAirDC, outputb);
   if (AirDataComputer._status[8] == '1') { //Output string sent through Bluetooth
-    Serial1.print(outputb); //Send out formatted data
+    Serial1.println(outputb); //Send out formatted data
   } else
   {
-    Serial.print(outputb); //Send out formatted data
+    Serial.println(outputb); //Send out formatted data to USB
   }
   if (AirDataComputer._status[0] == '1')
   { //Saves to SD Card
