@@ -50,7 +50,8 @@ char *ch;
 // Create an IntervalTimer object for acquisition time base
 IntervalTimer TimeBaseDefault;
 IntervalTimer TimeBase;
-int AcqTime = 500000; //Default time interval between two #10 recurrent messages
+int AcqTime = 5000000; //Default time interval between two #10 recurrent messages
+//int AcqTime = 0; //Default time interval between two #10 recurrent messages
 void setup()
 {
   //Deafult configuration for ADC Hardware. 1 present; 0 not installed
@@ -62,7 +63,7 @@ void setup()
   AirDataComputer._status[5] = '1'; //Absolute pressure sensor temperature
   AirDataComputer._status[6] = '0'; //Real time clock temperature temperature
   AirDataComputer._status[7] = '0'; //Error/Warning
-  AirDataComputer._status[8] = '1'; //BT Module present on serial1
+  AirDataComputer._status[8] = '0'; //BT Module present on serial1
   InitTime = 1; //First run
   pinMode(TsensorPin, INPUT);                       // and set pins to input.
 
@@ -99,7 +100,7 @@ void setup()
 }
 void loop()
 {
-  delay(4);
+  delay(10);
   noInterrupts();
   comm();
   acquisition();
@@ -107,8 +108,8 @@ void loop()
   interrupts();
 }
 void sendout() {
-  //Periodically send out data
   noInterrupts();
+  //Periodically send out data
   //Send out periodic data
   CC.DTA(ptrAirDC, outputb);
   if (AirDataComputer._status[8] == '1') { //Output string sent through Bluetooth
@@ -178,8 +179,8 @@ void computation() {
 }
 void comm()
 {
-  noInterrupts();
   ch = &input[0]; //Var init
+  noInterrupts();
   if (AirDataComputer._status[8] == '0') { //Serial port
     if (Serial.available()) //
     {
@@ -236,7 +237,7 @@ void comm()
     Serial.println(outputb);
   }
 fine:;
-  interrupts();
+interrupts();
 }
 
 void acquisition()

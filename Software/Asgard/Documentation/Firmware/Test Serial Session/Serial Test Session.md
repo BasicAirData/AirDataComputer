@@ -64,4 +64,25 @@ After receiving the data R requires deleting the log file from ADC
 $LGD
 
 
+---- Command line --- Linux ... two terminals
+Init blueetooth [Turn on BT hardware ...]
+
+# bluetoothhctl
+[bluetooth] agent on
+[bluetooth] default-agent
+[bluetooth] scan on
+Device blablaaddress
+[bluetooth] trust blablaaddress
+
+Terminal 1, after terminal 2 issued listening command
+Issue a command, for example
+echo -ne 'STR,1\n' > /dev/rfcomm0
+
+Terminal 2
+#rfcomm bind 0 blablaaddress
+[only first time "chmod o+rw /dev/rfcomm0"]
+listening on bluetooth
+cat -v < /dev/rfcomm0
+
+
 

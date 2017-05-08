@@ -156,7 +156,7 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
         //Reply #7 - STA - STATUS_ASSERT
         strcpy (outstr,"$STA,");
         strcat (outstr,workbuff);
-        strcat (outstr,uDELIMITER);
+       // strcat (outstr,uDELIMITER);
     }
 
 //#8 - DTS - DATA_SET
