@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/adctestactivity"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1"
+    tools:context="eu.basicairdata.graziano.adctester.ADCTestActivity">
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:id="@+id/id_spinnerdevices"
+        android:layout_marginTop="13dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp" />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorButtonNormal">
+        <ScrollView android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_weight="1"
+            android:id="@+id/id_scrollviewchat"
+            android:background="@android:color/background_light"
+            android:layout_marginBottom="1dp"
+            android:layout_marginTop="1dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:id="@+id/id_textviewchat"
+                android:layout_height="fill_parent"
+                android:layout_alignParentBottom="true"
+                android:fontFamily="monospace"
+                android:textSize="11sp"
+                android:elevation="1dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp" />
+        </ScrollView>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/id_relativelayoutbottom">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_height="wrap_content"
+            android:id="@+id/id_linearlayoutmessage"
+            android:layout_width="match_parent"
+            android:weightSum="1">
+
+            <Spinner
+                android:layout_height="wrap_content"
+                android:id="@+id/id_spinnermsg"
+                android:gravity="center_vertical|start"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_margin="8dp" />
+
+            <Button
+                android:text="Send"
+                android:onClick="sendMessage"
+                android:layout_height="wrap_content"
+                android:id="@+id/id_buttonsend"
+                android:layout_width="wrap_content"
+                android:enabled="false" />
+
+        </LinearLayout>
+
+        <TextView
+            android:text="Bluetooth disabled"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/id_textviewstatus"
+            android:background="@color/colorPrimary"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:padding="5dp"
+            android:layout_below="@+id/id_linearlayoutmessage" />
+    </RelativeLayout>
+
+</LinearLayout>
