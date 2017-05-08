@@ -5,7 +5,7 @@ This sequence of commands can be used, for example, to configure and use a bench
 
 Remote R unit hails ADC and send his identification "R" and its protocol version is number "0.2"
 
-$HBO,R,0.2
+$HBQ,R,0.2
 
 ADC
 
