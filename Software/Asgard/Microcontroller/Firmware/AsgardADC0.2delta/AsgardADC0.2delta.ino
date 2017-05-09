@@ -2,9 +2,8 @@
    This is a preliminary release, work in progress. Misbehaviour is plausible.
    AsgardADC0.2delta.ino - Air Data Computer Firmware
    Firmware for Teensy 3.6 MCU
--> Prior to compile please change buffer to 1024 Byte TX/RX_BUFFER_SIZE. For coherence set also  RTS_HIGH_WATERMARK (SERIAL1_RX_BUFFER_SIZE-512),RTS_LOW_WATERMARK  (SERIAL1_RX_BUFFER_SIZE-600). IRQ not modified.
--> \Arduino\hardware\teensy\avr\cores\teensy3\serial1.c
-
+  -> Prior to compile please change buffer to 1024 Byte TX/RX_BUFFER_SIZE. For coherence set also  RTS_HIGH_WATERMARK (SERIAL1_RX_BUFFER_SIZE-512),RTS_LOW_WATERMARK  (SERIAL1_RX_BUFFER_SIZE-600). IRQ not modified.
+  -> \Arduino\hardware\teensy\avr\cores\teensy3\serial1.c
    Created by JLJ and G.C.
    BasicAirData Team.
 
@@ -51,9 +50,10 @@ char outputb[OUTPUT_SIZE + 1];
 char *ch;
 // Create an IntervalTimer object for acquisition time base
 IntervalTimer TimeBaseDefault;
-IntervalTimer TimeBase;
+//IntervalTimer TimeBase;
 int AcqTime = 5000000; //Default time interval between two #10 recurrent messages
 //int AcqTime = 0; //Default time interval between two #10 recurrent messages
+unsigned char bytecount = 0;
 void setup()
 {
   //Deafult configuration for ADC Hardware. 1 present; 0 not installed
@@ -65,7 +65,7 @@ void setup()
   AirDataComputer._status[5] = '1'; //Absolute pressure sensor temperature
   AirDataComputer._status[6] = '0'; //Real time clock temperature temperature
   AirDataComputer._status[7] = '0'; //Error/Warning
-  AirDataComputer._status[8] = '0'; //BT Module present on serial1
+  AirDataComputer._status[8] = '1'; //BT Module present on serial1
   InitTime = 1; //First run
   pinMode(TsensorPin, INPUT);                       // and set pins to input.
 
@@ -73,7 +73,7 @@ void setup()
     Serial1.begin(9600);
   }
   else {
-    Serial.begin(115200);// Begin the serial monitor at 57600 bps over the USB
+    Serial.begin(115200);// Begin the serial monitor at 115200 bps over the USB
   }
   Wire.begin(); // I2C Bus 0
   Wire1.begin(); //I2C Bus 1
@@ -102,12 +102,13 @@ void setup()
 }
 void loop()
 {
-  delay(10);
+  delay(500);
   noInterrupts();
   comm();
   acquisition();
   computation();
   interrupts();
+
 }
 void sendout() {
   noInterrupts();
@@ -181,12 +182,12 @@ void computation() {
 }
 void comm()
 {
-  ch = &input[0]; //Var init
-  noInterrupts();
-  unsigned char bytecount = 0;
-  if (AirDataComputer._status[8] == '1') { // Bluetooth
-    while (Serial.available() && bytecount < 20 && (!endmsg)) { //Serial port
-      *ch = Serial.read();                    // read char from serial
+  endmsg = false;
+  ch = &input[0];// Return to first index, ready for the new message; <- Receive one single command at time, if the command is garbled then is dropped and we need retrasmittal
+  bytecount = 0;
+  if ( AirDataComputer._status[8] == '1') { // Bluetooth //AirDataComputer._status[8] =='1'
+    while (Serial1.available() && bytecount < 100 && (!endmsg)) { //Serial port
+      *ch = Serial1.read();                    // read char from serial
       if (*ch == DELIMITER)
       {
         endmsg = true;                        // found DELIMITER
@@ -199,8 +200,9 @@ void comm()
     }
   }
   else {
-    while (Serial1.available() && bytecount < 20 && (!endmsg)) { //Serial port
-      *ch = Serial1.read();                    // read char from serial
+    while (Serial.available() && bytecount < 100 && (!endmsg)) { //Serial port
+      *ch = Serial.read();
+      Serial1.println("pipposeriale");
       if (*ch == DELIMITER)
       {
         endmsg = true;                        // found DELIMITER
@@ -226,15 +228,16 @@ void comm()
     endmsg = false;
     *ch = 0;
     ch = &input[0];// Return to first index, ready for the new message;
-  }
-  if (AirDataComputer._status[8] == '1') {
-    Serial1.println(outputb);
-  }
-  else {
-    Serial.println(outputb);
+
+    if (AirDataComputer._status[8] == '1') { //if (AirDataComputer._status[8] == '1' )
+      Serial1.println(outputb);
+      Serial.println(outputb);
+    }
+    else {
+      Serial.println(outputb);
+    }
   }
 fine:;
-  interrupts();
 }
 
 void acquisition()

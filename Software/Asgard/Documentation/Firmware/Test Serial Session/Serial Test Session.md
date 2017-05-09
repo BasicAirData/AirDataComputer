@@ -85,4 +85,14 @@ listening on bluetooth
 cat -v < /dev/rfcomm0
 
 
+---- To config the Smirf module @ 9600 
 
+[Risposta: CMD]
+
+(newline \r\n abilitato nel terminale)
+$$$
+[AOK]
+SU,9600
+[AOK]
+R,1
+[Reboot]
