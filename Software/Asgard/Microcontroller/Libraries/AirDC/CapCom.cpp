@@ -60,6 +60,7 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
         strcat (outstr,ADC_NAME);
         strcat (outstr,SEPARATOR);
         strcat (outstr,FIRMWARE_V);
+        outstr[sizeof(ADC_NAME)+sizeof(SEPARATOR)+sizeof(FIRMWARE_V)+4]='\0';
 //        strcat (outstr,uDELIMITER);
     }
 //#2 - TMS - TIMESET
