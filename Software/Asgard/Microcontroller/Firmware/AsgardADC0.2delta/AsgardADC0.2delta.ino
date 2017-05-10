@@ -224,10 +224,10 @@ void comm()
     TimeBaseDefault.begin(sendout, CC._ReqPeriod);
     AcqTime = CC._ReqPeriod;
   }
-  if (endmsg) {
+  if (endmsg) {  //New message is received
     endmsg = false;
     *ch = 0;
-    ch = &input[0];// Return to first index, ready for the new message;
+    ch = &input[0];// Return to first index, ready for the new message; Here for Debug purposes.
 
     if (AirDataComputer._status[8] == '1') { //if (AirDataComputer._status[8] == '1' )
       Serial1.println(outputb);
