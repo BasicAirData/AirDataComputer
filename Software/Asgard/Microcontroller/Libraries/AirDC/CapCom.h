@@ -32,5 +32,7 @@ class CapCom
     //ADC Software Related
     char _PeerDevice[PEERDEVICE_SIZE];/**< Device actually connected for communication with ADC */
     char _PeerDeviceVer[PEERDEVICE_SIZE_VER];/**< Device actually connected for communication with ADC */
+  private:
+    void getfiles(char*outstr);
 };
 #endif

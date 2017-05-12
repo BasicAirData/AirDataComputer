@@ -36,6 +36,7 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
 //Here we trap each message and react
 //This section should be reordered with the most used message first
     char *command = strtok(inmsg,SEPARATOR);
+    char *param=nullptr;
 //#0 - HBQ - HEARTBEAT_REQ
     if (!strcmp(command, "$HBQ"))
     {
@@ -244,22 +245,45 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
     }
 
 
-//#17 - LFQ - LOG_FILE_MANAGER
- if (!strcmp(command, "$LFQ"))
+    //#17 - LFQ - LOG_FILE_MANAGER
+    if (!strcmp(command, "$LFQ"))
     {
-    if (strlen(command)<1)
+        if (strlen(command)<1)
         {
             goto furout;
         }
-        workbuff = strtok (NULL, SEPARATOR); //Required command
-       command=strtok (NULL, SEPARATOR); //Parameter
-       if (workbuff[0]=='1'){ //List files on the SD
-        //Reply #18 LFA LOG_FILE_ASSERT
-        //Now we need to read the filenames and send theses back
-  //      strcpy (outstr,"$LFA,");
-  //      itoa(_ReqPeriod,workbuff,10);
-  //      strcat (outstr,workbuff);
-       }
+        command= strtok (NULL, SEPARATOR); //Required command
+        param=strtok (NULL, SEPARATOR); //Parameter
+        if (!strcmp(command, "1"))  //List files on the SD
+        {
+            //Reply #18 LFA LOG_FILE_ASSERT
+
+            File dir;
+            dir = SD.open("/"); //open root
+            //Test for files within the root directory
+            while(true)
+            {
+                File entry =  dir.openNextFile();
+                if (! entry)
+                {
+                    break;
+                }
+
+                if (entry.isDirectory())
+                {//Nothing to do
+                }
+                else
+                {
+                Serial.print(entry.name());
+                }
+                entry.close();
+            }
+            //Now we need to read the filenames and send theses back
+            //      strcpy (outstr,"$LFA,");
+            //      itoa(_ReqPeriod,workbuff,10);
+            //      strcat (outstr,workbuff);
+
+        }
     }
 /* Superseded
 //#17 - LGD - LOG_FILE_DELETE
@@ -348,6 +372,37 @@ void CapCom::DTA(AirDC *airdata, char*outstr)
         }
     }
  //   strcat (outstr,uDELIMITER);
+}
+/** Gets the files on the SD card
+* @param  *outstr The output string
+* @return Void
+ */
+void getfiles(char*outstr){
+   /* void printDirectory(File dir, int numTabs) {
+   while(true) {
+
+     File entry =  dir.openNextFile();
+     if (! entry) {
+       // no more files
+       //Serial.println("**nomorefiles**");
+       break;
+     }
+     for (uint8_t i=0; i<numTabs; i++) {
+       Serial.print('\t');
+     }
+     Serial.print(entry.name());
+     if (entry.isDirectory()) {
+       Serial.println("/");
+       printDirectory(entry, numTabs+1);
+     } else {
+       // files have sizes, directories do not
+       Serial.print("\t\t");
+       Serial.println(entry.size(), DEC);
+     }
+     entry.close();
+   }
+}
+*/
 }
 
 
