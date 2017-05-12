@@ -242,12 +242,33 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
         strcat (outstr,workbuff);
        // strcat (outstr,uDELIMITER);
     }
-    //#17 - LGD - LOG_FILE_DELETE
+
+
+//#17 - LFQ - LOG_FILE_MANAGER
+ if (!strcmp(command, "$LFQ"))
+    {
+    if (strlen(command)<1)
+        {
+            goto furout;
+        }
+        workbuff = strtok (NULL, SEPARATOR); //Required command
+       command=strtok (NULL, SEPARATOR); //Parameter
+       if (workbuff[0]=='1'){ //List files on the SD
+        //Reply #18 LFA LOG_FILE_ASSERT
+        //Now we need to read the filenames and send theses back
+  //      strcpy (outstr,"$LFA,");
+  //      itoa(_ReqPeriod,workbuff,10);
+  //      strcat (outstr,workbuff);
+       }
+    }
+/* Superseded
+//#17 - LGD - LOG_FILE_DELETE
     if (!strcmp(command, "$LGD"))
     {
         SD.remove("datalog.csv");
     }
-//#18 - LGQ - LOG_FILE_REQ
+
+//#18 - LGQ - LOG_FILE_REQ Superseded
     if (!strcmp(command, "$LGQ"))
     {
         File dataFile = SD.open("datalog.csv");
@@ -275,6 +296,7 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
             goto furout;
         }
     }
+    */
 //Service message
     if (!strcmp(command, "$STR"))           // Received a command, for example "$STR,1"
     {
