@@ -37,6 +37,7 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
 //This section should be reordered with the most used message first
     char *command = strtok(inmsg,SEPARATOR);
     char *param=nullptr;
+    File dir; //Work file variable
 //#0 - HBQ - HEARTBEAT_REQ
     if (!strcmp(command, "$HBQ"))
     {
@@ -94,7 +95,7 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
         //Reply #4 - TMA - TIME_ASSERT
         strcpy (outstr,"$TMA,");
         strcat (outstr,workbuff);
- //       strcat (outstr,uDELIMITER);
+//       strcat (outstr,uDELIMITER);
     }
 
 //#5 - STS - STATUS_SET
@@ -158,7 +159,7 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
         //Reply #7 - STA - STATUS_ASSERT
         strcpy (outstr,"$STA,");
         strcat (outstr,workbuff);
-       // strcat (outstr,uDELIMITER);
+        // strcat (outstr,uDELIMITER);
     }
 
 //#8 - DTS - DATA_SET
@@ -199,7 +200,7 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
         }
         //Modified #10 reply message. No data will be transmitted. It is a plain acknowledge.
         strcpy (outstr,"$DTA,");
- //       strcat (outstr,uDELIMITER);
+//       strcat (outstr,uDELIMITER);
     }
     //#9 - DTQ - DATA_REQ
     if (!strcmp(command, "$DTQ"))
@@ -232,22 +233,23 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
         strcpy (outstr,"$DFA,");
         itoa(_ReqPeriod,workbuff,10);
         strcat (outstr,workbuff);
-   //     strcat (outstr,uDELIMITER);
+        //     strcat (outstr,uDELIMITER);
     }
-//#15 - DFQ - DATA_FREQ_REQ
+    //#15 - DFQ - DATA_FREQ_REQ
     if (!strcmp(command, "$DFQ"))
     {
         //Reply #16 -DFA - DATA_FREQ_ASSERT
         strcpy (outstr,"$DFA,");
         itoa(_ReqPeriod,workbuff,10);
         strcat (outstr,workbuff);
-       // strcat (outstr,uDELIMITER);
+        // strcat (outstr,uDELIMITER);
     }
 
 
     //#17 - LFQ - LOG_FILE_MANAGER
     if (!strcmp(command, "$LFQ"))
     {
+        int n=0;
         if (strlen(command)<1)
         {
             goto furout;
@@ -257,10 +259,10 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
         if (!strcmp(command, "1"))  //List files on the SD
         {
             //Reply #18 LFA LOG_FILE_ASSERT
-
-            File dir;
+            strcpy (outstr,"$LFA");
             dir = SD.open("/"); //open root
-            //Test for files within the root directory
+            //Send a string with the total number of files to be sent
+            n=0;
             while(true)
             {
                 File entry =  dir.openNextFile();
@@ -270,57 +272,105 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
                 }
 
                 if (entry.isDirectory())
-                {//Nothing to do
+                {
+                    //Nothing to do
                 }
                 else
                 {
-                Serial.print(entry.name());
+                    n++;
                 }
                 entry.close();
             }
-            //Now we need to read the filenames and send theses back
-            //      strcpy (outstr,"$LFA,");
-            //      itoa(_ReqPeriod,workbuff,10);
-            //      strcat (outstr,workbuff);
-
-        }
-    }
-/* Superseded
-//#17 - LGD - LOG_FILE_DELETE
-    if (!strcmp(command, "$LGD"))
-    {
-        SD.remove("datalog.csv");
-    }
-
-//#18 - LGQ - LOG_FILE_REQ Superseded
-    if (!strcmp(command, "$LGQ"))
-    {
-        File dataFile = SD.open("datalog.csv");
-
-        // if the file is available
-        if (dataFile)
-        {
-            while (dataFile.available()) //To be modified?
+            strcat (outstr,SEPARATOR);
+            itoa(n,workbuff,10); //Append number of files
+            strcat (outstr,workbuff);
+            while(true)
             {
-                if (airdata->_status[7]=='0')  //Serial port only
+                File entry =  dir.openNextFile();
+                if (! entry)
                 {
-                    Serial.write(dataFile.read()); //<- Incomplete : To change that part to handle serial + BT
+                    break;
                 }
-                if (airdata->_status[7]=='1')  //BT module installed on Serial1
+
+                if (entry.isDirectory())
                 {
-                    Serial1.write(dataFile.read()); //<- Incomplete : To change that part to handle serial + BT
+                    //Nothing to do
+                }
+                else
+                {
+                    strcat (outstr,SEPARATOR);
+                    strcat (outstr,entry.name());  //Send out filename
+                    strcat (outstr,SEPARATOR);
+                    ltoa(entry.size(),workbuff,10);
+                    strcat (outstr,workbuff);  //Send out file size
+                }
+                entry.close();
+            }
+        }
+        if (!strcmp(command, "2"))  //Requires creation of a file
+        {
+            dir = SD.open(param, FILE_WRITE);
+            dir.close();
+            if (SD.exists(param))   //Only if the file was created update ADC current log file
+            {
+                strcpy(airdata->_logfile,param);
+            }
+        }
+        if (!strcmp(command, "3"))  //Requires deletion of a file
+        {
+            SD.remove(param);
+            if (!(SD.exists(param)))   //Only if the file was deleted the ADC current log file is updated
+            {
+                strcpy(airdata->_logfile,DEFAULT_LOG_FILE);
+            }
+        }
+        if (!strcmp(command, "4"))  //Requires information about one file
+        {
+            dir = SD.open(param);
+            strcat (outstr,SEPARATOR);
+            strcat (outstr,dir.name());  //Send out filename
+            strcat (outstr,SEPARATOR);
+            ltoa(dir.size(),workbuff,10);
+            strcat (outstr,workbuff);  //Send out file size
+        }
+
+        if (!strcmp(command, "5"))  //Requires dump of one file
+        {
+            dir = SD.open(param);
+            // if the file is available
+            if (dir)
+            {
+                while (dir.available()) //To be modified?
+                {
+                    if (airdata->_status[8]=='0')  //Serial port only
+                    {
+                        Serial.write(dir.read());
+                    }
+                    if (airdata->_status[8]=='1')  //BT module installed on Serial1
+                    {
+                        Serial1.write(dir.read());
+                    }
+                }
+                dir.close();
+                //Send EOF
+                if (airdata->_status[8]=='0')  //Serial port only
+                {
+                    Serial.println("$EOF");
+                }
+                if (airdata->_status[8]=='1')  //BT module installed on Serial1
+                {
+                    Serial1.println("$EOF");
                 }
             }
-            dataFile.close();
+            // if the file isn't open, pop up an error:
+            else
+            {
+                //Serial.println("error opening datalog.csv");
+                goto furout;
+            }
         }
-        // if the file isn't open, pop up an error:
-        else
-        {
-            //Serial.println("error opening datalog.csv");
-            goto furout;
-        }
+
     }
-    */
 //Service message
     if (!strcmp(command, "$STR"))           // Received a command, for example "$STR,1"
     {
@@ -338,8 +388,9 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
         strcat (outstr,workbuff);
 //        strcat (outstr,uDELIMITER);
     }
-furout:;
-interrupts();
+furout:
+    ;
+    interrupts();
 }
 /** Generates a message #10 DTA
 * @param  *airdata Pointer  to the AirDataComputer to use to gather data
@@ -371,38 +422,5 @@ void CapCom::DTA(AirDC *airdata, char*outstr)
         {
         }
     }
- //   strcat (outstr,uDELIMITER);
+//   strcat (outstr,uDELIMITER);
 }
-/** Gets the files on the SD card
-* @param  *outstr The output string
-* @return Void
- */
-void getfiles(char*outstr){
-   /* void printDirectory(File dir, int numTabs) {
-   while(true) {
-
-     File entry =  dir.openNextFile();
-     if (! entry) {
-       // no more files
-       //Serial.println("**nomorefiles**");
-       break;
-     }
-     for (uint8_t i=0; i<numTabs; i++) {
-       Serial.print('\t');
-     }
-     Serial.print(entry.name());
-     if (entry.isDirectory()) {
-       Serial.println("/");
-       printDirectory(entry, numTabs+1);
-     } else {
-       // files have sizes, directories do not
-       Serial.print("\t\t");
-       Serial.println(entry.size(), DEC);
-     }
-     entry.close();
-   }
-}
-*/
-}
-
-

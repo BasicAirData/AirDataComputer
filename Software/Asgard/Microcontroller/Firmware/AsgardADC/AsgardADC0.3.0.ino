@@ -1,8 +1,9 @@
-/* Work in progress Asgard ADC Firmware Relase 0.2 delta 09/05/2017 Nighttime
+/* Work in progress Asgard ADC Firmware Relase 0.3.0 12/05/2017
    This is a preliminary release, work in progress. Misbehaviour is plausible.
-   AsgardADC0.2delta.ino - Air Data Computer Firmware
+   AsgardADC.ino - Air Data Computer Firmware
+   Conform to ADC Common Mesage Set 0.3
    Firmware for Teensy 3.6 MCU
-  -> Prior to compile please change buffer to 1024 Byte TX/RX_BUFFER_SIZE. For coherence set also  RTS_HIGH_WATERMARK (SERIAL1_RX_BUFFER_SIZE-512),RTS_LOW_WATERMARK  (SERIAL1_RX_BUFFER_SIZE-600). IRQ not modified.
+  -> Prior to compile please change buffer to 1024(fine tuning in progress) Byte TX/RX_BUFFER_SIZE. For coherence set also  RTS_HIGH_WATERMARK (SERIAL1_RX_BUFFER_SIZE-512),RTS_LOW_WATERMARK  (SERIAL1_RX_BUFFER_SIZE-600). IRQ not modified.
   -> \Arduino\hardware\teensy\avr\cores\teensy3\serial1.c
    Created by JLJ and G.C.
    BasicAirData Team.
@@ -202,7 +203,6 @@ void comm()
   else {
     while (Serial.available() && bytecount < 100 && (!endmsg)) { //Serial port
       *ch = Serial.read();
-      Serial1.println("pipposeriale");
       if (*ch == DELIMITER)
       {
         endmsg = true;                        // found DELIMITER

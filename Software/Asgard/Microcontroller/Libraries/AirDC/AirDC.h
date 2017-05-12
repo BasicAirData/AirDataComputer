@@ -8,7 +8,7 @@
 #define AirDC_h
 #include <arduino.h>
 #include <TimeLib.h>
-
+#define DEFAULT_LOG_FILE "datalog.csv"
 class AirDC
 {
 public:
@@ -33,8 +33,9 @@ public:
     int _pid;/**< Class ID */
 //Hardware configuration
     char _status[11];/**< Hardware Status vector see communication protocol msg #5*/
+//Active log file
+    char _logfile[15]=DEFAULT_LOG_FILE;/**< Defines the active log file name */
 //Message handling configuration
-
     char _datasel[25]={'0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','\0'};/**< Data selection vector see communication protocol msg #9*/
     double _dataout[25]; //Double array that contains data ready to be send out
 //Geometric
