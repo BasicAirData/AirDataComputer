@@ -337,6 +337,7 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
         if (!strcmp(command, "4"))  //Requires information about one file
         {
             dir = SD.open(param);
+            strcpy (outstr,"$LFA");
             strcat (outstr,SEPARATOR);
             strcat (outstr,dir.name());  //Send out filename
             strcat (outstr,SEPARATOR);
