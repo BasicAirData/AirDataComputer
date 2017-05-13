@@ -328,7 +328,9 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
 
             if (!(SD.exists(param)))   //Only if the file was deleted the ADC current log file is updated
             {
-                Serial.println("ok_del");
+                strcpy (outstr,"$LFA");
+                strcat (outstr,SEPARATOR);
+                strcat (outstr,param);
                 strcpy(airdata->_logfile,DEFAULT_LOG_FILE);
             }
         }
