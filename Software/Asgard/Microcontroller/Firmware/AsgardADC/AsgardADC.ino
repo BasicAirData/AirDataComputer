@@ -58,7 +58,7 @@ unsigned char bytecount = 0;
 void setup()
 {
   //Deafult configuration for ADC Hardware. 1 present; 0 not installed
-  AirDataComputer._status[0] = '0'; //SD Card
+  AirDataComputer._status[0] = '1'; //SD Card
   AirDataComputer._status[1] = '1'; //Deltap pressure sensor
   AirDataComputer._status[2] = '1'; //Absolute pressure sensor
   AirDataComputer._status[3] = '1'; //External temperature sensor
@@ -66,7 +66,7 @@ void setup()
   AirDataComputer._status[5] = '1'; //Absolute pressure sensor temperature
   AirDataComputer._status[6] = '0'; //Real time clock temperature temperature
   AirDataComputer._status[7] = '0'; //Error/Warning
-  AirDataComputer._status[8] = '1'; //BT Module present on serial1
+  AirDataComputer._status[8] = '0'; //BT Module present on serial1
   InitTime = 1; //First run
   pinMode(TsensorPin, INPUT);                       // and set pins to input.
 

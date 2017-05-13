@@ -281,46 +281,54 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
                 }
                 entry.close();
             }
+            dir = SD.open("/");
             strcat (outstr,SEPARATOR);
             itoa(n,workbuff,10); //Append number of files
             strcat (outstr,workbuff);
             while(true)
             {
-                File entry =  dir.openNextFile();
-                if (! entry)
+                File entry2 =  dir.openNextFile();
+                if (!entry2)
                 {
                     break;
                 }
 
-                if (entry.isDirectory())
+                if (entry2.isDirectory())
                 {
                     //Nothing to do
                 }
                 else
                 {
+                  //  Serial.println(entry2.name());
                     strcat (outstr,SEPARATOR);
-                    strcat (outstr,entry.name());  //Send out filename
+                    strcat (outstr,entry2.name());  //Send out filename
                     strcat (outstr,SEPARATOR);
-                    ltoa(entry.size(),workbuff,10);
+                    ltoa(entry2.size(),workbuff,10);
                     strcat (outstr,workbuff);  //Send out file size
                 }
-                entry.close();
+                entry2.close();
             }
         }
         if (!strcmp(command, "2"))  //Requires creation of a file
         {
             dir = SD.open(param, FILE_WRITE);
-            dir.close();
             if (SD.exists(param))   //Only if the file was created update ADC current log file
             {
+                strcpy (outstr,"$LFA");
+                strcat (outstr,SEPARATOR);
                 strcpy(airdata->_logfile,param);
+                strcat (outstr,param);
             }
+            dir.close();
+
         }
         if (!strcmp(command, "3"))  //Requires deletion of a file
         {
             SD.remove(param);
+
             if (!(SD.exists(param)))   //Only if the file was deleted the ADC current log file is updated
             {
+                Serial.println("ok_del");
                 strcpy(airdata->_logfile,DEFAULT_LOG_FILE);
             }
         }
