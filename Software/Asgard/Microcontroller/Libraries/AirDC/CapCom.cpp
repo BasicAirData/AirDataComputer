@@ -218,7 +218,32 @@ void CapCom::HandleMessage(AirDC *airdata,char *inmsg, char*outstr)
         }
         DTA(airdata,outstr);
     }
+//#11 - LFS – LOG_FILE_SET
+    if (!strcmp(command, "$LFS"))
+    {
+        command = strtok (NULL, SEPARATOR);
+        if (strlen(command)<1)
+        {
+            goto furout;
+        }
+        //   dir = SD.open(command, FILE_WRITE);
+        if (SD.exists(command))   //Only if the file exist is set as current, #13 reply
+        {
+            strcpy(airdata->_logfile,command);
+            strcpy (outstr,"$LCA");
+            strcat (outstr,SEPARATOR);
+            strcat (outstr,airdata->_logfile);
+        }
+//#13 reply LCA – LOG_CURRENT_ASSERT
+    }
 
+//#12 - LFR - LOG_FILE_REQ
+    if (!strcmp(command, "$LFR"))
+    {
+//#13 reply LCA – LOG_CURRENT_ASSERT
+        strcpy (outstr,"$LCA,");
+        strcat (outstr,airdata->_logfile);
+    }
 //#14 - DFS - DATA_FREQ_SET
     if (!strcmp(command, "$DFS"))
     {
