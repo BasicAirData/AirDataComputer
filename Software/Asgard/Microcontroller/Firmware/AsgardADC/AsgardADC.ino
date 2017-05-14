@@ -66,7 +66,7 @@ void setup()
   AirDataComputer._status[5] = '1'; //Absolute pressure sensor temperature
   AirDataComputer._status[6] = '0'; //Real time clock temperature temperature
   AirDataComputer._status[7] = '0'; //Error/Warning
-  AirDataComputer._status[8] = '0'; //BT Module present on serial1
+  AirDataComputer._status[8] = '1'; //BT Module present on serial1
   InitTime = 1; //First run
   pinMode(TsensorPin, INPUT);                       // and set pins to input.
 
