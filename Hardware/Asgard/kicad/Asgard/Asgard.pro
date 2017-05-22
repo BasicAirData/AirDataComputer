@@ -1,4 +1,4 @@
-update=28/03/2017 10:14:37
+update=22/05/2017 23:52:20
 version=1
 last_client=kicad
 [general]
@@ -62,3 +62,13 @@ LibName28=atmel
 LibName29=contrib
 LibName30=valves
 LibName31=KiCad libraries/teensy/teensy
+[schematic_editor]
+version=1
+PageLayoutDescrFile=
+PlotDirectoryName=
+SubpartIdSeparator=0
+SubpartFirstId=65
+NetFmtName=
+SpiceForceRefPrefix=0
+SpiceUseNetNumbers=0
+LabSize=60
