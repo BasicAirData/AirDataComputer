@@ -695,7 +695,7 @@
   )
   (gr_line (start 40.64 30.48) (end 40.64 91.44) (angle 90) (layer Edge.Cuts) (width 0.15))
   (gr_circle (center 45.78 73.66) (end 47.03 73.66) (layer Edge.Cuts) (width 0.1))
-  (gr_circle (center 53.4 73.66) (end 54.65 73.66) (layer Edge.Cuts) (width 0.15))
+  (gr_circle (center 53.4 73.66) (end 54.65 73.66) (layer Edge.Cuts) (width 0.1))
   (gr_circle (center 52.07 44.45) (end 52.07 46.45) (layer Edge.Cuts) (width 0.1))
   (gr_line (start 58.42 91.44) (end 40.64 91.44) (angle 90) (layer Edge.Cuts) (width 0.15))
   (gr_line (start 58.42 30.48) (end 58.42 91.44) (angle 90) (layer Edge.Cuts) (width 0.15))
