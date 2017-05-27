@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
-import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,10 +27,10 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Set;
-import java.util.Timer;
 
 public class ADCTestActivity extends AppCompatActivity {
 
+    private final static int MAX_LINES = 100;
     private static final int REQUEST_ENABLE_BT = 12;
 
     private ArrayList<String> BTDevices = new ArrayList<>();
@@ -112,9 +111,10 @@ public class ADCTestActivity extends AppCompatActivity {
         mScrollViewChat = (ScrollView)findViewById(R.id.id_scrollviewchat);
         mButtonSend = (Button)findViewById(R.id.id_buttonsend);
 
-        MessagesChoice.add("$HBQ,ADCTESTER,1");                                 // Set default messages
+        MessagesChoice.add("$HBQ,ADCTESTER,0.3");                                 // Set default messages
         MessagesChoice.add("$TMS,<Time>");      // <- Please leave it in second position
         MessagesChoice.add("$TMQ");
+        MessagesChoice.add("$DFQ");
      /* MessagesChoice.add("$STS,1,1,1,1,1,1,1,N,1");
         MessagesChoice.add("$STQ");
         MessagesChoice.add("$$DTS,1,1,1,1,1,1,0");
@@ -204,6 +204,7 @@ public class ADCTestActivity extends AppCompatActivity {
                     mBluetooth.Connect(adapterView.getItemAtPosition(pos).toString());
                     String text = "<font color='lightgrey'>Status --> Connecting to " + adapterView.getItemAtPosition(pos).toString() + " ...</font><br>";
                     mTextViewChat.append(Html.fromHtml(text));
+                    EraseExcessiveLines();
                     mScrollViewChat.fullScroll(View.FOCUS_DOWN);
                 } else {
                     mBluetooth.Disconnect();
@@ -245,6 +246,7 @@ public class ADCTestActivity extends AppCompatActivity {
                     public void run() {
                         String text = "<font color='gray'>" + message + "</font><br>";
                         mTextViewChat.append(Html.fromHtml(text));
+                        EraseExcessiveLines();
                         mScrollViewChat.fullScroll(View.FOCUS_DOWN);
                     }
                 });
@@ -266,6 +268,7 @@ public class ADCTestActivity extends AppCompatActivity {
                     //if (mSpinnerDevices.getSelectedItem().toString() != "Disconnected") mBluetooth.Connect(mSpinnerDevices.getSelectedItem().toString());
                 }
                 mTextViewChat.append(Html.fromHtml(text));
+                EraseExcessiveLines();
                 mScrollViewChat.fullScroll(View.FOCUS_DOWN);
             }
         });
@@ -274,6 +277,26 @@ public class ADCTestActivity extends AppCompatActivity {
         //mTextViewChat.append(Html.fromHtml(text));
     }
 
+
+    private void EraseExcessiveLines() {
+        // Erase excessive lines
+        int excessLineNumber = mTextViewChat.getLineCount() - MAX_LINES;
+        if (excessLineNumber > 0) {
+            int eolIndex = -1;
+            CharSequence charSequence = mTextViewChat.getText();
+            for(int i=0; i<excessLineNumber; i++) {
+                do {
+                    eolIndex++;
+                } while(eolIndex < charSequence.length() && charSequence.charAt(eolIndex) != '\n');
+            }
+            if (eolIndex < charSequence.length()) {
+                mTextViewChat.getEditableText().delete(0, eolIndex+1);
+            }
+            else {
+                mTextViewChat.setText("");
+            }
+        }
+    }
 
     @Override
     protected void onDestroy(){
@@ -300,6 +323,7 @@ public class ADCTestActivity extends AppCompatActivity {
             textmessage = "$TMS," + System.currentTimeMillis() / 1000L;
         }
         mTextViewChat.append(Html.fromHtml(text));
+        EraseExcessiveLines();
         mScrollViewChat.fullScroll(View.FOCUS_DOWN);
 
         mBluetooth.SendMessage(textmessage);
