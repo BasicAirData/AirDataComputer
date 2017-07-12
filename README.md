@@ -15,5 +15,10 @@
 ## Typical Applications
 [Typical applications](https://github.com/BasicAirData/AirDataComputer/blob/master/Software/applications.md)
 
-## License and General Information
-[License and general info](https://github.com/BasicAirData/Document-Templates/blob/master/general-info.md)
+## Reference documents
+
+[Code of conduct](CODE_OF_CONDUCT.md)
+
+[Contributing Information](CONTRIBUTING.md)
+
+[Repository License](LICENSE)
