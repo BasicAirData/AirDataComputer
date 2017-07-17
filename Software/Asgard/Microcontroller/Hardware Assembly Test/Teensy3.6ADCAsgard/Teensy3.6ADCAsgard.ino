@@ -18,7 +18,7 @@
    You should have received a copy of the GNU General Public License
    along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
-//#define BT_PRESENT true;
+//#define BT_PRESENT false;
 
 #include <SD.h>
 #include <SD_t3.h>
@@ -48,7 +48,7 @@ void setup()
   Serial1.begin(9600);// Begin the serial monitor at 9600 bps over BT module
 #endif
 #ifndef BT_PRESENT
-  Serial.begin(57600);// Begin the serial monitor at 57600 bps over the USB
+  Serial.begin(115200);// Begin the serial monitor at 57600 bps over the USB
 #endif
   Wire.begin(); // I2C Bus 0
   Wire1.begin(); //I2C Bus 1
@@ -183,7 +183,7 @@ void testme_local()
   }
 
   //Outside Temperature Sensor
-  temperature = TMP36GT_AI_value_to_Celsius(analogRead(TsensorPin)); // read temperature
+  //temperature = TMP36GT_AI_value_to_Celsius(analogRead(TsensorPin)); // read temperature
   Serial.println("Outside Temperature Measurement");
   Serial.print(temperature, 1);             // write temperature to Serial
   Serial.println(" °C");

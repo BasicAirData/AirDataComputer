@@ -58,7 +58,7 @@ unsigned char bytecount = 0;
 void setup()
 {
   //Deafult configuration for ADC Hardware. 1 present; 0 not installed
-  AirDataComputer._status[0] = '1'; //SD Card
+  AirDataComputer._status[0] = '0'; //SD Card
   AirDataComputer._status[1] = '1'; //Deltap pressure sensor
   AirDataComputer._status[2] = '1'; //Absolute pressure sensor
   AirDataComputer._status[3] = '1'; //External temperature sensor
@@ -66,7 +66,7 @@ void setup()
   AirDataComputer._status[5] = '1'; //Absolute pressure sensor temperature
   AirDataComputer._status[6] = '0'; //Real time clock temperature temperature
   AirDataComputer._status[7] = '0'; //Error/Warning
-  AirDataComputer._status[8] = '1'; //BT Module present on serial1
+  AirDataComputer._status[8] = '0'; //BT Module present on serial1
   InitTime = 1; //First run
   pinMode(TsensorPin, INPUT);                       // and set pins to input.
 
@@ -105,8 +105,11 @@ void loop()
 {
   delay(500);
   noInterrupts();
+  Serial.println("uno");
   comm();
-  acquisition();
+  Serial.println("due");
+  acquisition();// <- Questa si appende
+  Serial.println("tre");
   computation();
   interrupts();
 
@@ -183,6 +186,7 @@ void computation() {
 }
 void comm()
 {
+  noInterrupts();
   endmsg = false;
   ch = &input[0];// Return to first index, ready for the new message; <- Receive one single command at time, if the command is garbled then is dropped and we need retrasmittal
   bytecount = 0;
@@ -214,6 +218,7 @@ void comm()
       bytecount++;
     }
   }
+
   if (!((endmsg) && (ch != &input[0]))) {
     goto fine;
   }
@@ -226,8 +231,8 @@ void comm()
   }
   if (endmsg) {  //New message is received
     endmsg = false;
-    *ch = 0;
-    ch = &input[0];// Return to first index, ready for the new message; Here for Debug purposes.
+ //   *ch = 0;
+ //   ch = &input[0];// Return to first index, ready for the new message; Here for Debug purposes.
 
     if (AirDataComputer._status[8] == '1') { //if (AirDataComputer._status[8] == '1' )
       Serial1.println(outputb);
@@ -238,15 +243,17 @@ void comm()
     }
   }
 fine:;
+ interrupts();
 }
 
 void acquisition()
 {
+  noInterrupts();
   //Outside Temperature Sensor
   temperature = TMP36GT_AI_value_to_Celsius(analogRead(TsensorPin)); // read temperature
   //Differential Pressure sensor
-  diffp.update();
-  dp = diffp.pressure();
+   diffp.update();
+   dp = diffp.pressure();
   AirDataComputer._qcRaw = diffp.pressure_Raw();
   AirDataComputer._Tdeltap = diffp.temperature();
   AirDataComputer._TdeltapRaw = diffp.temperature_Raw();
@@ -257,12 +264,15 @@ void acquisition()
   AirDataComputer._Tabsp = absp.temperature();
   AirDataComputer._TabspRaw = absp.temperature_Raw();
   pstatic = absp.pressure();
+  interrupts();
 }
 double TMP36GT_AI_value_to_Celsius(int AI_value)
 { // Convert Analog-input value to temperature
+  noInterrupts();
   float Voltage;
   Voltage = AI_value * (3300.0 / 1024);         // Sensor value in mV:
   return (((Voltage - 750) / 10) + 25) + 273.15;         // [K] Temperature according to datasheet: 750 mV @ 25 °C
   // 10 mV / °C
+  interrupts();
 }
 
