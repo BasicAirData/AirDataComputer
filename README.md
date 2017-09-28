@@ -13,7 +13,7 @@
 ![Amaranth i2](http://www.basicairdata.eu/wp-content/gallery/amaranth-i2-updated-pictures/IMGP5093.jpg)
 
 ## Typical Applications
-[Typical applications](https://github.com/BasicAirData/AirDataComputer/blob/master/Software/applications.md)
+[Typical applications](http://www.basicairdata.eu/projects/air-data-systems/air-data-systems-applications/)
 
 ## Reference documents
 
