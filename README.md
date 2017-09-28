@@ -6,11 +6,12 @@
 ## [Newsletter](http://eepurl.com/by-8RH)
 ## [Mailing List](http://vps139588.ovh.net/cgi-bin/mailman/listinfo/basicairdata)
 
-[Picture Gallery](http://www.basicairdata.eu/projects/airdatacomputer/amaranth-i2-assembly-tutorial/pictures-gallery-for-amaranth-adc/)
+## Refer to main website for former ADC release Media 
+[Amaranth i2](http://www.basicairdata.eu/projects/airdatacomputer/amaranth-i2-assembly-tutorial/pictures-gallery-for-amaranth-adc/)
 
 [Website](http://www.basicairdata.eu/projects/airdatacomputer/)
 
-![Amaranth i2](http://www.basicairdata.eu/wp-content/gallery/amaranth-i2-updated-pictures/IMGP5093.jpg)
+![Asgard ADC](http://www.basicairdata.eu/wp-content/uploads/sites/1/nggallery/adc-asgard/IMGP5525.jpg)
 
 ## Typical Applications
 [Typical applications](http://www.basicairdata.eu/projects/air-data-systems/air-data-systems-applications/)
