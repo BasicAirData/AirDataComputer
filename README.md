@@ -1,9 +1,8 @@
 # [Air Data Computer](http://www.basicairdata.eu/panorama/asgard-air-data-computer/)
 ![Asgard ADC](http://www.basicairdata.eu/wp-content/uploads/sites/1/nggallery/adc-asgard/IMGP5525.jpg)
 ## At a Glance
-### Assembly Time is now two hours
-### Typical Applications
-[Typical applications](http://www.basicairdata.eu/projects/air-data-systems/air-data-systems-applications/)
+* Assembly Time is now two hours
+* [Typical applications](http://www.basicairdata.eu/projects/air-data-systems/air-data-systems-applications/)
 
 ## Reference documents
 
