@@ -105,11 +105,11 @@ void loop()
 {
   delay(500);
   noInterrupts();
-  Serial.println("uno");
+//  Serial.println("uno");
   comm();
-  Serial.println("due");
-  acquisition();// <- Questa si appende
-  Serial.println("tre");
+//  Serial.println("due");
+  acquisition();
+//  Serial.println("tre");
   computation();
   interrupts();
 
