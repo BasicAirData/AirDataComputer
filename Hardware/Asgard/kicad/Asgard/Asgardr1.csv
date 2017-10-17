@@ -1,0 +1,4 @@
+qty,partname,description
+3,CONN_01X04, Socket single row 01x04 2.54 mm pitch
+4,R, 4700 Ohm Resistor ThroughHole Axial DIN0204_l3.6_D1.6mm_P1.90mm_vertical
+2,Teensy Socket, Socket single row 01x04 2.54 mm pitch

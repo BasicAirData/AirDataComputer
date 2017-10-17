@@ -1,0 +1,5 @@
+qty,partname,description,lib
+CONN_01X03,Connector, single row, 01x03, pin header,conn
+CONN_01X04,Connector, single row, 01x04, pin header,conn
+R,Resistor,device
+Teensy3.6fsocket,,teensy
