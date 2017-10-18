@@ -1,7 +1,7 @@
 # [Air Data Computer](https://github.com/BasicAirData/AirDataComputer/wiki)
 ![Asgard ADC](http://www.basicairdata.eu/wp-content/uploads/sites/1/nggallery/adc-asgard-build-2/IMGP5610.JPG)
 ## At a Glance
-* [Assembly](https://www.basicairdata.eu/projects/airdatacomputer/asgard-adc/assembly-adc-asgard/)
+* [Fast Assembly](https://www.basicairdata.eu/projects/airdatacomputer/asgard-adc/assembly-adc-asgard/)
 * [Pictures](http://www.basicairdata.eu/projects/airdatacomputer/asgard-adc/adc-asgard-pictures/)
 * [Typical applications](http://www.basicairdata.eu/projects/air-data-systems/air-data-systems-applications/)
 
