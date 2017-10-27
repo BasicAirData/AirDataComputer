@@ -1,0 +1,5 @@
+Quantity,MPN,Designator,Footprint,Comment,Description
+2,855-D01-9973242,"ABS, DELTAP",SIL 4,Straight female Socket,4-pin through-hole connector
+1,517-974-01-04-RK,BLUETOOTH,4x2.54 Pitch,Straight female Socket,4-pin through-hole connector
+2,517-929850-01-24-RA,TEENSY USB SIDE,24x2.54 Pitch,Straight female Socket,24-pin through-hole connector
+4,603-CFR-25JT-52-1K,"R1, R2, R3, R4",Through-hole connector,Vertical mounted resistor,1/8 W vertical mounted resistor
