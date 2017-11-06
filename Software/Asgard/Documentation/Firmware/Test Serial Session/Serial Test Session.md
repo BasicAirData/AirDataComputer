@@ -24,7 +24,7 @@ $STS,0,1,1,1,1,1,1,N,0
 
 ADC ack
 
-$STA,0,1,1,1,1,1,1,N,1 
+$STA,0,1,1,1,1,1,1,N,0
 
 R sets the data rate of ADC, 6 Hertz/Samples per second
 
