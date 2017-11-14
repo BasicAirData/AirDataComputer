@@ -2,7 +2,7 @@
 #include "AirDC.h"
 #include "MatrixMath.h"
 #include <math.h>
-#include <arduino.h>
+#include <Arduino.h>
 #include <TimeLib.h>
 
 AirDC::AirDC(int pid)

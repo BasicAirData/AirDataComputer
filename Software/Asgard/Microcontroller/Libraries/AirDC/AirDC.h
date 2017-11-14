@@ -6,7 +6,7 @@
 
 #ifndef AirDC_h
 #define AirDC_h
-#include <arduino.h>
+#include <Arduino.h>
 #include <TimeLib.h>
 #define DEFAULT_LOG_FILE "datalog.csv"
 class AirDC
