@@ -1,5 +1,1 @@
-## Status
-[Work in progress, refer to the Wiki](https://github.com/BasicAirData/AirDataComputer/wiki)
-
-## Introduction
-Current ADC release is Asgard
+#"Asgard" and "i2" contain archived releases of software. "Release" folder contains the work in progress release.
