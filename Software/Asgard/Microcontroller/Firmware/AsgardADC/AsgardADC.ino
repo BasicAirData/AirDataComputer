@@ -52,6 +52,8 @@ String message_BT;            // string that stores the incoming BT message
 String message_COM;           // string that stores the incoming COM message
 const int ledPin = 13;        // The led is ON when the application is logging on SD
 
+#define MIN_ACQUISITION_FREQ 1.0f         // The minimum frequency of acquisition
+
 float acquisition_freq     =  50;         // The frequency of acquisition     =  50 Hz (20 ms)
 float sendtoserial_freq    =   1;         // The frequency of sendtoserial    =   1 Hz (1 s)
 float sendtobluetooth_freq =   1;         // The frequency of sendtobluetooth =   1 Hz (1 s)
@@ -660,7 +662,14 @@ void loop() {
       strcat (Answer, f2);
       strcat (Answer, SEPARATOR);
       sprintf(f3,"%.3f", sendtosd_freq);
-      strcat (Answer,f3);                      // TODO = Set the aquisition_freq = max (sendtoserial_freq, sendtosd_freq..)
+      strcat (Answer,f3);
+
+      // Set the acquisition_freq = max (sendtoserial_freq, sendtosd_freq, sendtobluetooth_freq, MIN_ACQUISITION_FREQ)
+      acquisition_freq = fmaxf(sendtoserial_freq, sendtobluetooth_freq);
+      acquisition_freq = fmaxf(acquisition_freq, sendtosd_freq);
+      acquisition_freq = fmaxf(acquisition_freq, MIN_ACQUISITION_FREQ);
+      //Serial.println(acquisition_freq);
+      
       goto endeval;
     }
 
