@@ -52,11 +52,11 @@ String message_BT;            // string that stores the incoming BT message
 String message_COM;           // string that stores the incoming COM message
 const int ledPin = 13;        // The led is ON when the application is logging on SD
 
-#define MIN_ACQUISITION_FREQ 1.0f         // The minimum frequency of acquisition
+//#define MIN_ACQUISITION_FREQ 1.0f         // The minimum frequency of acquisition
 
-float acquisition_freq     =  50;         // The frequency of acquisition     =  50 Hz (20 ms)
-float sendtoserial_freq    =   1;         // The frequency of sendtoserial    =   1 Hz (1 s)
-float sendtobluetooth_freq =   1;         // The frequency of sendtobluetooth =   1 Hz (1 s)
+float acquisition_freq     =   1;         // The minimum frequency of acquisition =   1 Hz (1 s)
+float sendtoserial_freq    =   1;         // The frequency of sendtoserial        =   1 Hz (1 s)
+float sendtobluetooth_freq =   1;         // The frequency of sendtobluetooth     =   1 Hz (1 s)
 float sendtosd_freq        =   0;         // The frequency of sendtosd, NOT ACTIVE
 
 long acquisition_interval     = (long)(1.0f / acquisition_freq     * 1000.0f);
@@ -67,6 +67,10 @@ Metro acquisitionTimer     = Metro(acquisition_interval);        // The timer fo
 Metro sendtoserialTimer    = Metro(sendtoserial_interval);       // The timer for sendtoserialTimer
 Metro sendtobluetoothTimer = Metro(sendtobluetooth_interval);    // The timer for sendtobluetoothTimer
 Metro sendtosdTimer        = Metro(1000);        //NOT ACTIVE    // The timer for sendtosdTimer
+
+bool is_sendtoserial_acquisition_updated    = false;    // The check that the aquisition has been updated since the last $DTA
+bool is_sendtobluetooth_acquisition_updated = false;    // The check that the aquisition has been updated since the last $DTA
+bool is_sendtosd_acquisition_updated        = false;    // The check that the aquisition has been updated since the last $DTA
 
 char Data[2][BUFFERLENGTH];  // The strings containing the data message
 char *p_Data;                // The pointer to the current valid data string
@@ -205,6 +209,12 @@ void acquisition(void)
   strcat (p_newData, "\0");
   
   p_Data = (p_Data == &Data[0][0] ? &Data[1][0] : &Data[0][0]);   // Switch the pointer to the current valid string to the new one
+
+  is_sendtoserial_acquisition_updated      = true;    // The aquisition has been updated since the last $DTA
+  is_sendtobluetooth_acquisition_updated   = true;    // The aquisition has been updated since the last $DTA
+  is_sendtosd_acquisition_updated          = true;    // The aquisition has been updated since the last $DTA
+
+  //Serial.println("*"); // Debug for computation frequency;
 }
 
 
@@ -257,6 +267,7 @@ void sendtoserial(void)
 {
   char printdata[BUFFERLENGTH];
   strcpy (printdata, p_Data);
+  is_sendtoserial_acquisition_updated = false;
   Serial.println(printdata);
 }
 
@@ -266,6 +277,7 @@ void sendtobluetooth(void)
 {
   char printdata[BUFFERLENGTH];
   strcpy (printdata, p_Data);
+  is_sendtobluetooth_acquisition_updated = false;
   Serial1.println(printdata);
 }
 
@@ -275,6 +287,7 @@ void sendtosd(void)
 {
   char printdata[BUFFERLENGTH];
   strcpy (printdata, p_Data);
+  is_sendtosd_acquisition_updated = false;
   if (dataFile) dataFile.println(printdata);
 }
 
@@ -290,10 +303,31 @@ void loop() {
 
   // 0) Check Metro Timers:
 
-  if ((acquisition_freq > 0)     && (acquisitionTimer.check() == 1))     acquisition();
-  if ((sendtoserial_freq > 0)    && (sendtoserialTimer.check() == 1))    sendtoserial();
-  if ((sendtobluetooth_freq > 0) && (sendtobluetoothTimer.check() == 1)) sendtobluetooth();
-  if ((sendtosd_freq > 0)        && (sendtosdTimer.check() == 1))        sendtosd();
+  if ((acquisition_freq > 0)     && (acquisitionTimer.check() == 1)) acquisition();
+  
+  if ((sendtoserial_freq > 0)    && (sendtoserialTimer.check() == 1)) {
+    if (!is_sendtoserial_acquisition_updated) {
+      acquisition();
+      acquisitionTimer.reset();
+    }
+    sendtoserial();
+  }
+  
+  if ((sendtobluetooth_freq > 0) && (sendtobluetoothTimer.check() == 1)) {
+    if (!is_sendtobluetooth_acquisition_updated) {
+      acquisition();
+      acquisitionTimer.reset();
+    }
+    sendtobluetooth();
+  }
+  
+  if ((sendtosd_freq > 0)        && (sendtosdTimer.check() == 1)) {
+    if (!is_sendtosd_acquisition_updated) {
+      acquisition();
+      acquisitionTimer.reset();
+    }
+    sendtosd();
+  }
 
   
   // 1) Read input from Serial and Bluetooth:
@@ -665,9 +699,9 @@ void loop() {
       strcat (Answer,f3);
 
       // Set the acquisition_freq = max (sendtoserial_freq, sendtosd_freq, sendtobluetooth_freq, MIN_ACQUISITION_FREQ)
-      acquisition_freq = fmaxf(sendtoserial_freq, sendtobluetooth_freq);
-      acquisition_freq = fmaxf(acquisition_freq, sendtosd_freq);
-      acquisition_freq = fmaxf(acquisition_freq, MIN_ACQUISITION_FREQ);
+      //acquisition_freq = fmaxf(sendtoserial_freq, sendtobluetooth_freq);
+      //acquisition_freq = fmaxf(acquisition_freq, sendtosd_freq);
+      //acquisition_freq = fmaxf(acquisition_freq, MIN_ACQUISITION_FREQ);
       //Serial.println(acquisition_freq);
       
       goto endeval;
