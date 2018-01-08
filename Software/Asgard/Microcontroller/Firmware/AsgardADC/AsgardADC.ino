@@ -1,4 +1,4 @@
-/* Work in progress Asgard ADC Firmware Relase 0.4.0 06/01/2018
+/* Work in progress Asgard ADC Firmware Relase 0.4.0 08/01/2018
    This is a preliminary release, work in progress. Misbehaviour is plausible.
    AsgardADC.ino - Air Data Computer Firmware
    Conform to ADC Common Mesage Set 0.4
@@ -26,8 +26,8 @@
 #include <SD.h>
 #include <SPI.h>
 #include <SD_t3.h>
-#include <i2c_t3.h> //Library for second I2C 
-#include <SSC.h>    //Library for SSC series sensors, support two bus I2C
+#include <i2c_t3.h>                       // Library for second I2C 
+#include <SSC.h>                          // Library for SSC series sensors, support two bus I2C
 
 #define BUFFERLENGTH 400                  // The length of string buffers
 #define DELIMITER '\n'
@@ -52,8 +52,6 @@ String message_BT;            // string that stores the incoming BT message
 String message_COM;           // string that stores the incoming COM message
 const int ledPin = 13;        // The led is ON when the application is logging on SD
 
-//#define MIN_ACQUISITION_FREQ 1.0f         // The minimum frequency of acquisition
-
 float acquisition_freq     =   1;         // The minimum frequency of acquisition =   1 Hz (1 s)
 float sendtoserial_freq    =   1;         // The frequency of sendtoserial        =   1 Hz (1 s)
 float sendtobluetooth_freq =   1;         // The frequency of sendtobluetooth     =   1 Hz (1 s)
@@ -62,11 +60,14 @@ float sendtosd_freq        =   0;         // The frequency of sendtosd, NOT ACTI
 long acquisition_interval     = (long)(1.0f / acquisition_freq     * 1000.0f);
 long sendtoserial_interval    = (long)(1.0f / sendtoserial_freq    * 1000.0f);
 long sendtobluetooth_interval = (long)(1.0f / sendtobluetooth_freq * 1000.0f);
+long sendtosd_interval        = 1000l;    // IMPOSSIBLE TO SET IT CORRECTLY, BECAUSE freq=0
 
-Metro acquisitionTimer     = Metro(acquisition_interval);        // The timer for acquisition
-Metro sendtoserialTimer    = Metro(sendtoserial_interval);       // The timer for sendtoserialTimer
-Metro sendtobluetoothTimer = Metro(sendtobluetooth_interval);    // The timer for sendtobluetoothTimer
-Metro sendtosdTimer        = Metro(1000);        //NOT ACTIVE    // The timer for sendtosdTimer
+int delaymicroseconds_interval = 5000;    // The delay at the end of main loop. It may vary in the range 100-5000
+
+Metro acquisitionTimer     = Metro(acquisition_interval);             // The timer for acquisition
+Metro sendtoserialTimer    = Metro(sendtoserial_interval);            // The timer for sendtoserialTimer
+Metro sendtobluetoothTimer = Metro(sendtobluetooth_interval);         // The timer for sendtobluetoothTimer
+Metro sendtosdTimer        = Metro(sendtosd_interval); //NOT ACTIVE   // The timer for sendtosdTimer
 
 bool is_sendtoserial_acquisition_updated    = false;    // The check that the aquisition has been updated since the last $DTA
 bool is_sendtobluetooth_acquisition_updated = false;    // The check that the aquisition has been updated since the last $DTA
@@ -100,6 +101,7 @@ void setup() {
   pinMode(TsensorPin, INPUT);
   pinMode(ledPin, OUTPUT);
 
+  //Serial.begin (57600);                           // Set up the Serial Connection using high speed, for precise log timings
   Serial.begin (9600);                              // Set up the Serial Connection
   Serial1.begin (9600);                             // Set up the BT Connection
   delay(500);
@@ -650,16 +652,16 @@ void loop() {
             if ((DataFrequency_COM >= 0) && (DataFrequency_COM != sendtoserial_freq)) {
               sendtoserial_freq = DataFrequency_COM;
               if (sendtoserial_freq > 0) {
-                long new_interval=(long)(1.0f/sendtoserial_freq*1000.0f);
-                sendtoserialTimer.interval(new_interval);
+                sendtoserial_interval=(long)(1.0f/sendtoserial_freq*1000.0f);
+                sendtoserialTimer.interval(sendtoserial_interval);
                 sendtoserialTimer.reset();
               }
             }
             if ((DataFrequency_BT >= 0) && (DataFrequency_BT != sendtobluetooth_freq)) {
               sendtobluetooth_freq = DataFrequency_BT;
               if (sendtobluetooth_freq > 0) {
-                long new_interval=(long)(1.0f/sendtobluetooth_freq*1000.0f);
-                sendtobluetoothTimer.interval(new_interval);
+                sendtobluetooth_interval=(long)(1.0f/sendtobluetooth_freq*1000.0f);
+                sendtobluetoothTimer.interval(sendtobluetooth_interval);
                 sendtobluetoothTimer.reset();
               }
             }
@@ -674,8 +676,8 @@ void loop() {
                 dataFile = SD.open(AirDataComputer._logfile, FILE_WRITE);
                 if (dataFile) {
                   AirDataComputer._status[0] = '1';  // SD Card present
-                  long new_interval=(long)(1.0f/sendtosd_freq*1000.0f);
-                  sendtosdTimer.interval(new_interval);
+                  sendtosd_interval=(long)(1.0f/sendtosd_freq*1000.0f);
+                  sendtosdTimer.interval(sendtosd_interval);
                   sendtosdTimer.reset();
                   digitalWrite(ledPin, HIGH); // set the LED on
                 } else {
@@ -698,11 +700,14 @@ void loop() {
       sprintf(f3,"%.3f", sendtosd_freq);
       strcat (Answer,f3);
 
-      // Set the acquisition_freq = max (sendtoserial_freq, sendtosd_freq, sendtobluetooth_freq, MIN_ACQUISITION_FREQ)
-      //acquisition_freq = fmaxf(sendtoserial_freq, sendtobluetooth_freq);
-      //acquisition_freq = fmaxf(acquisition_freq, sendtosd_freq);
-      //acquisition_freq = fmaxf(acquisition_freq, MIN_ACQUISITION_FREQ);
-      //Serial.println(acquisition_freq);
+      // Set the new delaymicroseconds_interval = 0.5% of the minimum of the log delays
+      long delay_interval = 1000l;    // 1 second min
+      if (sendtoserial_freq > 0)    delay_interval = fminl(sendtoserial_interval, delay_interval);
+      if (sendtobluetooth_freq > 0) delay_interval = fminl(sendtobluetooth_interval, delay_interval);
+      if (sendtosd_freq > 0)        delay_interval = fminl(sendtosd_interval, delay_interval);
+      if (delay_interval < 20l) delay_interval = 20l;
+      delaymicroseconds_interval = (int)(delay_interval * 5);
+      //Serial.println(delaymicroseconds_interval);
       
       goto endeval;
     }
@@ -871,7 +876,8 @@ void loop() {
       if (endmsg_BT)  Serial1.println(Answer);
     }
   }
-  delay(2); //delay
+  
+  delayMicroseconds(delaymicroseconds_interval); //delay
 }
 
 
