@@ -69,9 +69,9 @@ Metro sendtoserialTimer    = Metro(sendtoserial_interval);            // The tim
 Metro sendtobluetoothTimer = Metro(sendtobluetooth_interval);         // The timer for sendtobluetoothTimer
 Metro sendtosdTimer        = Metro(sendtosd_interval); //NOT ACTIVE   // The timer for sendtosdTimer
 
-bool is_sendtoserial_acquisition_updated    = false;    // The check that the aquisition has been updated since the last $DTA
-bool is_sendtobluetooth_acquisition_updated = false;    // The check that the aquisition has been updated since the last $DTA
-bool is_sendtosd_acquisition_updated        = false;    // The check that the aquisition has been updated since the last $DTA
+bool sendtoserial_needs_acquisition    = true;    // The check that the aquisition has been updated since the last $DTA
+bool sendtobluetooth_needs_acquisition = true;    // The check that the aquisition has been updated since the last $DTA
+bool sendtosd_needs_acquisition        = true;    // The check that the aquisition has been updated since the last $DTA
 
 char Data[2][BUFFERLENGTH];  // The strings containing the data message
 char *p_Data;                // The pointer to the current valid data string
@@ -212,9 +212,9 @@ void acquisition(void)
   
   p_Data = (p_Data == &Data[0][0] ? &Data[1][0] : &Data[0][0]);   // Switch the pointer to the current valid string to the new one
 
-  is_sendtoserial_acquisition_updated      = true;    // The aquisition has been updated since the last $DTA
-  is_sendtobluetooth_acquisition_updated   = true;    // The aquisition has been updated since the last $DTA
-  is_sendtosd_acquisition_updated          = true;    // The aquisition has been updated since the last $DTA
+  sendtoserial_needs_acquisition      = false;    // The aquisition has been updated since the last $DTA
+  sendtobluetooth_needs_acquisition   = false;    // The aquisition has been updated since the last $DTA
+  sendtosd_needs_acquisition          = false;    // The aquisition has been updated since the last $DTA
 
   //Serial.println("*"); // Debug for computation frequency;
 }
@@ -269,7 +269,7 @@ void sendtoserial(void)
 {
   char printdata[BUFFERLENGTH];
   strcpy (printdata, p_Data);
-  is_sendtoserial_acquisition_updated = false;
+  sendtoserial_needs_acquisition = true;
   Serial.println(printdata);
 }
 
@@ -279,7 +279,7 @@ void sendtobluetooth(void)
 {
   char printdata[BUFFERLENGTH];
   strcpy (printdata, p_Data);
-  is_sendtobluetooth_acquisition_updated = false;
+  sendtobluetooth_needs_acquisition = true;
   Serial1.println(printdata);
 }
 
@@ -289,7 +289,7 @@ void sendtosd(void)
 {
   char printdata[BUFFERLENGTH];
   strcpy (printdata, p_Data);
-  is_sendtosd_acquisition_updated = false;
+  sendtosd_needs_acquisition = true;
   if (dataFile) dataFile.println(printdata);
 }
 
@@ -308,7 +308,7 @@ void loop() {
   if ((acquisition_freq > 0)     && (acquisitionTimer.check() == 1)) acquisition();
   
   if ((sendtoserial_freq > 0)    && (sendtoserialTimer.check() == 1)) {
-    if (!is_sendtoserial_acquisition_updated) {
+    if (sendtoserial_needs_acquisition) {
       acquisition();
       acquisitionTimer.reset();
     }
@@ -316,7 +316,7 @@ void loop() {
   }
   
   if ((sendtobluetooth_freq > 0) && (sendtobluetoothTimer.check() == 1)) {
-    if (!is_sendtobluetooth_acquisition_updated) {
+    if (sendtobluetooth_needs_acquisition) {
       acquisition();
       acquisitionTimer.reset();
     }
@@ -324,7 +324,7 @@ void loop() {
   }
   
   if ((sendtosd_freq > 0)        && (sendtosdTimer.check() == 1)) {
-    if (!is_sendtosd_acquisition_updated) {
+    if (sendtosd_needs_acquisition) {
       acquisition();
       acquisitionTimer.reset();
     }
@@ -595,6 +595,7 @@ void loop() {
           if (isSDCardPresent) {
             dataFile.close();
             strcpy(AirDataComputer._logfile, command);
+            //dataFile = SD.open(AirDataComputer._logfile, O_WRITE | O_CREAT | O_APPEND);
             dataFile = SD.open(AirDataComputer._logfile, FILE_WRITE);
             if (dataFile) { // if the file is available, write to it:
               AirDataComputer._status[0] = '1';  // SD Card present
@@ -655,6 +656,7 @@ void loop() {
                 sendtoserial_interval=(long)(1.0f/sendtoserial_freq*1000.0f);
                 sendtoserialTimer.interval(sendtoserial_interval);
                 sendtoserialTimer.reset();
+                sendtoserial_needs_acquisition = true;
               }
             }
             if ((DataFrequency_BT >= 0) && (DataFrequency_BT != sendtobluetooth_freq)) {
@@ -663,6 +665,7 @@ void loop() {
                 sendtobluetooth_interval=(long)(1.0f/sendtobluetooth_freq*1000.0f);
                 sendtobluetoothTimer.interval(sendtobluetooth_interval);
                 sendtobluetoothTimer.reset();
+                sendtobluetooth_needs_acquisition = true;
               }
             }
             if ((DataFrequency_SD >= 0) && (DataFrequency_SD != sendtosd_freq)) {
@@ -673,12 +676,14 @@ void loop() {
                 if (SD.begin(chipSelect)) {
                   isSDCardPresent = true;            // Set up the SDCard
                 }
+                //dataFile = SD.open(AirDataComputer._logfile, O_WRITE | O_CREAT | O_APPEND);
                 dataFile = SD.open(AirDataComputer._logfile, FILE_WRITE);
                 if (dataFile) {
                   AirDataComputer._status[0] = '1';  // SD Card present
                   sendtosd_interval=(long)(1.0f/sendtosd_freq*1000.0f);
                   sendtosdTimer.interval(sendtosd_interval);
                   sendtosdTimer.reset();
+                  sendtosd_needs_acquisition = true;
                   digitalWrite(ledPin, HIGH); // set the LED on
                 } else {
                   AirDataComputer._status[0] = '0';  // SD Card not present
@@ -707,7 +712,7 @@ void loop() {
       if (sendtosd_freq > 0)        delay_interval = fminl(sendtosd_interval, delay_interval);
       if (delay_interval < 20l) delay_interval = 20l;
       delaymicroseconds_interval = (int)(delay_interval * 5);
-      //Serial.println(delaymicroseconds_interval);
+      Serial.println(delaymicroseconds_interval);
       
       goto endeval;
     }
