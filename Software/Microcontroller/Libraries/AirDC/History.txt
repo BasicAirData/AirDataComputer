@@ -1,5 +1,0 @@
-Teensy Lib
-AirDC -Work in Progress
-07-01-2016 Beta Release
-01-04-2017 The big changes are coming
-Best Regards
