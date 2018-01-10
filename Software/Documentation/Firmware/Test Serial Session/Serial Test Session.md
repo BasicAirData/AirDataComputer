@@ -1,5 +1,16 @@
 ## Example Test Communication Session Between a Remote unit, R,  and an Asgard ADC. All the communications strings are terminated with a carriage return char '\n'
-
+---- To be fixed
+1) Impostazione della stringa di dati:
+$DTQ,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+2) Creazione nuovo file su SD:
+$FMQ,NEW,PAGNOTTA.CSV
+3) Impostazione nuovo file come file corrente:
+$LCS,PAGNOTTA.CSV
+4) Per iniziare la registrazione (USB=0Hz, BT=0Hz, SD=50Hz):
+$DFS,0,0,50
+5) Per terminare la registrazione:
+$DFS,0,0,0
+----- Supeseed
 This sequence of commands can be used, for example, to configure and use a benchtop ADC unit. To be noted that the unit should periodically send to R the data required by the default configuration. To attain an effective communication these messages are removed.
 
 
