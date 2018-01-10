@@ -117,7 +117,7 @@ void AirDC::RhoAir(int mode)
             {
             case 1:
             {
-                //Calculates Sensibility factor for p
+;                //Calculates Sensibility factor for p
                 _Rho=p*Ma/(Z*R*T)*(1-xv*(1-Mv/Ma))*0.001;
                 break;
             }
@@ -161,7 +161,7 @@ void AirDC::IAS(int mode)
             _qc=0;
         }*/
         //Reverse Input
-        _qc=-1*_qc
+        _qc=-1*_qc;
         _IAS=1.27775310604201*sqrt(_qc);
 /*        if (_qc>0)
         {
