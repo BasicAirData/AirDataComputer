@@ -156,19 +156,21 @@ void AirDC::IAS(int mode)
     switch (mode)
     {
     case 1:
-        if (_qc<0)
+/*        if (_qc<0)
         {
             _qc=0;
-        }
+        }*/
+        //Reverse Input
+        _qc=-1*_qc
         _IAS=1.27775310604201*sqrt(_qc);
-        if (_qc>0)
+/*        if (_qc>0)
         {
             _uIAS=0.638876553021004/(sqrt(_qc))*_uqc;
         }
         else
         {
             _uIAS=0;
-        }
+        }*/
         break;
     }
 }
