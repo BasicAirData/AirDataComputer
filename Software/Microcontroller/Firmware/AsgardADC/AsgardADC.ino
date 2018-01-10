@@ -229,7 +229,7 @@ void computation() {
   // Init
   AirDataComputer._T = Temperature + 273.15;
   AirDataComputer.RhoAir(1);                    // Calculates the air density
-  AirDataComputer.Viscosity(2);                 // Calculates the dynamic viscosity, Algorithm 2 (UOM Pas1e-6)
+  AirDataComputer.Viscosity(1);                 // Calculates the dynamic viscosity, Algorithm 2 (UOM Pas1e-6)
   AirDataComputer.CalibrationFactor(1);         // Calibration factor set to 1
   AirDataComputer.IAS(1);                       // Calculates IAS method 1
   AirDataComputer._TAS = AirDataComputer._IAS;
@@ -239,7 +239,7 @@ void computation() {
   iof = 1;
   while ((res > 0.05) || (iof < 10)) {
     AirDataComputer.RhoAir(1);                  // Calculates the air density
-    AirDataComputer.Viscosity(2);               // Calculates the dynamic viscosity, Algorithm 2 (UOM Pas1e-6)
+    AirDataComputer.Viscosity(1);               // Calculates the dynamic viscosity, Algorithm 2 (UOM Pas1e-6)
     AirDataComputer.CalibrationFactor(2);       // Update calibration fator vat at TAS
     AirDataComputer.IAS(1);                     // IAS
     AirDataComputer.CAS(1);                     // CAS
@@ -248,7 +248,7 @@ void computation() {
     iTAS = AirDataComputer._TAS;                // Store TAS value
     AirDataComputer.OAT(1);                     // Update outside Air Temperature
     AirDataComputer.RhoAir(1);                  // Calculates the air density
-    AirDataComputer.Viscosity(2);               // Calculates the dynamic viscosity, Algorithm 2 (UOM Pas1e-6)
+    AirDataComputer.Viscosity(1);               // Calculates the dynamic viscosity, Algorithm 2 (UOM Pas1e-6)
     AirDataComputer.CalibrationFactor(2);       // Update calibration fator vat at TAS
     AirDataComputer.TAS(1);                     // Update TAS
     AirDataComputer.Mach(1);                    // Update Mach No
