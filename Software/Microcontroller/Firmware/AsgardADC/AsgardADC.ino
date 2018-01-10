@@ -1,4 +1,4 @@
-/* Work in progress Asgard ADC Firmware Relase 0.4.0 08/01/2018
+/* Work in progress Asgard ADC Firmware Relase 0.4.0 12/01/2018
    This is a preliminary release, work in progress. Misbehaviour is plausible.
    AsgardADC.ino - Air Data Computer Firmware
    Conform to ADC Common Mesage Set 0.4
@@ -29,7 +29,7 @@
 #include <i2c_t3.h>                       // Library for second I2C 
 #include <SSC.h>                          // Library for SSC series sensors, support two bus I2C
 
-#define BUFFERLENGTH 400                  // The length of string buffers
+#define BUFFERLENGTH 512                  // The length of string buffers
 #define DELIMITER '\n'
 #define SEPARATOR ","
 #define ADC_NAME "ASGARD"                 // The name of the ADC device
@@ -712,7 +712,7 @@ void loop() {
       if (sendtosd_freq > 0)        delay_interval = fminl(sendtosd_interval, delay_interval);
       if (delay_interval < 20l) delay_interval = 20l;
       delaymicroseconds_interval = (int)(delay_interval * 5);
-      Serial.println(delaymicroseconds_interval);
+      //Serial.println(delaymicroseconds_interval);           // Left for debug purpose
       
       goto endeval;
     }
@@ -849,21 +849,31 @@ void loop() {
             Serial.println(Answer);
             strcpy (Answer,"");
             
-            while (dir.available()) {
-              Serial.write(dir.read());
+            while (dir.available() && (!Serial.available())) {
+              for (int i = 0; (i < 512) && (dir.available()); i++) {
+                Serial.write(dir.read());
+              }
+              Serial.flush();
+              if (Serial.available()) Serial.println();
             }
-            Serial.println("$EOF");
+            /*if (dir.available()) Serial.println("$EOD");
+            else*/ Serial.println("$EOF");
           }
           if (endmsg_BT) {
             strcat (Answer,SEPARATOR);
             strcat (Answer,dir.name());
             Serial1.println(Answer);
             strcpy (Answer,"");
-            
-            while (dir.available()) {
-              Serial1.write(dir.read());
+
+            while (dir.available() && (!Serial1.available())) {
+              for (int i = 0; (i < 512) && (dir.available()); i++) {
+                Serial1.write(dir.read());
+              }
+              Serial1.flush();
+              if (Serial1.available()) Serial1.println();
             }
-            Serial.println("$EOF");
+            /*if (dir.available()) Serial.println("$EOD");
+            else*/ Serial1.println("$EOF");
           }
           dir.close();
         }
