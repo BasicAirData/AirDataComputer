@@ -2,6 +2,8 @@
 //1 debug mode 
 debug=1;
 exec('rhoair.sci')
+exec('viscosityair.sci')
+exec('ISAaltitude.sci')
 clc
 //Q = csvRead("LG3-50HZ.CSV") //Field data  <-  Buono
 Q = csvRead("LG57600.CSV") //Field data
@@ -30,9 +32,10 @@ rhoairmcol=22;
 vair=23;
 Re=24;
 cfactor=25;
-//Define error band
-//Air Density
-airdensityeband=0.5; //Percent of rho
+//Define tollerance band
+airdensityeband=0.5; //Air Density Percent of rho
+viscosityeband=0.5;//Viscosity %
+altitudeeband=0.5;//Altitude %
 fsamplev=zeros(1,ngroups);
 
 //Calculate the average sample frequency from the samples
@@ -153,10 +156,42 @@ if debug==1 then
     clf(3);
     figerrori.figure_name='Absoulte differences betweeen logged ADC output and library calculated values';
     //Rhoair
-    //   subplot(2,2,1)
+    subplot(2,2,1)
     xtitle('Density of Air Difference % vs Time [ms]')
     plot(timetic,Q(:,c+1),2)
     if ((abs(min(Q(:,c+1)))<airdensityeband)&(abs(max(Q(:,c+1)))<airdensityeband)) then
-        mprintf('ADC calculated Air Density value is within the tollerance band of %f %% of density',airdensityeband)
+        mprintf('\nADC calculated Air Density value is within the tollerance band of %f %% of density',airdensityeband)
+    else
+        mprintf('\nWarning: ADC calculated Air Density value is outside the tollerance band of %f %% of density',airdensityeband)
     end
+
+    //Air viscosity check
+    subplot(2,2,2)
+    xtitle('Viscosity of Air Difference % vs Time [ms]')
+    for ri=1:r
+        Q(ri,c+2)=(Q(ri,vair)-viscosityair(Q(ri,exttempcol)))/viscosityair(Q(ri,exttempcol))*100
+    end
+    plot(timetic,Q(:,c+2),2)
+    if ((abs(min(Q(:,c+2)))<viscosityeband)&(abs(max(Q(:,c+2)))<viscosityeband)) then
+        mprintf('\nADC calculated Viscosity value is within the tollerance band of %f %% of viscosity',viscosityeband)
+    else
+        mprintf('\nWarning: ADC calculated Viscosity value is outside the tollerance band of %f %% of viscosity',viscosityeband)
+    end
+    //Altitude check
+    subplot(2,2,3)
+    xtitle('Altitude Difference % vs Time [ms]')
+    for ri=1:r
+        Q(ri,c+3)=(Q(ri,altitude)-ISAaltitude(Q(ri,absmcol)))/ISAaltitude(Q(ri,absmcol))*100
+    end
+    plot(timetic,Q(:,c+3),2)
+    if ((abs(min(Q(:,c+3)))<altitudeeband)&(abs(max(Q(:,c+3)))<altitudeeband)) then
+        mprintf('\nADC calculated altitude value is within the tollerance band of %f %% of viscosity',altitudeeband)
+    else
+        mprintf('\nWarning: ADC calculated altitude value is outside the tollerance band of %f %% of viscosity',altitudeeband)
+    end
+    
+    
+    
+    
+    
 end
