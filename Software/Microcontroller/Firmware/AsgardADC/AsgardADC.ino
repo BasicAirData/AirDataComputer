@@ -1,4 +1,4 @@
-/* Work in progress Asgard ADC Firmware Relase 0.4.0 12/01/2018
+﻿/* Work in progress Asgard ADC Firmware Relase 0.4.0 12/01/2018
    This is a preliminary release, work in progress. Misbehaviour is plausible.
    AsgardADC.ino - Air Data Computer Firmware
    Conform to ADC Common Mesage Set 0.4
@@ -198,7 +198,7 @@ void acquisition(void)
         case 18:                                                                  // 19 = Uncertainty Altitude [m]
         case 19: sprintf(workbuff, "%.1f", (AirDataComputer._dataout[i])); break; // 20 = Uncertainty OAT [K]
         case 20:                                                                  // 21 = Air Density [kg/m^3]
-        case 21: sprintf(workbuff, "%.6f", (AirDataComputer._dataout[i])); break; // 22 = Air Viscosity[Pas*10^-6]
+        case 21: sprintf(workbuff, "%.6f", (AirDataComputer._dataout[i])); break; // 22 = Air Viscosity[Pas]
         case 22: sprintf(workbuff, "%.1f", (AirDataComputer._dataout[i])); break; // 23 = Re
         case 23: sprintf(workbuff, "%.4f", (AirDataComputer._dataout[i])); break; // 24 = c factor
         
