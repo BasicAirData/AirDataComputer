@@ -197,8 +197,8 @@ void acquisition(void)
         case 17:                                                                  // 18 = Uncertainty TAS [m/s]
         case 18:                                                                  // 19 = Uncertainty Altitude [m]
         case 19: sprintf(workbuff, "%.1f", (AirDataComputer._dataout[i])); break; // 20 = Uncertainty OAT [K]
-        case 20:                                                                  // 21 = Air Density [kg/m^3]
-        case 21: sprintf(workbuff, "%.6f", (AirDataComputer._dataout[i])); break; // 22 = Air Viscosity[Pas]
+        case 20: sprintf(workbuff, "%.6f", (AirDataComputer._dataout[i])); break; // 21 = Air Density [kg/m^3]
+        case 21: sprintf(workbuff, "%.8f", (AirDataComputer._dataout[i])); break; // 22 = Air Viscosity[Pas]
         case 22: sprintf(workbuff, "%.1f", (AirDataComputer._dataout[i])); break; // 23 = Re
         case 23: sprintf(workbuff, "%.4f", (AirDataComputer._dataout[i])); break; // 24 = c factor
         
