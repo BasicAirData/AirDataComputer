@@ -1,4 +1,4 @@
-﻿/* Work in progress Asgard ADC Firmware Relase 0.4.0 12/01/2018
+/* Work in progress Asgard ADC Firmware Relase 0.4.0 11/01/2018
    This is a preliminary release, work in progress. Misbehaviour is plausible.
    AsgardADC.ino - Air Data Computer Firmware
    Conform to ADC Common Mesage Set 0.4
@@ -52,17 +52,17 @@ String message_BT;            // string that stores the incoming BT message
 String message_COM;           // string that stores the incoming COM message
 const int ledPin = 13;        // The led is ON when the application is logging on SD
 
-float acquisition_freq     =   1;         // The minimum frequency of acquisition =   1 Hz (1 s)
-float sendtoserial_freq    =   1;         // The frequency of sendtoserial        =   1 Hz (1 s)
-float sendtobluetooth_freq =   1;         // The frequency of sendtobluetooth     =   1 Hz (1 s)
-float sendtosd_freq        =   0;         // The frequency of sendtosd, NOT ACTIVE
+float acquisition_freq     =   1;         // The minimum frequency of acquisition = 1 Hz (1 s)
+float sendtoserial_freq    =   0;         // The frequency of sendtoserial        = NOT ACTIVE
+float sendtobluetooth_freq =   0;         // The frequency of sendtobluetooth     = NOT ACTIVE
+float sendtosd_freq        =   0;         // The frequency of sendtosd,           = NOT ACTIVE
 
-long acquisition_interval     = (long)(1.0f / acquisition_freq     * 1000.0f);
-long sendtoserial_interval    = (long)(1.0f / sendtoserial_freq    * 1000.0f);
-long sendtobluetooth_interval = (long)(1.0f / sendtobluetooth_freq * 1000.0f);
-long sendtosd_interval        = 1000l;    // IMPOSSIBLE TO SET IT CORRECTLY, BECAUSE freq=0
+long acquisition_interval  = (long)(1.0f / acquisition_freq * 1000.0f);
+long sendtoserial_interval;
+long sendtobluetooth_interval;
+long sendtosd_interval;
 
-int delaymicroseconds_interval = 5000;    // The delay at the end of main loop. It may vary in the range 100-5000
+int delaymicroseconds_interval = 5000;    // The delay at the end of main loop. It may vary in the range 100-5000 micros.
 
 Metro acquisitionTimer     = Metro(acquisition_interval);             // The timer for acquisition
 Metro sendtoserialTimer    = Metro(sendtoserial_interval);            // The timer for sendtoserialTimer
