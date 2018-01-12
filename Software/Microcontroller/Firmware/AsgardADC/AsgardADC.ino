@@ -3,7 +3,7 @@
    AsgardADC.ino - Air Data Computer Firmware
    Conform to ADC Common Mesage Set 0.4
    Firmware for Teensy 3.6 MCU
-   Created by JLJ and GC, BasicAirData Team.
+   Created by JLJ and GC, BasicAirData Team www.basicairdata.eu
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
