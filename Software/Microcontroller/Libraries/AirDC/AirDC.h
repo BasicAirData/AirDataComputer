@@ -1,9 +1,18 @@
- /**
- * AirDC - Library for Basic Air Data calculations
- * Created by J.L.J., December 3, 2015.\n Refer to http:\\www.basicairdata.eu
- * Status: The big updates are coming 04/2017 JLJ
+/**
+* AirDC - Library for Basic Air Data calculations
+* J.L.J (C)2015, Basic Air Data Team.\n Refer to http:\\www.basicairdata.eu
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implie  d warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* You should have received a copy of the GNU General Public License
+* along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
-
 #ifndef AirDC_h
 #define AirDC_h
 #include <Arduino.h>
@@ -49,7 +58,7 @@ public:
     double _T;/**< Temperature K*/
     double _TRaw;/**< Temperature sensor counts*/
     double _RH;/**< Relative Humidity*/
-    double _qc;/**< Differential pressure at Pitot, sensor counts*/
+    double _qc;/**< Differential pressure at Pitot, Pascal*/
     double _qcRaw;/**< Raw sensor value of differential pressure at Pitot, Impact pressure minus static pressure Pa*/
     double _AOA;/**< Angle of Attack, rads*/
     double _AOS;/**< Angle of Sideslip, rads*/
