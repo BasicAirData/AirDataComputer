@@ -1,4 +1,4 @@
-/* Work in progress Asgard ADC Firmware Relase 0.4.0 11/01/2018
+/* Work in progress Asgard ADC Firmware Relase 0.4.0 13/01/2018
    This is a preliminary release, work in progress. Misbehaviour is plausible.
    AsgardADC.ino - Air Data Computer Firmware
    Conform to ADC Common Mesage Set 0.4
@@ -97,8 +97,8 @@ void setup() {
   pinMode(TsensorPin, INPUT);
   pinMode(ledPin, OUTPUT);
 
-  //Serial.begin (57600);                           // Set up the Serial Connection using high speed, for precise log timings
-  Serial.begin (9600);                              // Set up the Serial Connection
+  Serial.begin (57600);                           // Set up the Serial Connection using high speed, for precise log timings
+  //Serial.begin (9600);                              // Set up the Serial Connection
   Serial1.begin (9600);                             // Set up the BT Connection
   delay(500);
   if (Serial1) AirDataComputer._status[AIRDC_STATUS_BLUETOOTH] = '1';    // BT Module present on serial1
@@ -128,7 +128,7 @@ void setup() {
 
 
 
-void acquisition(void)
+void acquisition()
 {
   // 1) Sensors reading
 
@@ -149,7 +149,7 @@ void acquisition(void)
     }
   }
   
-  // Absolute Pressure
+  // Absolute Pressure sensor
   if (AirDataComputer._status[AIRDC_STATUS_P] == '1') {           // Absolute pressure sensor present
     absp.update();
     AirDataComputer._pRaw = absp.pressure_Raw();
@@ -163,7 +163,9 @@ void acquisition(void)
   // No sensor for RH, we are selecting dry air but the library will handle moist air if required
   AirDataComputer._RH = 0;
 
+  // For low speeds this is a good approximation
   AirDataComputer._T = AirDataComputer._TAT;
+
 
   // 2) Calculations
 
@@ -176,11 +178,10 @@ void acquisition(void)
   p_newData = (p_Data == &Data[0][0] ? &Data[1][0] : &Data[0][0]);  // The new string is composed into the unused Data index
   strcpy (p_newData, "$DTA");
 
-  char workbuff[BUFFERLENGTH];                          //General purpose buffer, used for itoa conversion
+  char workbuff[BUFFERLENGTH];                                      // General purpose buffer, used for itoa conversion
   AirDataComputer.PrepareData();
-  int i;
-  for (i=0; i<24; i++) {                                //Prepare to send #10 - DTA - DATA_ASSERT message
-    // Check the fields from 1 to 24
+
+  for (int i=0; i<AIRDC_DATA_VECTOR_SIZE; i++) {                    // Prepare to send #10 - DTA - DATA_ASSERT message
     strcat (p_newData, SEPARATOR); // Add the separator
     if (AirDataComputer._datasel[i]=='1') {
       switch (i) {
@@ -240,9 +241,6 @@ void acquisition(void)
 
 
 void computation() {
-  // put your main code here, to run repeatedly:
-  
-  // Computation
   // Init
   AirDataComputer.RhoAir(1);                    // Calculates the air density
   AirDataComputer.Viscosity(1);                 // Calculates the dynamic viscosity, Algorithm 2 (UOM Pas1e-6)
@@ -251,6 +249,7 @@ void computation() {
   AirDataComputer._TAS = AirDataComputer._IAS;
   AirDataComputer.Mach(1);                      // Calculates Mach No
   AirDataComputer.OAT(1);                       // Outside Air Temperature
+  
   // Wild iteration
   iof = 1;
   while ((res > 0.05) || (iof < 10)) {
@@ -273,6 +272,7 @@ void computation() {
     res = abs(ip1TAS - iTAS) / iTAS;
     iof++;
   }
+  
   // Uncorrected ISA Altitude _h
   AirDataComputer.ISAAltitude(1);
   AirDataComputer._d = 8e-3;
@@ -511,7 +511,7 @@ void loop() {
     // --------------------------------------------------
     // #8 – DTS – DATA_SET
     // --------------------------------------------------
-    // $DTS,0,0,0,0,0,0,0,0,300,0   Sets the external temperature to 300 [K] (if the sensor is not present
+    // $DTS,0,0,0,0,0,0,0,0,300,0   Sets the external temperature to 300 [K] (if the sensor is not present)
     
     if (!strcmp(command, "$DTS")) {
       int i;
@@ -552,7 +552,7 @@ void loop() {
       strcpy (Answer, p_Data);
       int i;
       i=0;
-      for (i=0; i<24; i++) {
+      for (i=0; i<AIRDC_DATA_VECTOR_SIZE; i++) {
         command = strtok (NULL, SEPARATOR);
         if (strlen(command)<1) goto endeval;
         AirDataComputer._datasel[i]=command[0];
