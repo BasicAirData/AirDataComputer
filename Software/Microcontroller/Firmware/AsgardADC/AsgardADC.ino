@@ -37,7 +37,6 @@
 #define DEFAULT_LOGFILE "DATALOG.CSV"     // The default log file name
 #define DEFAULT_CONFIGFILE "CONFIG.CFG"   // The configuration file name
 
-
 const int chipSelect = BUILTIN_SDCARD;    // HW pin for micro SD adaptor CS
 bool isSDCardPresent = false;
 File dataFile;                            // The file on SD
@@ -76,25 +75,22 @@ bool sendtosd_needs_acquisition        = true;    // The check that the aquisiti
 char Data[2][BUFFERLENGTH];  // The strings containing the data message
 char *p_Data;                // The pointer to the current valid data string
 int  TsensorPin = A0;        // The input pin for the analog Temperature sensor
-long iterationcount = 0;     // A iteration counter; it counts the number of acquisition computed
 
-int TemperatureRaw = 0;
-double Temperature = 0;
 
 
 
 
 void setup() {
   // Deafult configuration for ADC Hardware. 1 present; 0 not installed
-  AirDataComputer._status[0] = '0'; // SD Card
-  AirDataComputer._status[1] = '1'; // Deltap pressure sensor
-  AirDataComputer._status[2] = '1'; // Absolute pressure sensor
-  AirDataComputer._status[3] = '1'; // External temperature sensor
-  AirDataComputer._status[4] = '1'; // Deltap sensor temperature
-  AirDataComputer._status[5] = '1'; // Absolute pressure sensor temperature
-  AirDataComputer._status[6] = '0'; // Real time clock temperature temperature
-  AirDataComputer._status[7] = '0'; // Error/Warning
-  AirDataComputer._status[8] = '0'; // BT Module present on serial1
+  AirDataComputer._status[AIRDC_STATUS_SD]        = '0'; // SD Card
+  AirDataComputer._status[AIRDC_STATUS_DELTAP]    = '1'; // Deltap pressure sensor
+  AirDataComputer._status[AIRDC_STATUS_P]         = '1'; // Absolute pressure sensor
+  AirDataComputer._status[AIRDC_STATUS_TAT]       = '1'; // External temperature sensor
+  AirDataComputer._status[AIRDC_STATUS_TDELTAP]   = '1'; // Deltap sensor temperature
+  AirDataComputer._status[AIRDC_STATUS_TABSP]     = '1'; // Absolute pressure sensor temperature
+  AirDataComputer._status[AIRDC_STATUS_RTCBATT]   = '0'; // Real time clock temperature temperature
+  AirDataComputer._status[AIRDC_STATUS_ERRWARN]   = '0'; // Error/Warning
+  AirDataComputer._status[AIRDC_STATUS_BLUETOOTH] = '0'; // BT Module present on serial1
 
   strcpy(AirDataComputer._logfile, DEFAULT_LOGFILE);
   
@@ -105,11 +101,11 @@ void setup() {
   Serial.begin (9600);                              // Set up the Serial Connection
   Serial1.begin (9600);                             // Set up the BT Connection
   delay(500);
-  if (Serial1) AirDataComputer._status[8] = '1';    // BT Module present on serial1
+  if (Serial1) AirDataComputer._status[AIRDC_STATUS_BLUETOOTH] = '1';    // BT Module present on serial1
   if (SD.begin(chipSelect)) {
     //Serial.println("SD card initialized");
     isSDCardPresent = true;                         // Set up the SDCard
-    AirDataComputer._status[0] = '1';               // SD Card present
+    AirDataComputer._status[AIRDC_STATUS_SD] = '1'; // SD Card present
   } //else Serial.println("SD card initialization failed");
 
   Wire.begin();                     // I2C Bus 0
@@ -137,26 +133,37 @@ void acquisition(void)
   // 1) Sensors reading
 
   // Outside Temperature Sensor
-  TemperatureRaw = analogRead(TsensorPin);
-  Temperature = (((TemperatureRaw * (3300.0 / 1024)) - 750) / 10) + 25;
-
-  // Iterations count (for debug purpose)
-  iterationcount++;
+  if (AirDataComputer._status[AIRDC_STATUS_TAT] == '1') {   // External Temperature sensor present
+    AirDataComputer._TRaw = analogRead(TsensorPin);
+    AirDataComputer._TAT = ((((AirDataComputer._TRaw * (3300.0 / 1024)) - 750) / 10) + 25) + 273.15; // Total Air Temperature
+  }
 
   // Differential Pressure sensor
-  diffp.update();
-  AirDataComputer._qc = diffp.pressure();
-  AirDataComputer._qcRaw = diffp.pressure_Raw();
-  AirDataComputer._Tdeltap = diffp.temperature();
-  AirDataComputer._TdeltapRaw = diffp.temperature_Raw();
+  if (AirDataComputer._status[AIRDC_STATUS_TDELTAP] == '1') {     // Differential pressure sensor present
+    diffp.update();
+    AirDataComputer._qc = diffp.pressure();
+    AirDataComputer._qcRaw = diffp.pressure_Raw();
+    if (AirDataComputer._status[AIRDC_STATUS_TDELTAP] == '1') {   // Temperature differential pressure sensor present
+      AirDataComputer._Tdeltap = diffp.temperature();
+      AirDataComputer._TdeltapRaw = diffp.temperature_Raw();
+    }
+  }
   
-  //Absolute Pressure
-  absp.update();
-  AirDataComputer._pRaw = absp.pressure_Raw();
-  AirDataComputer._Tabsp = absp.temperature();
-  AirDataComputer._TabspRaw = absp.temperature_Raw();
-  AirDataComputer._p = absp.pressure();
+  // Absolute Pressure
+  if (AirDataComputer._status[AIRDC_STATUS_P] == '1') {           // Absolute pressure sensor present
+    absp.update();
+    AirDataComputer._pRaw = absp.pressure_Raw();
+    AirDataComputer._p = absp.pressure();
+    if (AirDataComputer._status[AIRDC_STATUS_TABSP] == '1') {     // Temperature absolute pressure sensor present
+      AirDataComputer._Tabsp = absp.temperature();
+      AirDataComputer._TabspRaw = absp.temperature_Raw();
+    }
+  }
+  
+  // No sensor for RH, we are selecting dry air but the library will handle moist air if required
+  AirDataComputer._RH = 0;
 
+  AirDataComputer._T = AirDataComputer._TAT;
 
   // 2) Calculations
 
@@ -177,32 +184,44 @@ void acquisition(void)
     strcat (p_newData, SEPARATOR); // Add the separator
     if (AirDataComputer._datasel[i]=='1') {
       switch (i) {
-        case 0:                                                                   // 1  = Timestamp
-        case 1:                                                                   // 2  = Deltap [Sensor units, counts]
-        case 2:                                                                   // 3  = Absolute Pressure [Sensor units, counts]
-        case 3:                                                                   // 4  = Ext Temperature [Sensor units, counts]
-        case 4:                                                                   // 5  = Temp deltap [Sensor units, counts]
-        case 5: sprintf(workbuff, "%.0f", (AirDataComputer._dataout[i])); break;  // 6  = Temp absolute [Sensor units, counts]
-        case 6: sprintf(workbuff, "%.2f", (AirDataComputer._dataout[i])); break;  // 7  = Deltap [Pa]
-        case 7:                                                                   // 8  = Absolute Pressure [Pa]
-        case 8:                                                                   // 9  = Ext Temperature [K]
-        case 9:                                                                   // 10 = Temp deltap [K]
-        case 10: sprintf(workbuff, "%.1f", (AirDataComputer._dataout[i])); break; // 11 = Temp absolute [K]
-        case 11:                                                                  // 12 = IAS [m/s]
-        case 12:                                                                  // 13 = TAS [m/s]
-        case 13: sprintf(workbuff, "%.2f", (AirDataComputer._dataout[i])); break; // 14 = Altitude [m]
-        case 14: sprintf(workbuff, "%.1f", (AirDataComputer._dataout[i])); break; // 15 = OAT [K]
-        case 15: sprintf(workbuff, "%.0f", (AirDataComputer._dataout[i])); break; // 16 = Relative time micro millis [s*10^-6]
-        case 16:                                                                  // 17 = Uncertainty IAS [m/s]
-        case 17:                                                                  // 18 = Uncertainty TAS [m/s]
-        case 18:                                                                  // 19 = Uncertainty Altitude [m]
-        case 19: sprintf(workbuff, "%.1f", (AirDataComputer._dataout[i])); break; // 20 = Uncertainty OAT [K]
-        case 20: sprintf(workbuff, "%.6f", (AirDataComputer._dataout[i])); break; // 21 = Air Density [kg/m^3]
-        case 21: sprintf(workbuff, "%.8f", (AirDataComputer._dataout[i])); break; // 22 = Air Viscosity[Pas]
-        case 22: sprintf(workbuff, "%.1f", (AirDataComputer._dataout[i])); break; // 23 = Re
-        case 23: sprintf(workbuff, "%.4f", (AirDataComputer._dataout[i])); break; // 24 = c factor
+        case AIRDC_DATA_TIME:
+        case AIRDC_DATA_QCRAW:
+        case AIRDC_DATA_PRAW:
+        case AIRDC_DATA_TRAW:
+        case AIRDC_DATA_TDELTAPRAW:
+        case AIRDC_DATA_TABSPRAW:
+        case AIRDC_DATA_MILLIS:
+          sprintf(workbuff, "%.0f", (AirDataComputer._dataout[i])); break;
         
-        default: sprintf(workbuff, "%f", (AirDataComputer._dataout[i])); break;   // UNUSED DEFAULT FORMAT
+        case AIRDC_DATA_P:
+        case AIRDC_DATA_TAT:
+        case AIRDC_DATA_TDELTAP:
+        case AIRDC_DATA_TABSP:
+        case AIRDC_DATA_UIAS:
+        case AIRDC_DATA_UTAS:
+        case AIRDC_DATA_UH:
+        case AIRDC_DATA_UT:
+        case AIRDC_DATA_T:
+        case AIRDC_DATA_RE:
+          sprintf(workbuff, "%.1f", (AirDataComputer._dataout[i])); break;
+        
+        case AIRDC_DATA_IAS:
+        case AIRDC_DATA_TAS:
+        case AIRDC_DATA_H:
+        case AIRDC_DATA_QC:
+          sprintf(workbuff, "%.2f", (AirDataComputer._dataout[i])); break;
+
+        case AIRDC_DATA_C:
+          sprintf(workbuff, "%.4f", (AirDataComputer._dataout[i])); break;
+
+        case AIRDC_DATA_RHO:
+          sprintf(workbuff, "%.6f", (AirDataComputer._dataout[i])); break;
+          
+        case AIRDC_DATA_MU:
+          sprintf(workbuff, "%.8f", (AirDataComputer._dataout[i])); break;
+
+        default:
+          sprintf(workbuff, "%f", (AirDataComputer._dataout[i])); break;   // UNUSED DEFAULT FORMAT
       }
       strcat (p_newData, workbuff);
     } else {
@@ -222,12 +241,9 @@ void acquisition(void)
 
 void computation() {
   // put your main code here, to run repeatedly:
-  AirDataComputer._RH = 0; // No sensor for RH, we are selecting dry air but the library will handle moist air if required
-  AirDataComputer._TRaw = TemperatureRaw;
-  AirDataComputer._TAT = Temperature + 273.15; //Total Air Temperature
+  
   // Computation
   // Init
-  AirDataComputer._T = Temperature + 273.15;
   AirDataComputer.RhoAir(1);                    // Calculates the air density
   AirDataComputer.Viscosity(1);                 // Calculates the dynamic viscosity, Algorithm 2 (UOM Pas1e-6)
   AirDataComputer.CalibrationFactor(1);         // Calibration factor set to 1
@@ -440,26 +456,24 @@ void loop() {
     if (!strcmp(command, "$STS")) {
       int i;
       i=0;
-      for (i=0; i<9; i++) {
-        /* Receive the fields from 1 to 9
-        1 SD card present
-        2 Deltap sensor
-        3 Absolute pressure sensor
-        4 External Temperaure sensor
-        5 Deltap sensor temperature
-        6 Absolute pressure sensor temperature
-        7 Real time clock battery
-        8 Error/Warning
-        9 BT interface
-        */
+      for (i=0; i<AIRDC_STATUS_VECTOR_SIZE; i++) {
+        // Receive the status vector
         command = strtok (NULL, SEPARATOR);
         if (strlen(command)<1) goto endeval;
-        AirDataComputer._status[i]=command[0];
-        workbuff[2*i]=command[0];
+        if (!strcmp(command, "0")) {
+          AirDataComputer._status[i]='0';
+          workbuff[2*i]='0';
+        }
+        else if (!strcmp(command, "1")) {
+          AirDataComputer._status[i]='1';
+          workbuff[2*i]='1';
+        } else {
+          workbuff[2*i]=AirDataComputer._status[i];
+        }
         workbuff[2*i+1]=',';
       }
-      AirDataComputer._status[i+1]='\0';
-      workbuff[2*i-1]='\0';
+      AirDataComputer._status[AIRDC_STATUS_VECTOR_SIZE+1]='\0';
+      workbuff[2*AIRDC_STATUS_VECTOR_SIZE-1]='\0';
       
       strcpy (Answer, "$STA,");
       strcat (Answer, workbuff);           // TODO = Send the real status buffer, and NOT the received workbuff
@@ -474,18 +488,8 @@ void loop() {
     if (!strcmp(command, "$STQ")) {
       int i;
       i=0;
-      for (i=0; i<9; i++) {
-        /* Receive the fields from 1 to 9
-        1 SD card present
-        2 Deltap sensor
-        3 Absolute pressure sensor
-        4 External Temperaure sensor
-        5 Deltap sensor temperature
-        6 Absolute pressure sensor temperature
-        7 Real time clock battery
-        8 Error/Warning
-        9 BT interface
-        */
+      for (i=0; i<AIRDC_STATUS_VECTOR_SIZE; i++) {
+        // Returns the status vector
         workbuff[2*i]=AirDataComputer._status[i];
         workbuff[2*i+1]=',';
       }
@@ -507,8 +511,28 @@ void loop() {
     // --------------------------------------------------
     // #8 – DTS – DATA_SET
     // --------------------------------------------------
+    // $DTS,0,0,0,0,0,0,0,0,300,0   Sets the external temperature to 300 [K] (if the sensor is not present
     
     if (!strcmp(command, "$DTS")) {
+      int i;
+      i=0;
+      for (i=0; i<AIRDC_DATA_VECTOR_SIZE; i++) {  // Check the fields
+        command = strtok (NULL, SEPARATOR);
+        if (strlen(command)<1) goto endeval;
+        
+        switch (i) {
+          case AIRDC_DATA_TAT:
+            if (AirDataComputer._status[AIRDC_STATUS_TAT] == '0') {
+              AirDataComputer._TAT = atol(command);
+              AirDataComputer._TRaw = 0l;
+            }
+            break;
+
+          default:
+            break;
+            // IT DOES NOTHING
+        }
+      }
       goto endeval;
     }
 
@@ -528,15 +552,10 @@ void loop() {
       strcpy (Answer, p_Data);
       int i;
       i=0;
-      for (i=0; i<24; i++)
-      {
+      for (i=0; i<24; i++) {
         command = strtok (NULL, SEPARATOR);
-        if (strlen(command)<1)
-        {
-            goto endeval;
-        }
+        if (strlen(command)<1) goto endeval;
         AirDataComputer._datasel[i]=command[0];
-        //AirDataComputer._status[i]=command[0];
         workbuff[2*i]=command[0];
         workbuff[2*i+1]=',';
       }
@@ -551,12 +570,12 @@ void loop() {
         SD.remove(DEFAULT_CONFIGFILE);
         File dataFile = SD.open(DEFAULT_CONFIGFILE, FILE_WRITE);
         if (dataFile) { // if the file is available, write to it:
-          AirDataComputer._status[0] = '1';  // SD Card present
+          AirDataComputer._status[AIRDC_STATUS_SD] = '1';  // SD Card present
           dataFile.print("$DTQ,");
           dataFile.println(workbuff);
           dataFile.close();
         } else {        // if the file isn't open, pop up an error:
-          AirDataComputer._status[0] = '0';  // SD Card not present
+          AirDataComputer._status[AIRDC_STATUS_SD] = '0';  // SD Card not present
           goto endeval;
         }
       }
@@ -598,14 +617,14 @@ void loop() {
             //dataFile = SD.open(AirDataComputer._logfile, O_WRITE | O_CREAT | O_APPEND);
             dataFile = SD.open(AirDataComputer._logfile, FILE_WRITE);
             if (dataFile) { // if the file is available, write to it:
-              AirDataComputer._status[0] = '1';  // SD Card present
+              AirDataComputer._status[AIRDC_STATUS_SD] = '1';  // SD Card present
             } else {        // if the file isn't open, pop up an error:
-              AirDataComputer._status[0] = '0';  // SD Card not present
+              AirDataComputer._status[AIRDC_STATUS_SD] = '0';  // SD Card not present
               goto endeval;
             }
           }
           
-          AirDataComputer._status[0] = '1';  // SD Card present
+          AirDataComputer._status[AIRDC_STATUS_SD] = '1';  // SD Card present
         }
       }
       strcpy (Answer,"$LCA");
@@ -679,14 +698,14 @@ void loop() {
                 //dataFile = SD.open(AirDataComputer._logfile, O_WRITE | O_CREAT | O_APPEND);
                 dataFile = SD.open(AirDataComputer._logfile, FILE_WRITE);
                 if (dataFile) {
-                  AirDataComputer._status[0] = '1';  // SD Card present
+                  AirDataComputer._status[AIRDC_STATUS_SD] = '1';  // SD Card present
                   sendtosd_interval=(long)(1.0f/sendtosd_freq*1000.0f);
                   sendtosdTimer.interval(sendtosd_interval);
                   sendtosdTimer.reset();
                   sendtosd_needs_acquisition = true;
                   digitalWrite(ledPin, HIGH); // set the LED on
                 } else {
-                  AirDataComputer._status[0] = '0';  // SD Card not present
+                  AirDataComputer._status[AIRDC_STATUS_SD] = '0';  // SD Card not present
                   sendtosd_freq = 0;
                 }
               }

@@ -17,7 +17,49 @@
 #define AirDC_h
 #include <Arduino.h>
 #include <TimeLib.h>
-#define DEFAULT_LOG_FILE "datalog.csv"
+#define DEFAULT_LOG_FILE "DATALOG.CSV"
+
+#define AIRDC_DATA_TIME          0   // Timestamp
+#define AIRDC_DATA_QCRAW         1   // Differential pressure [count]
+#define AIRDC_DATA_PRAW          2   // Absolute pressure [count]
+#define AIRDC_DATA_TRAW          3   // External Temperature sensor [count]
+#define AIRDC_DATA_TDELTAPRAW    4   // Temperature differential pressure sensor [count]
+#define AIRDC_DATA_TABSPRAW      5   // Temperature absolute pressure sensor [count]
+#define AIRDC_DATA_QC            6   // Differential pressure [Pa]
+#define AIRDC_DATA_P             7   // Static pressure [Pa]
+#define AIRDC_DATA_TAT           8   // TAT External Temperature [K]
+#define AIRDC_DATA_TDELTAP       9   // Temperature differential pressure sensor [K]
+#define AIRDC_DATA_TABSP         10  // Temperature absolute pressure sensor [K]
+#define AIRDC_DATA_IAS           11  // Indicated Air Speed [m/s]
+#define AIRDC_DATA_TAS           12  // True Air Speed [m/s]
+#define AIRDC_DATA_H             13  // Barometric altitude [m]
+#define AIRDC_DATA_T             14  // OAT [K]
+#define AIRDC_DATA_MILLIS        15  // Internal time Milliseconds
+#define AIRDC_DATA_UIAS          16  // Uncertainty IAS [m/s]
+#define AIRDC_DATA_UTAS          17  // Uncertainty TAS [m/s]
+#define AIRDC_DATA_UH            18  // Uncertainty Altitude [m]
+#define AIRDC_DATA_UT            19  // Uncertainty OAT [K]
+#define AIRDC_DATA_RHO           20  // Air Density [kg/m^3]
+#define AIRDC_DATA_MU            21  // Dynamic Air Viscosity [Pa*s]]
+#define AIRDC_DATA_RE            22  // Reynolds number
+#define AIRDC_DATA_C             23  // c factor
+
+#define AIRDC_DATA_VECTOR_SIZE   24  // The size of this data vector
+
+
+#define AIRDC_STATUS_SD          0   // SD Card
+#define AIRDC_STATUS_DELTAP      1   // Differential pressure sensor
+#define AIRDC_STATUS_P           2   // Absolute pressure sensor
+#define AIRDC_STATUS_TAT         3   // External Temperature sensor
+#define AIRDC_STATUS_TDELTAP     4   // Temperature differential pressure sensor
+#define AIRDC_STATUS_TABSP       5   // Temperature absolute pressure sensor
+#define AIRDC_STATUS_RTCBATT     6   // Real time clock battery
+#define AIRDC_STATUS_ERRWARN     7   // Error/Warning
+#define AIRDC_STATUS_BLUETOOTH   8   // Bluetooth
+
+#define AIRDC_STATUS_VECTOR_SIZE 9   // The size of this status vector
+
+
 class AirDC
 {
 public:

@@ -429,28 +429,28 @@ void AirDC::PrepareData(void) //Refresh and reorder data following #10 message o
     23 Re
     24 c factor
     */
-    _dataout[0]=(double)(now()); //Time
-    _dataout[1]=_qcRaw;//Differential pressure count
-    _dataout[2]=_pRaw;//Absolute pressure count
-    _dataout[3]=_TRaw;//External Temperature sensor
-    _dataout[4]=_TdeltapRaw;//Temperature differential pressure sensor
-    _dataout[5]=_TabspRaw;//Temperature absolute pressure  sensor
-    _dataout[6]=_qc;//Differential pressure Pa
-    _dataout[7]=_p;//Static pressure Pa
-    _dataout[8]=_TAT;//TAT External Temperature K
-    _dataout[9]=_Tdeltap;//Temperature differential pressure sensor K
-    _dataout[10]=_Tabsp;//Temperature absolute pressure  sensor K
-    _dataout[11]=_IAS;//Indicated Air Speed m/s
-    _dataout[12]=_TAS;//True Air Speed m/s
-    _dataout[13]=_h;//Barometric altitude m/s
-    _dataout[14]=_T;//OAT K
-    _dataout[15]=millis();//Internal time rMilliseconds
-    _dataout[16]=_uIAS;//Uncertainty IAS [m/s]
-    _dataout[17]=_uTAS;//Uncertainty TAS [m/s]
-    _dataout[18]=_uh;//Uncertainty Altitude [m]
-    _dataout[19]=_uT;//Uncertainty OAT [K]
-    _dataout[20]=_Rho;//Uncertainty OAT [K]
-    _dataout[21]=_mu ;//Dynamic Air Viscosity[Pas*10^-6]]
-    _dataout[22]=_Re ;//Reynolds number
-    _dataout[23]=_c ;//c factor
+    _dataout[AIRDC_DATA_TIME]       = (double)(now()); // Time
+    _dataout[AIRDC_DATA_QCRAW]      = _qcRaw;          // Differential pressure [count]
+    _dataout[AIRDC_DATA_PRAW]       = _pRaw;           // Absolute pressure [count]
+    _dataout[AIRDC_DATA_TRAW]       = _TRaw;           // External Temperature sensor [count]
+    _dataout[AIRDC_DATA_TDELTAPRAW] = _TdeltapRaw;     // Temperature differential pressure sensor [count]
+    _dataout[AIRDC_DATA_TABSPRAW]   = _TabspRaw;       // Temperature absolute pressure sensor [count]
+    _dataout[AIRDC_DATA_QC]         = _qc;             // Differential pressure [Pa]
+    _dataout[AIRDC_DATA_P]          = _p;              // Static pressure [Pa]
+    _dataout[AIRDC_DATA_TAT]        = _TAT;            // TAT External Temperature [K]
+    _dataout[AIRDC_DATA_TDELTAP]    = _Tdeltap;        // Temperature differential pressure sensor [K]
+    _dataout[AIRDC_DATA_TABSP]      = _Tabsp;          // Temperature absolute pressure sensor [K]
+    _dataout[AIRDC_DATA_IAS]        = _IAS;            // Indicated Air Speed [m/s]
+    _dataout[AIRDC_DATA_TAS]        = _TAS;            // True Air Speed [m/s]
+    _dataout[AIRDC_DATA_H]          = _h;              // Barometric altitude [m/s]
+    _dataout[AIRDC_DATA_T]          = _T;              // OAT [K]
+    _dataout[AIRDC_DATA_MILLIS]     = millis();        // Internal time [milliseconds]
+    _dataout[AIRDC_DATA_UIAS]       = _uIAS;           // Uncertainty IAS [m/s]
+    _dataout[AIRDC_DATA_UTAS]       = _uTAS;           // Uncertainty TAS [m/s]
+    _dataout[AIRDC_DATA_UH]         = _uh;             // Uncertainty Altitude [m]
+    _dataout[AIRDC_DATA_UT]         = _uT;             // Uncertainty OAT [K]
+    _dataout[AIRDC_DATA_RHO]        = _Rho;            // Air Density [kg/m^3]
+    _dataout[AIRDC_DATA_MU]         = _mu ;            // Dynamic Air Viscosity [Pa*s]]
+    _dataout[AIRDC_DATA_RE]         = _Re ;            // Reynolds number
+    _dataout[AIRDC_DATA_C]          = _c ;             // c factor
 }
