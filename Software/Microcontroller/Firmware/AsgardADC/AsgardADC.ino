@@ -32,6 +32,7 @@
 #define BUFFERLENGTH 512                  // The length of string buffers
 #define DELIMITER '\n'
 #define SEPARATOR ","
+#define LEAVE_AS_IS "="
 #define ADC_NAME "ASGARD"                 // The name of the ADC device
 #define PROTOCOL_VERSION "0.4"            // The version of the communication protocol
 #define DEFAULT_LOGFILE "DATALOG.CSV"     // The default log file name
@@ -150,7 +151,7 @@ void acquisition()
   }
 
   // Differential Pressure sensor
-  if (AirDataComputer._status[AIRDC_STATUS_TDELTAP] == '1') {     // Differential pressure sensor present
+  if (AirDataComputer._status[AIRDC_STATUS_DELTAP] == '1') {     // Differential pressure sensor present
     diffp.update();
     AirDataComputer._qc = diffp.pressure();
     AirDataComputer._qcRaw = diffp.pressure_Raw();
@@ -463,6 +464,7 @@ void loop() {
     // #5 – STS – STATUS_SET                             --> Reply STA - STATUS_ASSERT
     // --------------------------------------------------
     // $STS,0,1,1,1,1,1,0,0,0
+    // $STS,=,=,=,0,=,=,=,=,=     Deactivate the external temperature sensor. Don't touch other fields
 
     if (!strcmp(command, "$STS")) {
       int i;
@@ -522,7 +524,7 @@ void loop() {
     // --------------------------------------------------
     // #8 – DTS – DATA_SET
     // --------------------------------------------------
-    // $DTS,0,0,0,0,0,0,0,0,300,0   Sets the external temperature to 300 [K] (if the sensor is not present)
+    // $DTS,=,=,=,=,=,=,=,=,300   Sets the external temperature to 300 [K] (if the sensor is not present)
     
     if (!strcmp(command, "$DTS")) {
       int i;
@@ -530,18 +532,42 @@ void loop() {
       for (i=0; i<AIRDC_DATA_VECTOR_SIZE; i++) {  // Check the fields
         command = strtok (NULL, SEPARATOR);
         if (strlen(command)<1) goto endeval;
-        
-        switch (i) {
-          case AIRDC_DATA_TAT:
-            if (AirDataComputer._status[AIRDC_STATUS_TAT] == '0') {
-              AirDataComputer._TAT = atol(command);
-              AirDataComputer._TRaw = 0l;
-            }
-            break;
+        if (strcmp(command, LEAVE_AS_IS)) {
+          switch (i) {
+            case AIRDC_DATA_TAT:                                            // External Temperature
+              if (AirDataComputer._status[AIRDC_STATUS_TAT] == '0') {
+                AirDataComputer._TAT = atol(command);
+                AirDataComputer._TRaw = 0l;
+              }
+              break;
+            case AIRDC_DATA_QC:                                             // Differential pressure
+              if (AirDataComputer._status[AIRDC_STATUS_DELTAP] == '0') {
+                AirDataComputer._qc = atol(command);
+                AirDataComputer._qcRaw = 0l;
+              }
+              break;
+            case AIRDC_DATA_TDELTAP:                                        // Temperature differential pressure sensor
+              if (AirDataComputer._status[AIRDC_STATUS_TDELTAP] == '0') {
+                AirDataComputer._Tdeltap = atol(command);
+                AirDataComputer._TdeltapRaw = 0l;
+              }
+              break;
+            case AIRDC_DATA_P:                                              // Absolute pressure
+              if (AirDataComputer._status[AIRDC_STATUS_P] == '0') {
+                AirDataComputer._p = atol(command);
+                AirDataComputer._pRaw = 0l;
+              }
+              break;
+            case AIRDC_DATA_TABSP:                                          // Temperature absolute pressure sensor
+              if (AirDataComputer._status[AIRDC_STATUS_TABSP] == '0') {
+                AirDataComputer._Tabsp = atol(command);
+                AirDataComputer._TabspRaw = 0l;
+              }
+              break;
+            default:  // IT DOES NOTHING
+              break;
 
-          default:
-            break;
-            // IT DOES NOTHING
+          }
         }
       }
       goto endeval;
@@ -556,38 +582,40 @@ void loop() {
     // $DTQ,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
     // Request time, deltap, p, ext temperature
     // $DTQ,1,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+    // Toggle ON the ext temperature field
+    // $DTQ,=,=,=,=,=,=,=,=,1
     // Request a $DTA string
     // $DTQ
     
     if (!strcmp(command, "$DTQ")) {
-      strcpy (Answer, p_Data);
+      if (!strcmp(command, "$DTQ,")) {
+        strcpy (Answer, p_Data);      // Simply return the data
+        goto endeval;
+      }
+      strcpy (Answer, "");
       int i;
       i=0;
       for (i=0; i<AIRDC_DATA_VECTOR_SIZE; i++) {
         command = strtok (NULL, SEPARATOR);
         if (strlen(command)<1) goto endeval;
-        AirDataComputer._datasel[i]=command[0];
-        workbuff[2*i]=command[0];
-        workbuff[2*i+1]=',';
+        if (strcmp(command, LEAVE_AS_IS)) AirDataComputer._datasel[i]=command[0];
       }
-      workbuff[2*i-1]='\0';
-      strcpy (Answer, "");
       
       // Save to the SD the configuration data
-      SDCardCheck();
-      if (isSDCardPresent) {
-        SD.remove(DEFAULT_CONFIGFILE);
-        File dataFile = SD.open(DEFAULT_CONFIGFILE, FILE_WRITE);
-        if (dataFile) { // if the file is available, write to it:
-          AirDataComputer._status[AIRDC_STATUS_SD] = '1';  // SD Card present
-          dataFile.print("$DTQ,");
-          dataFile.println(workbuff);
-          dataFile.close();
-        } else {        // if the file isn't open, pop up an error:
-          AirDataComputer._status[AIRDC_STATUS_SD] = '0';  // SD Card not present
-          goto endeval;
-        }
-      }
+      //SDCardCheck();
+      //if (isSDCardPresent) {
+      //  SD.remove(DEFAULT_CONFIGFILE);
+      //  File dataFile = SD.open(DEFAULT_CONFIGFILE, FILE_WRITE);
+      //  if (dataFile) { // if the file is available, write to it:
+      //    AirDataComputer._status[AIRDC_STATUS_SD] = '1';  // SD Card present
+      //    dataFile.print("$DTQ,");
+      //    dataFile.println(workbuff);
+      //    dataFile.close();
+      //  } else {        // if the file isn't open, pop up an error:
+      //    AirDataComputer._status[AIRDC_STATUS_SD] = '0';  // SD Card not present
+      //    goto endeval;
+      //  }
+      //}
       // Modified #10 reply message. No data will be transmitted. It is a plain acknowledge.
       //strcpy (outstr,"$DTA,");
       //strcat (Answer, workbuff);
@@ -663,18 +691,18 @@ void loop() {
     // --------------------------------------------------
     // $DFS,Serial_freq,Bluetooth_freq,SD_freq                                    <-- SPECS CHANGED
     // $DFS,5,0.5,0    Serial = 1 Hz           Bluetooth = 0.5 Hz   No SD logging
-    // $DFS,-1,0.5,5   Serial = leave as is    Bluetooth = 0.5 Hz   SD = 5 Hz
+    // $DFS,=,0.5,5    Serial = leave as is    Bluetooth = 0.5 Hz   SD = 5 Hz
     
     if (!strcmp(command, "$DFS")) {  // $DFS,Serial,Bluetooth,SD
       command = strtok (NULL, SEPARATOR);
       if (command != NULL) {
-        float DataFrequency_COM = atof(command);                  // Read the value after the comma
+        float DataFrequency_COM = (strcmp(command, LEAVE_AS_IS) ? atof(command) : -1);    // Read the freq value
         command = strtok (NULL, SEPARATOR);
         if (command != NULL) {
-          float DataFrequency_BT = atof(command);                 // Read the value after the comma
+          float DataFrequency_BT = (strcmp(command, LEAVE_AS_IS) ? atof(command) : -1);   // Read the freq value
           command = strtok (NULL, SEPARATOR);
           if (command != NULL) {
-            float DataFrequency_SD = atof(command);               // Read the value after the comma
+            float DataFrequency_SD = (strcmp(command, LEAVE_AS_IS) ? atof(command) : -1); // Read the freq value
             // Change frequencies
             if ((DataFrequency_COM >= 0) && (DataFrequency_COM != sendtoserial_freq)) {
               sendtoserial_freq = DataFrequency_COM;
