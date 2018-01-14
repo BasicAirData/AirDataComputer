@@ -1,4 +1,4 @@
-/* Work in progress Asgard ADC Firmware Relase 0.4.0 13/01/2018
+/* Work in progress Asgard ADC Firmware Relase 0.4.0 14/01/2018
    This is a preliminary release, work in progress. Misbehaviour is plausible.
    AsgardADC.ino - Air Data Computer Firmware
    Conform to ADC Common Mesage Set 0.4
@@ -38,13 +38,15 @@
 #define DEFAULT_CONFIGFILE "CONFIG.CFG"   // The configuration file name
 
 const int chipSelect = BUILTIN_SDCARD;    // HW pin for micro SD adaptor CS
-bool isSDCardPresent = false;
 File dataFile;                            // The file on SD
+bool isSDCardPresent;                     // The presence of a (formatted) card into the slot of SD
+Sd2Card card;                             // The SD Card
+SdVolume volume;                          // The volume (partition) on SD
 double iTAS, ip1TAS, res, iof;            // Accessory variables for Air Data calculations
 
 AirDC AirDataComputer(1);
 
-SSC diffp(0x28, 0);
+SSC diffp(0x28, 0);           // Create an SSC sensor with I2C address 0x28 on I2C bus 0
 SSC absp(0x28, 1);            // Create an SSC sensor with I2C address 0x28 on I2C bus 1
 
 String message_BT;            // string that stores the incoming BT message
@@ -97,16 +99,13 @@ void setup() {
   pinMode(TsensorPin, INPUT);
   pinMode(ledPin, OUTPUT);
 
-  Serial.begin (57600);                           // Set up the Serial Connection using high speed, for precise log timings
-  //Serial.begin (9600);                              // Set up the Serial Connection
+  Serial.begin (57600);                             // Set up the Serial Connection using high speed, for precise log timings
+  //Serial.begin (9600);                            // Set up the Serial Connection
   Serial1.begin (9600);                             // Set up the BT Connection
   delay(500);
   if (Serial1) AirDataComputer._status[AIRDC_STATUS_BLUETOOTH] = '1';    // BT Module present on serial1
-  if (SD.begin(chipSelect)) {
-    //Serial.println("SD card initialized");
-    isSDCardPresent = true;                         // Set up the SDCard
-    AirDataComputer._status[AIRDC_STATUS_SD] = '1'; // SD Card present
-  } //else Serial.println("SD card initialization failed");
+
+  SDCardCheck();
 
   Wire.begin();                     // I2C Bus 0
   Wire1.begin();                    // I2C Bus 1
@@ -124,6 +123,18 @@ void setup() {
   strcpy(Data[0],"\0");      // Initialize the Data
   strcpy(Data[1],"\0");      // Initialize the Data
   p_Data = &Data[1][0];      // The current valid status index is 1
+}
+
+
+
+void SDCardCheck() 
+{
+  if (!isSDCardPresent) {
+    isSDCardPresent = card.init(SPI_HALF_SPEED, chipSelect);
+    if (isSDCardPresent) SD.begin(chipSelect);
+  }
+  isSDCardPresent = volume.init(card);
+  AirDataComputer._status[AIRDC_STATUS_SD] = (isSDCardPresent ? '1' : '0');
 }
 
 
@@ -563,9 +574,7 @@ void loop() {
       strcpy (Answer, "");
       
       // Save to the SD the configuration data
-      if (SD.begin(chipSelect)) {
-        isSDCardPresent = true;            // Set up the SDCard
-      }
+      SDCardCheck();
       if (isSDCardPresent) {
         SD.remove(DEFAULT_CONFIGFILE);
         File dataFile = SD.open(DEFAULT_CONFIGFILE, FILE_WRITE);
@@ -605,9 +614,7 @@ void loop() {
       if (strlen(command)<1) {
         goto endeval;
       }
-      if (SD.begin(chipSelect)) {
-        isSDCardPresent = true;            // Set up the SDCard
-      }
+      SDCardCheck();
       if (isSDCardPresent) {
         if (SD.exists(command))   // Only if the file exist is set as current, #13 reply
         {
@@ -692,9 +699,7 @@ void loop() {
               if (dataFile) dataFile.close();
               sendtosd_freq = DataFrequency_SD;
               if (sendtosd_freq > 0) {
-                if (SD.begin(chipSelect)) {
-                  isSDCardPresent = true;            // Set up the SDCard
-                }
+                SDCardCheck();
                 //dataFile = SD.open(AirDataComputer._logfile, O_WRITE | O_CREAT | O_APPEND);
                 dataFile = SD.open(AirDataComputer._logfile, FILE_WRITE);
                 if (dataFile) {
@@ -769,9 +774,7 @@ void loop() {
     
     if (!strcmp(command, "$FMQ"))
     {
-      if (SD.begin(chipSelect)) {
-        isSDCardPresent = true;             // Set up the SDCard
-      } 
+      SDCardCheck();
       File dir;
       int n=0;
       if (strlen(command)<1) goto endeval;
@@ -782,6 +785,7 @@ void loop() {
       
       if (!strcmp(command, "LST")) {          // List files on the SD
         strcpy (Answer,"$FMA,LST");
+        if (!isSDCardPresent) goto endeval;
         dir = SD.open("/");            // open root
         
         // Send a string with the total number of files to be sent
@@ -816,6 +820,7 @@ void loop() {
       if (!strcmp(command, "NEW"))            // Requires creation of a file
       {
         strcpy (Answer,"$FMA,NEW");
+        if (!isSDCardPresent) goto endeval;
         dir = SD.open(param, FILE_WRITE);
         if (SD.exists(param))
         {
@@ -830,6 +835,7 @@ void loop() {
       if (!strcmp(command, "DEL"))            // Requires deletion of a file
       {
         strcpy (Answer,"$FMA,DEL");
+        if (!isSDCardPresent) goto endeval;
         if (strcmp(param, AirDataComputer._logfile)) {  // The file must not be the default log file
           SD.remove(param);
           if (!(SD.exists(param)))
@@ -844,6 +850,7 @@ void loop() {
       if (!strcmp(command, "PRP"))            // Requires information about one file
       {
         strcpy (Answer,"$FMA,PRP");
+        if (!isSDCardPresent) goto endeval;
         if (SD.exists(param)) {               // if file exists
           dir = SD.open(param);
           strcat (Answer,SEPARATOR);
@@ -859,6 +866,7 @@ void loop() {
       if (!strcmp(command, "DMP"))        //Requires dump of one file
       {
         strcpy (Answer,"$FMA,DMP");
+        if (!isSDCardPresent) goto endeval;
         dir = SD.open(param);
         // if the file is available
         if (dir) {
@@ -913,7 +921,6 @@ void loop() {
   
   delayMicroseconds(delaymicroseconds_interval); //delay
 }
-
 
 
 
