@@ -40,7 +40,9 @@
 
 const int chipSelect = BUILTIN_SDCARD;    // HW pin for micro SD adaptor CS
 File dataFile;                            // The file on SD
+File configFile;                          // The setup configuration file on SD
 bool isSDCardPresent;                     // The presence of a (formatted) card into the slot of SD
+bool loadConfiguration;                   // The flag is true if the config file is present into SD (and must be loaded on start)
 Sd2Card card;                             // The SD Card
 SdVolume volume;                          // The volume (partition) on SD
 double iTAS, ip1TAS, res, iof;            // Accessory variables for Air Data calculations
@@ -52,6 +54,7 @@ SSC absp(0x28, 1);            // Create an SSC sensor with I2C address 0x28 on I
 
 String message_BT;            // string that stores the incoming BT message
 String message_COM;           // string that stores the incoming COM message
+String message_CFG;           // string that stores the configuration messages
 const int ledPin = 13;        // The led is ON when the application is logging on SD
 
 float acquisition_freq     =   1;         // The minimum frequency of acquisition = 1 Hz (1 s)
@@ -124,6 +127,11 @@ void setup() {
   strcpy(Data[0],"\0");      // Initialize the Data
   strcpy(Data[1],"\0");      // Initialize the Data
   p_Data = &Data[1][0];      // The current valid status index is 1
+
+  if (isSDCardPresent) {      // Searches the configuration file
+    configFile = SD.open(DEFAULT_CONFIGFILE);
+    if (configFile) loadConfiguration = true;
+  }
 }
 
 
@@ -326,6 +334,7 @@ void sendtosd(void)
 void loop() {
   bool endmsg_BT                = false;  // it becomes true when a message is received from BLUETOOTH
   bool endmsg_COM               = false;  // it becomes true when a message is received from SERIAL
+  bool endmsg_CFG               = false;  // it becomes true when a message is received from CONFIGURATION FILE
   char workbuff[BUFFERLENGTH]   = "";     // General purpose buffer, used for itoa conversion
   char Message[BUFFERLENGTH]    = "";     // it contains the message to be processed
   char Answer[BUFFERLENGTH]     = "";
@@ -360,37 +369,51 @@ void loop() {
   }
 
   
-  // 1) Read input from Serial and Bluetooth:
-  
-  while (Serial.available()) {      // while there is SERIAL data available
-    char ch = Serial.read();
-    if (ch != DELIMITER) message_COM += char(ch);      // Store string from serial command
-    else endmsg_COM = true;
-  }
-  if (endmsg_COM) {                 // This comes from the Serial port (USB)
-    if (message_COM != "") {        // if data is available
-      message_COM.toCharArray (Message, BUFFERLENGTH-1);
-      message_COM = "";
+  // 1) Read input from Configuration file, Serial, and Bluetooth:
+
+  if (loadConfiguration) {
+    while (configFile.available() && !endmsg_CFG) {
+      char ch = configFile.read();
+      if ((ch != DELIMITER) && (ch != '\r')) message_CFG += char(ch);      // Store string from CFG file
+      else endmsg_CFG = true;
     }
-  }
-  if (!endmsg_COM) {
-    while (Serial1.available()) {  // while there is BLUETOOTH data available
-      char ch = Serial1.read();
-      if (ch != DELIMITER) message_BT += char(ch);     // Store string from BT command
-      else endmsg_BT = true;
+    if (!configFile.available()) {
+      loadConfiguration = false;
+      configFile.close();
+      endmsg_CFG = true;
     }
-    if (endmsg_BT) {                // This comes from the bluetooth device (such as phone)
-      if (message_BT != "") {       // if data is available
-        message_BT.toCharArray (Message, BUFFERLENGTH-1);
-        message_BT = "";
+    message_CFG.toCharArray (Message, BUFFERLENGTH-1);
+    message_CFG = "";
+  } else {
+    while (Serial.available()) {      // while there is SERIAL data available
+      char ch = Serial.read();
+      if (ch != DELIMITER) message_COM += char(ch);      // Store string from serial command
+      else endmsg_COM = true;
+    }
+    if (endmsg_COM) {                 // This comes from the Serial port (USB)
+      if (message_COM != "") {        // if data is available
+        message_COM.toCharArray (Message, BUFFERLENGTH-1);
+        message_COM = "";
+      }
+    }
+    if (!endmsg_COM) {
+      while (Serial1.available()) {  // while there is BLUETOOTH data available
+        char ch = Serial1.read();
+        if (ch != DELIMITER) message_BT += char(ch);     // Store string from BT command
+        else endmsg_BT = true;
+      }
+      if (endmsg_BT) {                // This comes from the bluetooth device (such as phone)
+        if (message_BT != "") {       // if data is available
+          message_BT.toCharArray (Message, BUFFERLENGTH-1);
+          message_BT = "";
+        }
       }
     }
   }
 
-
   // 2) Process messages
   
-  if (endmsg_COM || endmsg_BT) {
+  if (endmsg_COM || endmsg_BT || endmsg_CFG) {
     char *command = strtok(Message, SEPARATOR);
 
     // --------------------------------------------------
