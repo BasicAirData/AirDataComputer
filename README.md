@@ -2,12 +2,11 @@
 ![Asgard ADC](http://www.basicairdata.eu/wp-content/uploads/sites/1/nggallery/adc-asgard-build-2/IMGP5610.JPG)
 
 ## Description
+An air data computer (ADC) is an essential avionics component found in modern cockpits. This unit can determine calibrated Airspeed, Mach number, Altitude, and common air properties from a pitot-static probe data.
 
-An air data computer (ADC) is an essential avionics component found in modern cockpits. This computer, rather than individual instruments, can determine calibrated Airspeed, Mach number, Altitude, and other useful data from a pitot-static system.
+This repository, together with some material published on the BasicAirData website, contains the information to build from scratch a recreational grade DIY Air Data Computer. This device can transmit data via USB serial port and Bluetooth, and log all data on a MicroSD.
 
-This repositories, together with some material published on the BasicAirData website, contains the information to build from scratch a ricreational grade DIY Air Data Computer. This device can transmit data via USB serial port and Bluetooth, and log all data on a MicroSD.
-
-The project is work in progress. Many things are done, others are in planning or implementation phase.
+The project is a work in progress
 
 ## At a Glance
 * [Fast Assembly](https://www.basicairdata.eu/projects/airdatacomputer/asgard-adc/assembly-adc-asgard/)
