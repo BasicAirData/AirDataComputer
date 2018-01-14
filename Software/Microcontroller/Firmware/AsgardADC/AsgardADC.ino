@@ -99,8 +99,8 @@ void setup() {
   pinMode(TsensorPin, INPUT);
   pinMode(ledPin, OUTPUT);
 
-  Serial.begin (57600);                           // Set up the Serial Connection using high speed, for precise log timings
-  //Serial.begin (9600);                              // Set up the Serial Connection
+  Serial.begin (57600);                             // Set up the Serial Connection using high speed, for precise log timings
+  //Serial.begin (9600);                            // Set up the Serial Connection
   Serial1.begin (9600);                             // Set up the BT Connection
   delay(500);
   if (Serial1) AirDataComputer._status[AIRDC_STATUS_BLUETOOTH] = '1';    // BT Module present on serial1
@@ -131,6 +131,7 @@ void SDCardCheck()
 {
   if (!isSDCardPresent) {
     isSDCardPresent = card.init(SPI_HALF_SPEED, chipSelect);
+    if (isSDCardPresent) SD.begin(chipSelect);
   }
   isSDCardPresent = volume.init(card);
   AirDataComputer._status[AIRDC_STATUS_SD] = (isSDCardPresent ? '1' : '0');
