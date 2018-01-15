@@ -32,6 +32,7 @@
 #define BUFFERLENGTH 512                  // The length of string buffers
 #define DELIMITER '\n'
 #define SEPARATOR ","
+#define LEAVE_AS_IS "="
 #define ADC_NAME "ASGARD"                 // The name of the ADC device
 #define PROTOCOL_VERSION "0.4"            // The version of the communication protocol
 #define DEFAULT_LOGFILE "DATALOG.CSV"     // The default log file name
@@ -39,7 +40,9 @@
 
 const int chipSelect = BUILTIN_SDCARD;    // HW pin for micro SD adaptor CS
 File dataFile;                            // The file on SD
+File configFile;                          // The setup configuration file on SD
 bool isSDCardPresent;                     // The presence of a (formatted) card into the slot of SD
+bool loadConfiguration;                   // The flag is true if the config file is present into SD (and must be loaded on start)
 Sd2Card card;                             // The SD Card
 SdVolume volume;                          // The volume (partition) on SD
 double iTAS, ip1TAS, res, iof;            // Accessory variables for Air Data calculations
@@ -51,6 +54,7 @@ SSC absp(0x28, 1);            // Create an SSC sensor with I2C address 0x28 on I
 
 String message_BT;            // string that stores the incoming BT message
 String message_COM;           // string that stores the incoming COM message
+String message_CFG;           // string that stores the configuration messages
 const int ledPin = 13;        // The led is ON when the application is logging on SD
 
 float acquisition_freq     =   1;         // The minimum frequency of acquisition = 1 Hz (1 s)
@@ -123,6 +127,11 @@ void setup() {
   strcpy(Data[0],"\0");      // Initialize the Data
   strcpy(Data[1],"\0");      // Initialize the Data
   p_Data = &Data[1][0];      // The current valid status index is 1
+
+  if (isSDCardPresent) {      // Searches the configuration file
+    configFile = SD.open(DEFAULT_CONFIGFILE);
+    if (configFile) loadConfiguration = true;
+  }
 }
 
 
@@ -150,7 +159,7 @@ void acquisition()
   }
 
   // Differential Pressure sensor
-  if (AirDataComputer._status[AIRDC_STATUS_TDELTAP] == '1') {     // Differential pressure sensor present
+  if (AirDataComputer._status[AIRDC_STATUS_DELTAP] == '1') {     // Differential pressure sensor present
     diffp.update();
     AirDataComputer._qc = diffp.pressure();
     AirDataComputer._qcRaw = diffp.pressure_Raw();
@@ -325,6 +334,7 @@ void sendtosd(void)
 void loop() {
   bool endmsg_BT                = false;  // it becomes true when a message is received from BLUETOOTH
   bool endmsg_COM               = false;  // it becomes true when a message is received from SERIAL
+  bool endmsg_CFG               = false;  // it becomes true when a message is received from CONFIGURATION FILE
   char workbuff[BUFFERLENGTH]   = "";     // General purpose buffer, used for itoa conversion
   char Message[BUFFERLENGTH]    = "";     // it contains the message to be processed
   char Answer[BUFFERLENGTH]     = "";
@@ -359,37 +369,51 @@ void loop() {
   }
 
   
-  // 1) Read input from Serial and Bluetooth:
-  
-  while (Serial.available()) {      // while there is SERIAL data available
-    char ch = Serial.read();
-    if (ch != DELIMITER) message_COM += char(ch);      // Store string from serial command
-    else endmsg_COM = true;
-  }
-  if (endmsg_COM) {                 // This comes from the Serial port (USB)
-    if (message_COM != "") {        // if data is available
-      message_COM.toCharArray (Message, BUFFERLENGTH-1);
-      message_COM = "";
+  // 1) Read input from Configuration file, Serial, and Bluetooth:
+
+  if (loadConfiguration) {
+    while (configFile.available() && !endmsg_CFG) {
+      char ch = configFile.read();
+      if ((ch != DELIMITER) && (ch != '\r')) message_CFG += char(ch);      // Store string from CFG file
+      else endmsg_CFG = true;
     }
-  }
-  if (!endmsg_COM) {
-    while (Serial1.available()) {  // while there is BLUETOOTH data available
-      char ch = Serial1.read();
-      if (ch != DELIMITER) message_BT += char(ch);     // Store string from BT command
-      else endmsg_BT = true;
+    if (!configFile.available()) {
+      loadConfiguration = false;
+      configFile.close();
+      endmsg_CFG = true;
     }
-    if (endmsg_BT) {                // This comes from the bluetooth device (such as phone)
-      if (message_BT != "") {       // if data is available
-        message_BT.toCharArray (Message, BUFFERLENGTH-1);
-        message_BT = "";
+    message_CFG.toCharArray (Message, BUFFERLENGTH-1);
+    message_CFG = "";
+  } else {
+    while (Serial.available()) {      // while there is SERIAL data available
+      char ch = Serial.read();
+      if (ch != DELIMITER) message_COM += char(ch);      // Store string from serial command
+      else endmsg_COM = true;
+    }
+    if (endmsg_COM) {                 // This comes from the Serial port (USB)
+      if (message_COM != "") {        // if data is available
+        message_COM.toCharArray (Message, BUFFERLENGTH-1);
+        message_COM = "";
+      }
+    }
+    if (!endmsg_COM) {
+      while (Serial1.available()) {  // while there is BLUETOOTH data available
+        char ch = Serial1.read();
+        if (ch != DELIMITER) message_BT += char(ch);     // Store string from BT command
+        else endmsg_BT = true;
+      }
+      if (endmsg_BT) {                // This comes from the bluetooth device (such as phone)
+        if (message_BT != "") {       // if data is available
+          message_BT.toCharArray (Message, BUFFERLENGTH-1);
+          message_BT = "";
+        }
       }
     }
   }
 
-
   // 2) Process messages
   
-  if (endmsg_COM || endmsg_BT) {
+  if (endmsg_COM || endmsg_BT || endmsg_CFG) {
     char *command = strtok(Message, SEPARATOR);
 
     // --------------------------------------------------
@@ -463,6 +487,7 @@ void loop() {
     // #5 – STS – STATUS_SET                             --> Reply STA - STATUS_ASSERT
     // --------------------------------------------------
     // $STS,0,1,1,1,1,1,0,0,0
+    // $STS,=,=,=,0,=,=,=,=,=     Deactivate the external temperature sensor. Don't touch other fields
 
     if (!strcmp(command, "$STS")) {
       int i;
@@ -522,7 +547,7 @@ void loop() {
     // --------------------------------------------------
     // #8 – DTS – DATA_SET
     // --------------------------------------------------
-    // $DTS,0,0,0,0,0,0,0,0,300,0   Sets the external temperature to 300 [K] (if the sensor is not present)
+    // $DTS,=,=,=,=,=,=,=,=,300   Sets the external temperature to 300 [K] (if the sensor is not present)
     
     if (!strcmp(command, "$DTS")) {
       int i;
@@ -530,18 +555,42 @@ void loop() {
       for (i=0; i<AIRDC_DATA_VECTOR_SIZE; i++) {  // Check the fields
         command = strtok (NULL, SEPARATOR);
         if (strlen(command)<1) goto endeval;
-        
-        switch (i) {
-          case AIRDC_DATA_TAT:
-            if (AirDataComputer._status[AIRDC_STATUS_TAT] == '0') {
-              AirDataComputer._TAT = atol(command);
-              AirDataComputer._TRaw = 0l;
-            }
-            break;
+        if (strcmp(command, LEAVE_AS_IS)) {
+          switch (i) {
+            case AIRDC_DATA_TAT:                                            // External Temperature
+              if (AirDataComputer._status[AIRDC_STATUS_TAT] == '0') {
+                AirDataComputer._TAT = atol(command);
+                AirDataComputer._TRaw = 0l;
+              }
+              break;
+            case AIRDC_DATA_QC:                                             // Differential pressure
+              if (AirDataComputer._status[AIRDC_STATUS_DELTAP] == '0') {
+                AirDataComputer._qc = atol(command);
+                AirDataComputer._qcRaw = 0l;
+              }
+              break;
+            case AIRDC_DATA_TDELTAP:                                        // Temperature differential pressure sensor
+              if (AirDataComputer._status[AIRDC_STATUS_TDELTAP] == '0') {
+                AirDataComputer._Tdeltap = atol(command);
+                AirDataComputer._TdeltapRaw = 0l;
+              }
+              break;
+            case AIRDC_DATA_P:                                              // Absolute pressure
+              if (AirDataComputer._status[AIRDC_STATUS_P] == '0') {
+                AirDataComputer._p = atol(command);
+                AirDataComputer._pRaw = 0l;
+              }
+              break;
+            case AIRDC_DATA_TABSP:                                          // Temperature absolute pressure sensor
+              if (AirDataComputer._status[AIRDC_STATUS_TABSP] == '0') {
+                AirDataComputer._Tabsp = atol(command);
+                AirDataComputer._TabspRaw = 0l;
+              }
+              break;
+            default:  // IT DOES NOTHING
+              break;
 
-          default:
-            break;
-            // IT DOES NOTHING
+          }
         }
       }
       goto endeval;
@@ -556,38 +605,40 @@ void loop() {
     // $DTQ,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
     // Request time, deltap, p, ext temperature
     // $DTQ,1,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+    // Toggle ON the ext temperature field
+    // $DTQ,=,=,=,=,=,=,=,=,1
     // Request a $DTA string
     // $DTQ
     
     if (!strcmp(command, "$DTQ")) {
-      strcpy (Answer, p_Data);
+      if (!strcmp(command, "$DTQ,")) {
+        strcpy (Answer, p_Data);      // Simply return the data
+        goto endeval;
+      }
+      strcpy (Answer, "");
       int i;
       i=0;
       for (i=0; i<AIRDC_DATA_VECTOR_SIZE; i++) {
         command = strtok (NULL, SEPARATOR);
         if (strlen(command)<1) goto endeval;
-        AirDataComputer._datasel[i]=command[0];
-        workbuff[2*i]=command[0];
-        workbuff[2*i+1]=',';
+        if (strcmp(command, LEAVE_AS_IS)) AirDataComputer._datasel[i]=command[0];
       }
-      workbuff[2*i-1]='\0';
-      strcpy (Answer, "");
       
       // Save to the SD the configuration data
-      SDCardCheck();
-      if (isSDCardPresent) {
-        SD.remove(DEFAULT_CONFIGFILE);
-        File dataFile = SD.open(DEFAULT_CONFIGFILE, FILE_WRITE);
-        if (dataFile) { // if the file is available, write to it:
-          AirDataComputer._status[AIRDC_STATUS_SD] = '1';  // SD Card present
-          dataFile.print("$DTQ,");
-          dataFile.println(workbuff);
-          dataFile.close();
-        } else {        // if the file isn't open, pop up an error:
-          AirDataComputer._status[AIRDC_STATUS_SD] = '0';  // SD Card not present
-          goto endeval;
-        }
-      }
+      //SDCardCheck();
+      //if (isSDCardPresent) {
+      //  SD.remove(DEFAULT_CONFIGFILE);
+      //  File dataFile = SD.open(DEFAULT_CONFIGFILE, FILE_WRITE);
+      //  if (dataFile) { // if the file is available, write to it:
+      //    AirDataComputer._status[AIRDC_STATUS_SD] = '1';  // SD Card present
+      //    dataFile.print("$DTQ,");
+      //    dataFile.println(workbuff);
+      //    dataFile.close();
+      //  } else {        // if the file isn't open, pop up an error:
+      //    AirDataComputer._status[AIRDC_STATUS_SD] = '0';  // SD Card not present
+      //    goto endeval;
+      //  }
+      //}
       // Modified #10 reply message. No data will be transmitted. It is a plain acknowledge.
       //strcpy (outstr,"$DTA,");
       //strcat (Answer, workbuff);
@@ -663,18 +714,18 @@ void loop() {
     // --------------------------------------------------
     // $DFS,Serial_freq,Bluetooth_freq,SD_freq                                    <-- SPECS CHANGED
     // $DFS,5,0.5,0    Serial = 1 Hz           Bluetooth = 0.5 Hz   No SD logging
-    // $DFS,-1,0.5,5   Serial = leave as is    Bluetooth = 0.5 Hz   SD = 5 Hz
+    // $DFS,=,0.5,5    Serial = leave as is    Bluetooth = 0.5 Hz   SD = 5 Hz
     
     if (!strcmp(command, "$DFS")) {  // $DFS,Serial,Bluetooth,SD
       command = strtok (NULL, SEPARATOR);
       if (command != NULL) {
-        float DataFrequency_COM = atof(command);                  // Read the value after the comma
+        float DataFrequency_COM = (strcmp(command, LEAVE_AS_IS) ? atof(command) : -1);    // Read the freq value
         command = strtok (NULL, SEPARATOR);
         if (command != NULL) {
-          float DataFrequency_BT = atof(command);                 // Read the value after the comma
+          float DataFrequency_BT = (strcmp(command, LEAVE_AS_IS) ? atof(command) : -1);   // Read the freq value
           command = strtok (NULL, SEPARATOR);
           if (command != NULL) {
-            float DataFrequency_SD = atof(command);               // Read the value after the comma
+            float DataFrequency_SD = (strcmp(command, LEAVE_AS_IS) ? atof(command) : -1); // Read the freq value
             // Change frequencies
             if ((DataFrequency_COM >= 0) && (DataFrequency_COM != sendtoserial_freq)) {
               sendtoserial_freq = DataFrequency_COM;
