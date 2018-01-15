@@ -34,7 +34,7 @@ Re=24;
 cfactor=25;
 //Define tollerance band
 airdensityeband=0.5; //Air Density Percent of rho
-viscosityeband=0.5;//Viscosity %
+viscosityeband=2;//Viscosity %
 altitudeeband=0.5;//Altitude %
 fsamplev=zeros(1,ngroups);
 
@@ -109,39 +109,39 @@ subplot(4,3,3)
 xtitle('True Air Speed [m/s] vs Time [ms]')
 plot(timetic,Q(:,TASmcol),2)
 //External temperature [°K]
-subplot(4,3,3)
+subplot(4,3,4)
 xtitle('External Temperature [°K] vs Time [ms]')
 plot(timetic,Q(:,ExtTempmcol),2)
 //Temperature deltapsensor [°K]
-subplot(4,3,4)
+subplot(4,3,5)
 xtitle('Temperature from deltap pressure sensor [°K] vs Time [ms]')
 plot(timetic,Q(:,tempdeltapmcol),2)
 //Temperature abspressure sensor [°K]
-subplot(4,3,5)
+subplot(4,3,6)
 xtitle('Temperature from absolute pressure sensor [°K] vs Time [ms]')
 plot(timetic,Q(:,tempabsmcol),2)
 //Altitude [m]
-subplot(4,3,6)
+subplot(4,3,7)
 xtitle('Altitude [m] vs Time [ms]')
 plot(timetic,Q(:,altitude),2)
 //Outside Air Temperature [°K]
-subplot(4,3,7)
+subplot(4,3,8)
 xtitle('Outside Air Temperature [°K] vs Time [ms]')
 plot(timetic,Q(:,OAT),2)
 //Air Density [kg/m^3]
-subplot(4,3,8)
+subplot(4,3,9)
 xtitle('Air Density [kg/m^3] vs Time [ms]')
 plot(timetic,Q(:,rhoairmcol),2)
 //Air Viscosity [mPas]
-subplot(4,3,9)
+subplot(4,3,10)
 xtitle('Air Viscosity [mPas] vs Time [ms]')
 plot(timetic,Q(:,vair),2)
 //Re
-subplot(4,3,10)
+subplot(4,3,11)
 xtitle('Reynolds vs Time [ms]')
 plot(timetic,Q(:,Re),2)
 //C factot
-subplot(4,3,11)
+subplot(4,3,12)
 xtitle('c factor vs Time [ms]')
 plot(timetic,Q(:,cfactor),2)
 //Compares ADC logged values with offline calculated ones
@@ -169,7 +169,7 @@ if debug==1 then
     subplot(2,2,2)
     xtitle('Viscosity of Air Difference % vs Time [ms]')
     for ri=1:r
-        Q(ri,c+2)=(Q(ri,vair)-viscosityair(Q(ri,exttempcol)))/viscosityair(Q(ri,exttempcol))*100
+        Q(ri,c+2)=(Q(ri,vair)-viscosityair(Q(ri,ExtTempmcol)))/viscosityair(Q(ri,ExtTempmcol))*100
     end
     plot(timetic,Q(:,c+2),2)
     if ((abs(min(Q(:,c+2)))<viscosityeband)&(abs(max(Q(:,c+2)))<viscosityeband)) then
@@ -189,9 +189,4 @@ if debug==1 then
     else
         mprintf('\nWarning: ADC calculated altitude value is outside the tollerance band of %f %% of viscosity',altitudeeband)
     end
-    
-    
-    
-    
-    
 end
