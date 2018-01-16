@@ -6,7 +6,8 @@ exec('viscosityair.sci')
 exec('ISAaltitude.sci')
 clc
 //Q = csvRead("LG3-50HZ.CSV") //Field data  <-  Buono
-Q = csvRead("LG57600.CSV") //Field data
+Q = csvRead("PIPPO01.CSV") //Air Data
+GPS = csvRead("PIPPO01GPS.CSV") //GPS data
 [r c]=size(Q);
 ngroups=20;//Number of data sets
 fsample=0; //Averaged value of fsample
@@ -32,9 +33,17 @@ rhoairmcol=22;
 vair=23;
 Re=24;
 cfactor=25;
+//Define GPS data columns
+lat=3
+lon=4
+GPSaltitude=6
+geoidaltitude=7
+GPSspeed=8
+bearing=9; //Deg
+//Define tollerance band
 //Define tollerance band
 airdensityeband=0.5; //Air Density Percent of rho
-viscosityeband=2;//Viscosity %
+viscosityeband=3;//Viscosity %
 altitudeeband=0.5;//Altitude %
 fsamplev=zeros(1,ngroups);
 
@@ -190,3 +199,31 @@ if debug==1 then
         mprintf('\nWarning: ADC calculated altitude value is outside the tollerance band of %f %% of viscosity',altitudeeband)
     end
 end
+figGPS=scf(4);
+clf(4);
+//GPS track
+//scatter3(GPS(:,lat),GPS(:,lon),GPS(:,GPSaltitude),"*") 
+scatter3(GPS(:,lat),GPS(:,lon),GPS(:,GPSspeed),"red","*")  
+//scatter3(GPS(:,lat),GPS(:,lon),Q(:,TASmcol),"blue","x")
+azz=gca()
+// [xmin,ymin,zmin; xmax,ymax,zmax]
+xmin=min(GPS(:,lat))
+ymin=min(GPS(:,lon))
+zmin=0
+xmax=max(GPS(:,lat))
+ymax=min(GPS(:,lon))
+zmax=30
+azz.data_bounds=[xmin,ymin,zmin; xmax,ymax,zmax];
+//Get the total air data log time in seconds
+//fsample is the calcualted real sample rate
+[r1 c1]=size(GPS);
+[r c]=size(Q);
+timereal=min([r/fsample r1])
+//Append a column with the airdata to the GPS data
+//PIPPO2GPS 25 offset
+[r1 c1]=size(GPS);
+for mm=1:timereal
+  GPS(mm,c1+1)=Q(floor(50*0+ mm*fsample),IASmcol)
+end
+scatter3(GPS(:,lat),GPS(:,lon),GPS(:,c1+1),"blue","x")  
+
