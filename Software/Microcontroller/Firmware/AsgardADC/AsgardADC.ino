@@ -372,44 +372,44 @@ void loop() {
   // 1) Read input from Configuration file, Serial, and Bluetooth:
 
   if (loadConfiguration) {
-    while (configFile.available() && !endmsg_CFG) {
+    while (configFile.available()) {
       char ch = configFile.read();
-      if ((ch != DELIMITER) && (ch != '\r')) message_CFG += char(ch);      // Store string from CFG file
-      else endmsg_CFG = true;
+      if (ch == DELIMITER) {
+        endmsg_CFG = true;
+        message_CFG.toCharArray (Message, BUFFERLENGTH-1);
+        message_CFG = "";
+        goto endread;
+      } else if (ch != '\r') message_CFG += char(ch);   // Store string from CONFIG file
     }
-    if (!configFile.available()) {
-      loadConfiguration = false;
-      configFile.close();
-      endmsg_CFG = true;
-    }
+    loadConfiguration = false;
+    configFile.close();
+    endmsg_CFG = true;
     message_CFG.toCharArray (Message, BUFFERLENGTH-1);
     message_CFG = "";
-  } else {
-    while (Serial.available()) {      // while there is SERIAL data available
-      char ch = Serial.read();
-      if (ch != DELIMITER) message_COM += char(ch);      // Store string from serial command
-      else endmsg_COM = true;
-    }
-    if (endmsg_COM) {                 // This comes from the Serial port (USB)
-      if (message_COM != "") {        // if data is available
-        message_COM.toCharArray (Message, BUFFERLENGTH-1);
-        message_COM = "";
-      }
-    }
-    if (!endmsg_COM) {
-      while (Serial1.available()) {  // while there is BLUETOOTH data available
-        char ch = Serial1.read();
-        if (ch != DELIMITER) message_BT += char(ch);     // Store string from BT command
-        else endmsg_BT = true;
-      }
-      if (endmsg_BT) {                // This comes from the bluetooth device (such as phone)
-        if (message_BT != "") {       // if data is available
-          message_BT.toCharArray (Message, BUFFERLENGTH-1);
-          message_BT = "";
-        }
-      }
-    }
+    goto endread;
   }
+
+  while (Serial.available()) {
+  char ch = Serial.read();
+    if (ch == DELIMITER) {
+      endmsg_COM = true;
+      message_COM.toCharArray (Message, BUFFERLENGTH-1);
+      message_COM = "";
+      goto endread;
+    } else if (ch != '\r') message_COM += char(ch);     // Store string from serial command
+  }
+  
+  while (Serial1.available()) {
+    char ch = Serial1.read();
+    if (ch == DELIMITER) {
+      endmsg_BT = true;
+      message_BT.toCharArray (Message, BUFFERLENGTH-1);
+      message_BT = "";
+      goto endread;
+    } else if (ch != '\r') message_BT += char(ch);      // Store string from bluetooth command
+  }
+
+endread:
 
   // 2) Process messages
   
