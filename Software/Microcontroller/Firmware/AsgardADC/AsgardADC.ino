@@ -1,4 +1,4 @@
-/* Work in progress Asgard ADC Firmware Relase 0.4.0 14/01/2018
+/* Work in progress Asgard ADC Firmware Relase 0.4.0 16/01/2018
    This is a preliminary release, work in progress. Misbehaviour is plausible.
    AsgardADC.ino - Air Data Computer Firmware
    Conform to ADC Common Mesage Set 0.4
@@ -21,7 +21,6 @@
 
 #include <TimeLib.h>
 #include <Metro.h>
-
 #include <AirDC.h>
 #include <SD.h>
 #include <SPI.h>
@@ -29,16 +28,20 @@
 #include <i2c_t3.h>                       // Library for second I2C 
 #include <SSC.h>                          // Library for SSC series sensors, support two bus I2C
 
+#define ADC_NAME "ASGARD"                 // The name of the ADC device
+#define PROTOCOL_VERSION "0.4"            // The version of the communication protocol
+
 #define BUFFERLENGTH 512                  // The length of string buffers
 #define DELIMITER '\n'
 #define SEPARATOR ","
 #define LEAVE_AS_IS "="
-#define ADC_NAME "ASGARD"                 // The name of the ADC device
-#define PROTOCOL_VERSION "0.4"            // The version of the communication protocol
 #define DEFAULT_LOGFILE "DATALOG.CSV"     // The default log file name
 #define DEFAULT_CONFIGFILE "CONFIG.CFG"   // The configuration file name
 
-const int chipSelect = BUILTIN_SDCARD;    // HW pin for micro SD adaptor CS
+const int ledPin      = 13;               // The led is ON when the application is logging on SD
+const int TsensorPin  = A0;               // The input pin for the analog Temperature sensor
+const int chipSelect  = BUILTIN_SDCARD;   // HW pin for micro SD adaptor CS
+
 File dataFile;                            // The file on SD
 File configFile;                          // The setup configuration file on SD
 bool isSDCardPresent;                     // The presence of a (formatted) card into the slot of SD
@@ -47,7 +50,7 @@ Sd2Card card;                             // The SD Card
 SdVolume volume;                          // The volume (partition) on SD
 double iTAS, ip1TAS, res, iof;            // Accessory variables for Air Data calculations
 
-AirDC AirDataComputer(1);
+AirDC AirDataComputer(1);     // The Air Data Computer
 
 SSC diffp(0x28, 0);           // Create an SSC sensor with I2C address 0x28 on I2C bus 0
 SSC absp(0x28, 1);            // Create an SSC sensor with I2C address 0x28 on I2C bus 1
@@ -55,7 +58,6 @@ SSC absp(0x28, 1);            // Create an SSC sensor with I2C address 0x28 on I
 String message_BT;            // string that stores the incoming BT message
 String message_COM;           // string that stores the incoming COM message
 String message_CFG;           // string that stores the configuration messages
-const int ledPin = 13;        // The led is ON when the application is logging on SD
 
 float acquisition_freq     =   1;         // The minimum frequency of acquisition = 1 Hz (1 s)
 float sendtoserial_freq    =   0;         // The frequency of sendtoserial        = NOT ACTIVE
@@ -80,7 +82,6 @@ bool sendtosd_needs_acquisition        = true;    // The check that the aquisiti
 
 char Data[2][BUFFERLENGTH];  // The strings containing the data message
 char *p_Data;                // The pointer to the current valid data string
-int  TsensorPin = A0;        // The input pin for the analog Temperature sensor
 
 
 
@@ -128,7 +129,7 @@ void setup() {
   strcpy(Data[1],"\0");      // Initialize the Data
   p_Data = &Data[1][0];      // The current valid status index is 1
 
-  if (isSDCardPresent) {      // Searches the configuration file
+  if (isSDCardPresent) {     // Searches the configuration file
     configFile = SD.open(DEFAULT_CONFIGFILE);
     if (configFile) loadConfiguration = true;
   }
@@ -139,7 +140,7 @@ void setup() {
 void SDCardCheck() 
 {
   if (!isSDCardPresent) {
-    isSDCardPresent = card.init(SPI_HALF_SPEED, chipSelect);
+    isSDCardPresent = card.init(SPI_FULL_SPEED, chipSelect);
     if (isSDCardPresent) SD.begin(chipSelect);
   }
   isSDCardPresent = volume.init(card);
@@ -189,7 +190,40 @@ void acquisition()
 
   // 2) Calculations
 
-  computation();
+  // Init
+  AirDataComputer.RhoAir(1);                    // Calculates the air density
+  AirDataComputer.Viscosity(1);                 // Calculates the dynamic viscosity, Algorithm 2 (UOM Pas1e-6)
+  AirDataComputer.CalibrationFactor(1);         // Calibration factor set to 1
+  AirDataComputer.IAS(1);                       // Calculates IAS method 1
+  AirDataComputer._TAS = AirDataComputer._IAS;
+  AirDataComputer.Mach(1);                      // Calculates Mach No
+  AirDataComputer.OAT(1);                       // Outside Air Temperature
+  // Wild iteration
+  iof = 1;
+  while ((res > 0.05) || (iof < 10)) {
+    AirDataComputer.RhoAir(1);                  // Calculates the air density
+    AirDataComputer.Viscosity(1);               // Calculates the dynamic viscosity, Algorithm 2 (UOM Pas1e-6)
+    AirDataComputer.CalibrationFactor(2);       // Update calibration fator vat at TAS
+    AirDataComputer.IAS(1);                     // IAS
+    AirDataComputer.CAS(1);                     // CAS
+    AirDataComputer.TAS(1);                     // True Air Speed
+    AirDataComputer.Mach(1);                    // Update Mach No
+    iTAS = AirDataComputer._TAS;                // Store TAS value
+    AirDataComputer.OAT(1);                     // Update outside Air Temperature
+    AirDataComputer.RhoAir(1);                  // Calculates the air density
+    AirDataComputer.Viscosity(1);               // Calculates the dynamic viscosity, Algorithm 2 (UOM Pas1e-6)
+    AirDataComputer.CalibrationFactor(2);       // Update calibration fator vat at TAS
+    AirDataComputer.TAS(1);                     // Update TAS
+    AirDataComputer.Mach(1);                    // Update Mach No
+    AirDataComputer.OAT(1);                     // Update outside Air Temperature
+    ip1TAS = AirDataComputer._TAS;
+    res = abs(ip1TAS - iTAS) / iTAS;
+    iof++;
+  }
+  // Uncorrected ISA Altitude _h
+  AirDataComputer.ISAAltitude(1);
+  AirDataComputer._d = 8e-3;
+  AirDataComputer.Red(1);
 
   
   // 3) $DTA message update
@@ -255,49 +289,8 @@ void acquisition()
   sendtoserial_needs_acquisition      = false;    // The aquisition has been updated since the last $DTA
   sendtobluetooth_needs_acquisition   = false;    // The aquisition has been updated since the last $DTA
   sendtosd_needs_acquisition          = false;    // The aquisition has been updated since the last $DTA
-
-  //Serial.println("*"); // Debug for computation frequency;
 }
 
-
-void computation() {
-  // Init
-  AirDataComputer.RhoAir(1);                    // Calculates the air density
-  AirDataComputer.Viscosity(1);                 // Calculates the dynamic viscosity, Algorithm 2 (UOM Pas1e-6)
-  AirDataComputer.CalibrationFactor(1);         // Calibration factor set to 1
-  AirDataComputer.IAS(1);                       // Calculates IAS method 1
-  AirDataComputer._TAS = AirDataComputer._IAS;
-  AirDataComputer.Mach(1);                      // Calculates Mach No
-  AirDataComputer.OAT(1);                       // Outside Air Temperature
-  
-  // Wild iteration
-  iof = 1;
-  while ((res > 0.05) || (iof < 10)) {
-    AirDataComputer.RhoAir(1);                  // Calculates the air density
-    AirDataComputer.Viscosity(1);               // Calculates the dynamic viscosity, Algorithm 2 (UOM Pas1e-6)
-    AirDataComputer.CalibrationFactor(2);       // Update calibration fator vat at TAS
-    AirDataComputer.IAS(1);                     // IAS
-    AirDataComputer.CAS(1);                     // CAS
-    AirDataComputer.TAS(1);                     // True Air Speed
-    AirDataComputer.Mach(1);                    // Update Mach No
-    iTAS = AirDataComputer._TAS;                // Store TAS value
-    AirDataComputer.OAT(1);                     // Update outside Air Temperature
-    AirDataComputer.RhoAir(1);                  // Calculates the air density
-    AirDataComputer.Viscosity(1);               // Calculates the dynamic viscosity, Algorithm 2 (UOM Pas1e-6)
-    AirDataComputer.CalibrationFactor(2);       // Update calibration fator vat at TAS
-    AirDataComputer.TAS(1);                     // Update TAS
-    AirDataComputer.Mach(1);                    // Update Mach No
-    AirDataComputer.OAT(1);                     // Update outside Air Temperature
-    ip1TAS = AirDataComputer._TAS;
-    res = abs(ip1TAS - iTAS) / iTAS;
-    iof++;
-  }
-  
-  // Uncorrected ISA Altitude _h
-  AirDataComputer.ISAAltitude(1);
-  AirDataComputer._d = 8e-3;
-  AirDataComputer.Red(1);
-}
 
 
 
@@ -337,14 +330,14 @@ void loop() {
   bool endmsg_CFG               = false;  // it becomes true when a message is received from CONFIGURATION FILE
   char workbuff[BUFFERLENGTH]   = "";     // General purpose buffer, used for itoa conversion
   char Message[BUFFERLENGTH]    = "";     // it contains the message to be processed
-  char Answer[BUFFERLENGTH]     = "";
+  char Answer[BUFFERLENGTH]     = "";     // it contains the answer to the message
 
 
   // 0) Check Metro Timers:
 
-  if ((acquisition_freq > 0)     && (acquisitionTimer.check() == 1)) acquisition();
+  if ((acquisition_freq > 0) && (acquisitionTimer.check() == 1)) acquisition();
   
-  if ((sendtoserial_freq > 0)    && (sendtoserialTimer.check() == 1)) {
+  if ((sendtoserial_freq > 0) && (sendtoserialTimer.check() == 1)) {
     if (sendtoserial_needs_acquisition) {
       acquisition();
       acquisitionTimer.reset();
@@ -360,7 +353,7 @@ void loop() {
     sendtobluetooth();
   }
   
-  if ((sendtosd_freq > 0)        && (sendtosdTimer.check() == 1)) {
+  if ((sendtosd_freq > 0) && (sendtosdTimer.check() == 1)) {
     if (sendtosd_needs_acquisition) {
       acquisition();
       acquisitionTimer.reset();
@@ -390,7 +383,7 @@ void loop() {
   }
 
   while (Serial.available()) {
-  char ch = Serial.read();
+    char ch = Serial.read();
     if (ch == DELIMITER) {
       endmsg_COM = true;
       message_COM.toCharArray (Message, BUFFERLENGTH-1);
@@ -409,7 +402,8 @@ void loop() {
     } else if (ch != '\r') message_BT += char(ch);      // Store string from bluetooth command
   }
 
-endread:
+  endread:
+
 
   // 2) Process messages
   
@@ -589,7 +583,6 @@ endread:
               break;
             default:  // IT DOES NOTHING
               break;
-
           }
         }
       }
@@ -667,7 +660,7 @@ endread:
       }
       SDCardCheck();
       if (isSDCardPresent) {
-        if (SD.exists(command))   // Only if the file exist is set as current, #13 reply
+        if (SD.exists(command))   // Only if the file exists is set as current, #13 reply
         {
           if (isSDCardPresent) {
             dataFile.close();
@@ -680,8 +673,7 @@ endread:
               AirDataComputer._status[AIRDC_STATUS_SD] = '0';  // SD Card not present
               goto endeval;
             }
-          }
-          
+          }      
           AirDataComputer._status[AIRDC_STATUS_SD] = '1';  // SD Card present
         }
       }
@@ -961,6 +953,7 @@ endread:
     }
 
     endeval:
+
 
     // 3) In case answers to the right applicant
     
