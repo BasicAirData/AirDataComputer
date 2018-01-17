@@ -212,7 +212,7 @@ ymin=min(GPS(:,lon))
 zmin=0
 xmax=max(GPS(:,lat))
 ymax=min(GPS(:,lon))
-zmax=30
+zmax=25
 azz.data_bounds=[xmin,ymin,zmin; xmax,ymax,zmax];
 //Get the total air data log time in seconds
 //fsample is the calcualted real sample rate
@@ -223,7 +223,12 @@ timereal=min([r/fsample r1])
 //PIPPO2GPS 25 offset
 [r1 c1]=size(GPS);
 for mm=1:timereal
-  GPS(mm,c1+1)=Q(floor(50*0+ mm*fsample),IASmcol)
+  GPS(mm,c1+1)=Q(floor(50*0+ mm*fsample),TASmcol)
 end
-scatter3(GPS(:,lat),GPS(:,lon),GPS(:,c1+1),"blue","x")  
+scatter3(GPS(:,lat),GPS(:,lon),GPS(:,c1+1),"blue","x")  //TAS Airspeed at the sampled instants
+xlabel('Latitude')
+ylabel('Longitude')
+zlabel('Airspeed m/s')
+xtitle('GPS Speed vs Pitot Speed')
+legend(['GPS Ground Speed[m/s]';'True Airspeed [m/s]']);
 
