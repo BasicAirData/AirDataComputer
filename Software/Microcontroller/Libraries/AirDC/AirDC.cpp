@@ -176,7 +176,7 @@ void AirDC::IAS(int mode)
             _qc=-1*_qc;
         }
         _IAS=1.27775310604201*sqrt(_qc);
-        _uIAS=0.638876553021004/(sqrt(abs(_qc))*_uqc;
+        _uIAS=0.638876553021004/(sqrt(abs(_qc)))*_uqc;
         break;
     }
 }
@@ -263,7 +263,8 @@ void AirDC::ISAAltitude(int mode)
 //Sea level pressure should be put into _pSeaLevel. Mimics https://en.wikipedia.org/wiki/QNH
     {
         int i;
-        double f,fdot,t0,t1,t,erralt;
+        double f,fdot,t0,t1,t,erralt,Ps;
+        Ps=_p*0.000295299875080277;//Pa to inHg Conversion
         i=0;
         t0=1000; //Newton's initial value
         erralt=0; //Newton's initial value
