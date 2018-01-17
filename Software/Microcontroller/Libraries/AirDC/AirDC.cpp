@@ -51,8 +51,8 @@ AirDC::AirDC(int pid)
     _uT=0; //To be calculated
     _uRH=0.05;
     _uqc=5.0;
-    _uIAS=0.0;//To be calculated, 0 default value
-    _uTAT=0.0;//To be calculated, 0 default value
+    _uIAS=0.0;//0 default value
+    _uTAT=0.25;//From sensor specs 0 default value
 //Inertial Unit
     _Ip=0;
     _Iq=3;
@@ -176,14 +176,7 @@ void AirDC::IAS(int mode)
             _qc=-1*_qc;
         }
         _IAS=1.27775310604201*sqrt(_qc);
-        /*        if (_qc>0)
-                {
-                    _uIAS=0.638876553021004/(sqrt(_qc))*_uqc;
-                }
-                else
-                {
-                    _uIAS=0;
-                }*/
+        _uIAS=0.638876553021004/(sqrt(abs(_qc))*_uqc;
         break;
     }
 }
@@ -260,7 +253,7 @@ void AirDC::ISAAltitude(int mode)
     {
         double Ps,h;
         Ps=_p*0.000295299875080277;//Pa to inHg Conversion
-        _h=(pow(29.92126,0.190255)-pow(Ps,0.190255))*76189.2339431570; //Using Goodrich 4081 Air data handbook formula, US atmosphere 1962
+        _h=(pow(29.92126,0.190255)-pow(Ps,0.190255))*76189.2339431570; //Conform to Goodrich 4081 Air data handbook formula, US atmosphere 1962
         _h=_h*0.3048;//Back to SI
         _uh=4418.19264813511*pow(Ps,-0.809745)*_up*0.000295299875080277;
         break;
