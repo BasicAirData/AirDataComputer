@@ -1,6 +1,7 @@
 //ADC Asgard CSV Loader. JLJ. Basicairdata Team.
-//1 debug mode 
-debug=1;
+writetoQGISfile=1; //If 1 write output to CSV file for QGIS 
+debug=1;//1 debug mode 
+
 exec('rhoair.sci')
 exec('viscosityair.sci')
 exec('ISAaltitude.sci')
@@ -205,15 +206,7 @@ clf(4);
 //scatter3(GPS(:,lat),GPS(:,lon),GPS(:,GPSaltitude),"*") 
 scatter3(GPS(:,lat),GPS(:,lon),GPS(:,GPSspeed),"red","*")  
 //scatter3(GPS(:,lat),GPS(:,lon),Q(:,TASmcol),"blue","x")
-azz=gca()
-// [xmin,ymin,zmin; xmax,ymax,zmax]
-xmin=min(GPS(:,lat))
-ymin=min(GPS(:,lon))
-zmin=0
-xmax=max(GPS(:,lat))
-ymax=min(GPS(:,lon))
-zmax=25
-azz.data_bounds=[xmin,ymin,zmin; xmax,ymax,zmax];
+
 //Get the total air data log time in seconds
 //fsample is the calcualted real sample rate
 [r1 c1]=size(GPS);
@@ -225,10 +218,39 @@ timereal=min([r/fsample r1])
 for mm=1:timereal
   GPS(mm,c1+1)=Q(floor(50*0+ mm*fsample),TASmcol)
 end
-scatter3(GPS(:,lat),GPS(:,lon),GPS(:,c1+1),"blue","x")  //TAS Airspeed at the sampled instants
+//TAS Airspeed at the sampled instants
+scatter3(GPS(:,lat),GPS(:,lon),GPS(:,c1+1),"blue","x")  
+//Difference 
+scatter3(GPS(:,lat),GPS(:,lon),(GPS(:,GPSspeed)-GPS(:,c1+1)))  
+
+azz=gca()
+// [xmin,ymin,zmin; xmax,ymax,zmax]
+xmin=min(GPS(:,lat))
+ymin=min(GPS(:,lon))
+zmin=-2
+xmax=max(GPS(:,lat))
+ymax=min(GPS(:,lon))
+zmax=25
+azz.data_bounds=[xmin,ymin,zmin; xmax,ymax,zmax];
 xlabel('Latitude')
 ylabel('Longitude')
 zlabel('Airspeed m/s')
 xtitle('GPS Speed vs Pitot Speed')
-legend(['GPS Ground Speed[m/s]';'True Airspeed [m/s]']);
+legend(['GPS Ground Speed[m/s]';'True Airspeed [m/s]';'Speed difference']);
+//lat lon bearing TAS
+//x component of TAS
 
+
+if writetoQGISfile==1
+uTAS=cos(GPS(:,bearing)/360*6.28).*GPS(:,c1+1)
+vTAS=sin(GPS(:,bearing)/360*6.28).*GPS(:,c1+1)
+QGIS=[GPS(:,lat) GPS(:,lon) GPS(:,bearing) GPS(:,c1+1) uTAS vTAS]
+QGIS(1,1)=0
+QGIS(1,2)=0
+QGIS(1,3)=0
+QGIS(1,4)=0
+QGIS(1,5)=0
+QGIS(1,6)=0
+filename=fullfile("FORQGIS.csv");
+csvWrite ( QGIS , filename );
+end
