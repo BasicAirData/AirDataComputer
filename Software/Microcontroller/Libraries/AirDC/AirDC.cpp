@@ -278,7 +278,7 @@ void AirDC::ISAAltitude(int mode)
             i=i+1;
         }
         _h=t1;
-        _uh=0; //<- Need to be completed
+        _uh=erralt+4418.19264813511*pow(Ps,-0.809745)*_up*0.000295299875080277;
         break;
     }
     }
