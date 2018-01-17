@@ -1,4 +1,4 @@
-//ADC Asgard CSV Loader. JLJ . Basicairdata
+//ADC Asgard CSV Loader. JLJ. Basicairdata Team.
 //1 debug mode 
 debug=1;
 exec('rhoair.sci')
