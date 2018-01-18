@@ -136,6 +136,12 @@ void setup() {
 }
 
 
+void dateTime(uint16_t* date, uint16_t* time)                 // Callback for file timestamps
+{
+  *date = FAT_DATE(year(), month(), day());
+  *time = FAT_TIME(hour(), minute(), second());
+}
+
 
 void SDCardCheck() 
 {
@@ -649,8 +655,8 @@ void loop() {
     // --------------------------------------------------
     // #11 - LCS - LOG_CURRENTFILE_SET                   --> Reply LCA - LOG_CURRENTFILE_ASSERT
     // --------------------------------------------------
-    // Set the current log file to the (EXISTING) log1.csv
-    // $LCS,log1.csv
+    // Set the current log file to the LOG.CSV
+    // $LCS,LOG1.CSV
     
     if (!strcmp(command, "$LCS"))
     {
@@ -660,22 +666,23 @@ void loop() {
       }
       SDCardCheck();
       if (isSDCardPresent) {
-        if (SD.exists(command))   // Only if the file exists is set as current, #13 reply
-        {
-          if (isSDCardPresent) {
-            dataFile.close();
-            strcpy(AirDataComputer._logfile, command);
-            //dataFile = SD.open(AirDataComputer._logfile, O_WRITE | O_CREAT | O_APPEND);
-            dataFile = SD.open(AirDataComputer._logfile, FILE_WRITE);
-            if (dataFile) { // if the file is available, write to it:
-              AirDataComputer._status[AIRDC_STATUS_SD] = '1';  // SD Card present
-            } else {        // if the file isn't open, pop up an error:
-              AirDataComputer._status[AIRDC_STATUS_SD] = '0';  // SD Card not present
-              goto endeval;
-            }
-          }      
-          AirDataComputer._status[AIRDC_STATUS_SD] = '1';  // SD Card present
+        if (!SD.exists(command)) {                    // The file doesn't exists.
+           SdFile::dateTimeCallback(dateTime);
+           File file = SD.open(command, FILE_WRITE);  // Creates the file with the right timestamp
+           file.close();
+           SdFile::dateTimeCallbackCancel();
         }
+        dataFile.close();
+        strcpy(AirDataComputer._logfile, command);
+        //dataFile = SD.open(AirDataComputer._logfile, O_WRITE | O_CREAT | O_APPEND);
+        dataFile = SD.open(AirDataComputer._logfile, FILE_WRITE);
+        if (dataFile) { // if the file is available, write to it:
+          AirDataComputer._status[AIRDC_STATUS_SD] = '1';  // SD Card present
+        } else {        // if the file isn't open, pop up an error:
+          AirDataComputer._status[AIRDC_STATUS_SD] = '0';  // SD Card not present
+          goto endeval;
+        }      
+        AirDataComputer._status[AIRDC_STATUS_SD] = '1';  // SD Card present 
       }
       strcpy (Answer,"$LCA");
       strcat (Answer,SEPARATOR);
@@ -864,6 +871,12 @@ void loop() {
       {
         strcpy (Answer,"$FMA,NEW");
         if (!isSDCardPresent) goto endeval;
+        if (!SD.exists(param)) {                    // The file doesn't exists.
+           SdFile::dateTimeCallback(dateTime);
+           File file = SD.open(param, FILE_WRITE);  // Creates the file with the right timestamp
+           file.close();
+           SdFile::dateTimeCallbackCancel();
+        }
         dir = SD.open(param, FILE_WRITE);
         if (SD.exists(param))
         {
