@@ -136,11 +136,38 @@ void setup() {
 }
 
 
+
+void getNextFilename(char* namefile)
+{
+  if (strlen(namefile)<13) {
+    char namefile1[13], newname[13], number[13], nformat[5], *before, *after;
+    int numbersize = 13 - strlen(namefile);
+    numbersize = min (numbersize, 4);
+    sprintf(nformat, "%%0%id", numbersize);
+    strcpy(namefile1, namefile);
+    before = strtok (namefile1, "?");
+    after = strtok (NULL, "?");
+    bool fileexists = true;
+    for (int i = 0; i < (pow(10, numbersize)) && fileexists; i++) {
+      sprintf(number, nformat, i);
+      strcpy(newname, before);
+      strcat(newname, number);
+      strcat(newname, after);
+      if (!SD.exists(newname)) {
+        strcpy(namefile, newname);
+        fileexists = false;
+      }
+    }
+  }
+}
+
+
 void dateTime(uint16_t* date, uint16_t* time)                 // Callback for file timestamps
 {
   *date = FAT_DATE(year(), month(), day());
   *time = FAT_TIME(hour(), minute(), second());
 }
+
 
 
 void SDCardCheck() 
@@ -296,7 +323,6 @@ void acquisition()
   sendtobluetooth_needs_acquisition   = false;    // The aquisition has been updated since the last $DTA
   sendtosd_needs_acquisition          = false;    // The aquisition has been updated since the last $DTA
 }
-
 
 
 
@@ -666,6 +692,7 @@ void loop() {
       }
       SDCardCheck();
       if (isSDCardPresent) {
+        if (strstr(command, "?") != NULL) getNextFilename(command);
         if (!SD.exists(command)) {                    // The file doesn't exists.
            SdFile::dateTimeCallback(dateTime);
            File file = SD.open(command, FILE_WRITE);  // Creates the file with the right timestamp
@@ -871,6 +898,7 @@ void loop() {
       {
         strcpy (Answer,"$FMA,NEW");
         if (!isSDCardPresent) goto endeval;
+        if (strstr(param, "?") != NULL) getNextFilename(param);
         if (!SD.exists(param)) {                    // The file doesn't exists.
            SdFile::dateTimeCallback(dateTime);
            File file = SD.open(param, FILE_WRITE);  // Creates the file with the right timestamp
