@@ -1001,49 +1001,42 @@ endread:
     // --------------------------------------------------
     if (!strcmp(command, "$CCS"))
     {
+      float SensorID, CalibMode;
       if (strlen(command) < 1) goto endeval;
       command = strtok (NULL, SEPARATOR);   // Required command
-      if (!strcmp(command, "EXE")){         //Execute calibration command
-      command = strtok (NULL, SEPARATOR);
-      if (command != NULL) {
-        float SensorID_COM = (atof(command));    // Read the Sensor ID value
+      if (!strcmp(command, "EXE")) {        //Execute calibration command
         command = strtok (NULL, SEPARATOR);
         if (command != NULL) {
-          float CalibMode_COM = (atof(command));    // Read required calibration mode
+          SensorID = (atof(command));    // Read the Sensor ID value
+          command = strtok (NULL, SEPARATOR);
+          if (command != NULL) {
+            CalibMode = (atof(command));    // Read required calibration mode
+          }
         }
       }
-      }
-
-      //strcpy (Answer, "$DFA,");
-      //char f1[20], f2[20], f3[20];
-      //sprintf(f1, "%.3f", sendtoserial_freq);
-      //strcat (Answer, f1);
-      //strcat (Answer, SEPARATOR);
-      //sprintf(f2, "%.3f", sendtobluetooth_freq);
-      //strcat (Answer, f2);
-      //strcat (Answer, SEPARATOR);
-      //sprintf(f3, "%.3f", sendtosd_freq);
-      //strcat (Answer, f3);
-        //       strcpy (Answer,"$CCA,");
-        //       strcat (Answer,"1");         // Send out sensor ID. Sensor ID numnber?
-        //       strcat (Answer,SEPARATOR);
-        //       strcat (Answer,"12");  //Integer offset
-        goto endeval;
-      }
+      strcpy (Answer, "$CCA,");
+      char f1[20], f2[20], f3[20];
+      sprintf(f1, "%.3f", SensorID);
+      strcat (Answer, f1);
+      strcat (Answer, SEPARATOR);
+      sprintf(f2, "%.3f", CalibMode);
+      strcat (Answer, f2);
+      goto endeval;
+    }
 
 endeval:
 
 
-      // 3) In case answers to the right applicant
+    // 3) In case answers to the right applicant
 
-      if (strcmp(Answer, "")) {
-        if (endmsg_COM) Serial.println(Answer);
-        if (endmsg_BT)  Serial1.println(Answer);
-      }
+    if (strcmp(Answer, "")) {
+      if (endmsg_COM) Serial.println(Answer);
+      if (endmsg_BT)  Serial1.println(Answer);
     }
-
-    delayMicroseconds(delaymicroseconds_interval); //delay
   }
+
+  delayMicroseconds(delaymicroseconds_interval); //delay
+}
 
 
 
