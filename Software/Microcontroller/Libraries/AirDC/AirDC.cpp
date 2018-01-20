@@ -58,6 +58,7 @@ AirDC::AirDC(int pid)
     _Iq=3;
     _Ir=0;
     _c=1; //Probe calibration factor
+    _DpZeroMeas=8192;
 
 }
 /** Calculates the Air Density
@@ -391,6 +392,19 @@ void AirDC::CalibrationFactor(int mode)
         break;
     }
     }
+}
+/** Calculates correction factor for differential pressure measurements (SI) taken by sensorID
+* @param  SensorID Indicates the Sensor
+* @param  Pascal deltap measurement
+* @return Correction Offset [Pa]
+ */
+double AirDC::CorrectDp(int SensorID, double DpMeas)
+{
+ //Hey ! We should use the SensorID!
+ //0.93513059
+ //0.8417479
+
+ return (DpMeas-(_DpZeroMeas-8192)*0.93513059);
 }
 /** Order all the data within an array
 * @return Void
