@@ -198,7 +198,8 @@ void acquisition()
   // Differential Pressure sensor
   if (AirDataComputer._status[AIRDC_STATUS_DELTAP] == '1') {     // Differential pressure sensor present
     diffp.update();
-    AirDataComputer._qc = diffp.pressure();
+    //AirDataComputer._qc = diffp.pressure();
+    AirDataComputer._qc = AirDataComputer.CorrectDp(1,diffp.pressure()); //Corrected Differential Pressure
     AirDataComputer._qcRaw = diffp.pressure_Raw();
     if (AirDataComputer._status[AIRDC_STATUS_TDELTAP] == '1') {   // Temperature differential pressure sensor present
       AirDataComputer._Tdeltap = diffp.temperature();
@@ -999,9 +1000,11 @@ endread:
     // --------------------------------------------------
     // #19 - CCS–CALIBRATION_CON_SET
     // --------------------------------------------------
+    //Example Sent -> $CCS,EXE,1,1
+    //
     if (!strcmp(command, "$CCS"))
     {
-      float SensorID, CalibMode;
+      float SensorID, CalibMode,CalibMeasure;
       if (strlen(command) < 1) goto endeval;
       command = strtok (NULL, SEPARATOR);   // Required command
       if (!strcmp(command, "EXE")) {        //Execute calibration command
@@ -1014,6 +1017,19 @@ endread:
           }
         }
       }
+      //Sospensive zero offset calibration
+      CalibMeasure=0;
+      if (AirDataComputer._status[AIRDC_STATUS_DELTAP] == '1') {     // Differential pressure sensor present
+      int maxip=50; //No. of samples to calculate the average zero value
+      for (int ip=0;ip<maxip;ip++)
+      {
+      diffp.update();
+      CalibMeasure = CalibMeasure+ diffp.pressure_Raw();
+      delay(200);
+      }
+      CalibMeasure = CalibMeasure/maxip;
+      AirDataComputer._DpZeroMeas=CalibMeasure;
+      }
       strcpy (Answer, "$CCA,");
       char f1[20], f2[20], f3[20];
       sprintf(f1, "%.3f", SensorID);
@@ -1021,6 +1037,9 @@ endread:
       strcat (Answer, SEPARATOR);
       sprintf(f2, "%.3f", CalibMode);
       strcat (Answer, f2);
+      strcat (Answer, SEPARATOR);
+      sprintf(f3, "%.3f", AirDataComputer._DpZeroMeas);
+      strcat (Answer, f3);
       goto endeval;
     }
 

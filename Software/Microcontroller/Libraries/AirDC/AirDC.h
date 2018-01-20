@@ -71,6 +71,7 @@ public:
     void Mach(int mode);
     void OAT(int mode);
     void ISAAltitude(int mode);
+    double CorrectDp(int SensorID, double DpMeas);
    String OutputSerial(int mode);
 //Correction and Auxiliary
     void PitotCorrection(int mode);
@@ -138,7 +139,9 @@ public:
     double _Ip;/**< Pitch rate*/
     double _Iq;/**< Roll rate*/
     double _Ir;/**< yaw rate*/
-    double _c; /**Probe calibration factor*/
+    double _c; /**<Probe calibration factor*/
+//Sensor Specific
+    double _DpZeroMeas; /**<Zero measured value for differential sensor*/
 };
 #endif
 
