@@ -1,6 +1,3 @@
-/*JLJ Adding Msg 19 e 20
-   Linear calibration only
- * */
 /* Work in progress Asgard ADC Firmware Relase 0.4.0 16/01/2018
    This is a preliminary release, work in progress. Misbehaviour is plausible.
    AsgardADC.ino - Air Data Computer Firmware
@@ -199,7 +196,7 @@ void acquisition()
   if (AirDataComputer._status[AIRDC_STATUS_DELTAP] == '1') {     // Differential pressure sensor present
     diffp.update();
     //AirDataComputer._qc = diffp.pressure();
-    AirDataComputer._qc = AirDataComputer.CorrectDp(1,diffp.pressure()); //Corrected Differential Pressure
+    AirDataComputer._qc = AirDataComputer.CorrectDp(1, diffp.pressure()); //Corrected Differential Pressure
     AirDataComputer._qcRaw = diffp.pressure_Raw();
     if (AirDataComputer._status[AIRDC_STATUS_TDELTAP] == '1') {   // Temperature differential pressure sensor present
       AirDataComputer._Tdeltap = diffp.temperature();
@@ -1001,13 +998,13 @@ endread:
     // #19 - CCS–CALIBRATION_CON_SET
     // --------------------------------------------------
     //Example Sent -> $CCS,EXE,1,1
-    //
+    //  EXE Command
     if (!strcmp(command, "$CCS"))
     {
-      float SensorID, CalibMode,CalibMeasure;
+      float SensorID, CalibMode, CalibMeasure,CalibGain;
       if (strlen(command) < 1) goto endeval;
       command = strtok (NULL, SEPARATOR);   // Required command
-      if (!strcmp(command, "EXE")) {        //Execute calibration command
+      if (!strcmp(command, "EXE")) {        //EXE Execute calibration command
         command = strtok (NULL, SEPARATOR);
         if (command != NULL) {
           SensorID = (atof(command));    // Read the Sensor ID value
@@ -1016,30 +1013,108 @@ endread:
             CalibMode = (atof(command));    // Read required calibration mode
           }
         }
+
+        if (CalibMode == 1) { //Offset Calib
+          //Sospensive zero offset calibration
+          CalibMeasure = 0;
+          if (AirDataComputer._status[AIRDC_STATUS_DELTAP] == '1') {     // Differential pressure sensor present
+            int maxip = 50; //No. of samples to calculate the average zero value
+            for (int ip = 0; ip < maxip; ip++)
+            {
+              diffp.update();
+              CalibMeasure = CalibMeasure + diffp.pressure_Raw();
+              delay(200);
+            }
+            CalibMeasure = CalibMeasure / maxip;
+            AirDataComputer._DpZeroMeas = CalibMeasure;
+          }
+          strcpy (Answer, "$CCA,");
+          char f1[20], f2[20], f3[20];
+          sprintf(f1, "%.3f", SensorID);
+          strcat (Answer, f1);
+          strcat (Answer, SEPARATOR);
+          sprintf(f2, "%.3f", CalibMode);
+          strcat (Answer, f2);
+          strcat (Answer, SEPARATOR);
+          sprintf(f3, "%.3f", AirDataComputer._DpZeroMeas);
+          strcat (Answer, f3);
+          goto endeval;
+        }
       }
-      //Sospensive zero offset calibration
-      CalibMeasure=0;
-      if (AirDataComputer._status[AIRDC_STATUS_DELTAP] == '1') {     // Differential pressure sensor present
-      int maxip=50; //No. of samples to calculate the average zero value
-      for (int ip=0;ip<maxip;ip++)
-      {
-      diffp.update();
-      CalibMeasure = CalibMeasure+ diffp.pressure_Raw();
-      delay(200);
+      if (!strcmp(command, "USE")) {        //USE command
+        command = strtok (NULL, SEPARATOR);
+        if (command != NULL) {
+          SensorID = (atof(command));    // Read the Sensor ID value
+          command = strtok (NULL, SEPARATOR);
+          if (command != NULL) {
+            CalibMode = (atof(command));    // Read required calibration mode
+          }  
+          command = strtok (NULL, SEPARATOR);
+          if (command != NULL) {
+            CalibMeasure = (atof(command));    // Read offset value
+          }
+          command = strtok (NULL, SEPARATOR);
+          if (command != NULL) {
+            CalibGain = (atof(command));    // Read Gain Value
+          }
+          
+        }
+
+        if (CalibMode == 1) { //Offset Calibibration only
+          AirDataComputer._DpZeroMeas = CalibMeasure;
+          strcpy (Answer, "$CCA,");
+          char f1[20], f2[20], f3[20];
+          sprintf(f1, "%.3f", SensorID);
+          strcat (Answer, f1);
+          strcat (Answer, SEPARATOR);
+          sprintf(f2, "%.3f", CalibMode);
+          strcat (Answer, f2);
+          strcat (Answer, SEPARATOR);
+          sprintf(f3, "%.3f", AirDataComputer._DpZeroMeas);
+          strcat (Answer, f3);
+          goto endeval;
+        }
+        if (CalibMode == 2) { //Offset Calibibration only
+          AirDataComputer._DpZeroMeas = CalibMeasure;
+          AirDataComputer._GainDp = CalibGain;
+          strcpy (Answer, "$CCA,");
+          char f1[20], f2[20], f3[20],f4[20];
+          sprintf(f1, "%.3f", SensorID);
+          strcat (Answer, f1);
+          strcat (Answer, SEPARATOR);
+          sprintf(f2, "%.3f", CalibMode);
+          strcat (Answer, f2);
+          strcat (Answer, SEPARATOR);
+          sprintf(f3, "%.3f", AirDataComputer._DpZeroMeas);
+          strcat (Answer, f3);
+          strcat (Answer, SEPARATOR);
+          sprintf(f4, "%.6f", AirDataComputer._GainDp);
+          strcat (Answer, f4);
+          goto endeval;
+        }
+
+       
       }
-      CalibMeasure = CalibMeasure/maxip;
-      AirDataComputer._DpZeroMeas=CalibMeasure;
+      if (!strcmp(command, "SEN")) {        //SEN command
+        command = strtok (NULL, SEPARATOR);
+        if (command != NULL) {
+          SensorID = (atof(command));    // Read the Sensor ID value    
+        }
+          AirDataComputer._DpZeroMeas = CalibMeasure;
+          AirDataComputer._GainDp = CalibGain;
+          strcpy (Answer, "$CCA,");
+          char f1[20], f3[20],f4[20];
+          sprintf(f1, "%.3f", SensorID);
+          strcat (Answer, f1);
+          strcat (Answer, SEPARATOR);
+          sprintf(f3, "%.3f", AirDataComputer._DpZeroMeas);
+          strcat (Answer, f3);
+          strcat (Answer, SEPARATOR);
+          sprintf(f4, "%.6f", AirDataComputer._GainDp);
+          strcat (Answer, f4);
+          goto endeval;
       }
-      strcpy (Answer, "$CCA,");
-      char f1[20], f2[20], f3[20];
-      sprintf(f1, "%.3f", SensorID);
-      strcat (Answer, f1);
-      strcat (Answer, SEPARATOR);
-      sprintf(f2, "%.3f", CalibMode);
-      strcat (Answer, f2);
-      strcat (Answer, SEPARATOR);
-      sprintf(f3, "%.3f", AirDataComputer._DpZeroMeas);
-      strcat (Answer, f3);
+      
       goto endeval;
     }
 
