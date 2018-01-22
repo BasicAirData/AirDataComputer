@@ -140,8 +140,9 @@ public:
     double _Iq;/**< Roll rate*/
     double _Ir;/**< yaw rate*/
     double _c; /**<Probe calibration factor*/
-//Sensor Specific
-    double _DpZeroMeas; /**<Zero measured value for differential sensor*/
+//Differential pressure sensor specific
+    double _DpZeroMeas; /**<Sensor count value when zero differential pressure is applied*/
+    double _GainDp; /**<Sensor gain*/
 };
 #endif
 

@@ -59,6 +59,7 @@ AirDC::AirDC(int pid)
     _Ir=0;
     _c=1; //Probe calibration factor
     _DpZeroMeas=8192;
+    _GainDp=0.93513059;
 
 }
 /** Calculates the Air Density
@@ -404,7 +405,7 @@ double AirDC::CorrectDp(int SensorID, double DpMeas)
  //0.93513059
  //0.8417479
 
- return (DpMeas-(_DpZeroMeas-8192)*0.93513059);
+ return (DpMeas-(_DpZeroMeas-8192)*_GainDp);
 }
 /** Order all the data within an array
 * @return Void
