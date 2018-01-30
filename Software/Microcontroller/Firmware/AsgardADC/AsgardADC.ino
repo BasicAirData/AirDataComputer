@@ -50,6 +50,15 @@ Sd2Card card;                             // The SD Card
 SdVolume volume;                          // The volume (partition) on SD
 double iTAS, ip1TAS, res, iof;            // Accessory variables for Air Data calculations
 
+float diffpMinRaw          =   1638.3; //Declaration of sensors specific parameters for default ADC configuration
+float diffpMaxRaw          =   14744.7;
+float diffpMinPressure     =   -6984.760;
+float diffpsetMaxPressure  =   6984.760;
+float absMinRaw            =   1638.3;
+float absMaxRaw            =   14744.7;
+float absMinPressure       =   0.0;
+float abssetMaxPressure    =   160000.0;
+
 AirDC AirDataComputer(1);     // The Air Data Computer
 
 SSC diffp(0x28, 0);           // Create an SSC sensor with I2C address 0x28 on I2C bus 0
@@ -116,14 +125,14 @@ void setup() {
   Wire1.begin();                    // I2C Bus 1
 
   // Setup sensors parameters
-  diffp.setMinRaw (1638.3);
-  diffp.setMaxRaw (14744.7);
-  diffp.setMinPressure (-6984.760);
-  diffp.setMaxPressure (6984.760);
-  absp.setMinRaw (1638.3);
-  absp.setMaxRaw (14744.7);
-  absp.setMinPressure (0.0);
-  absp.setMaxPressure (160000.0);
+  diffp.setMinRaw (diffpMinRaw);
+  diffp.setMaxRaw (diffpMaxRaw);
+  diffp.setMinPressure (diffpMinPressure);
+  diffp.setMaxPressure (diffpsetMaxPressure);
+  absp.setMinRaw (absMinRaw);
+  absp.setMaxRaw (absMaxRaw);
+  absp.setMinPressure (absMinPressure);
+  absp.setMaxPressure (abssetMaxPressure);
 
   strcpy(Data[0], "\0");     // Initialize the Data
   strcpy(Data[1], "\0");     // Initialize the Data
@@ -1114,7 +1123,50 @@ endread:
           strcat (Answer, f4);
           goto endeval;
       }
-      
+
+    // Message #19, HWD command
+    // $CCS,=,=,1500,=,=,=,=,   Sets the external Absolute pressure sensor Min Count value
+
+    if (!strcmp(command, "HWD")) {
+      int i;
+      i = 0;
+      for (i = 0; i < 8; i++) { // Check the fields
+        command = strtok (NULL, SEPARATOR);
+        if (strlen(command) < 1) goto endeval;
+        if (strcmp(command, LEAVE_AS_IS)) {
+          switch (i) {
+            case 0:                                             // Deltap Sensor Min Count value
+              diffp.setMinRaw (atof(command));
+            break;
+            case 1:                                             // Absolute pressure sensor Min Count value
+              absp.setMinRaw (atof(command));
+            break;
+            case 2:                                             // Deltap Sensor Max Count value
+              diffp.setMaxRaw (atof(command));  
+            break;
+            case 3:                                             // Absolute pressure sensor Max Count value
+              absp.setMaxRaw (atof(command));
+            break;
+            case 4:                                             // Deltap Sensor Min Pressure
+              diffp.setMinPressure (atof(command));
+            break;
+            case 5:                                             // Abs Sensor Min Pressure
+              absp.setMinPressure (atof(command));
+            break;
+            case 6:                                             // Deltap Sensor Max Pressure
+              diffp.setMaxPressure (atof(command));
+            break;
+            case 7:                                             // Abs Sensor Max Pressure
+              absp.setMaxPressure (atof(command));
+            break;
+            default:  // IT DOES NOTHING
+            break;
+          }
+        }
+      }
+      goto endeval;
+    }
+   
       goto endeval;
     }
 
