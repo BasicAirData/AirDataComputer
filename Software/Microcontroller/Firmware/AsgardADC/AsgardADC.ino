@@ -691,8 +691,8 @@ endread:
     // --------------------------------------------------
     // #11 - LCS - LOG_CURRENTFILE_SET                   --> Reply LCA - LOG_CURRENTFILE_ASSERT
     // --------------------------------------------------
-    // Set the current log file to the LOG.CSV
-    // $LCS,LOG1.CSV
+    // Set the current log file to the LOG-01.CSV
+    // $LCS,LOG-01.CSV
 
     if (!strcmp(command, "$LCS"))
     {
@@ -930,8 +930,11 @@ endread:
       {
         strcpy (Answer, "$FMA,DEL");
         if (!isSDCardPresent) goto endeval;
-        if (strcmp(param, AirDataComputer._logfile)) {  // The file must not be the default log file
-          SD.remove(param);
+        if (!strcmp(param, AirDataComputer._logfile) && (sendtosd_freq == 0)) {  // current file
+          dataFile.close();                   // Close the current file (if is not recording)
+        }
+        if ((!strcmp(param, AirDataComputer._logfile) && (sendtosd_freq == 0)) || strcmp(param, AirDataComputer._logfile)) {
+          SD.remove(param);                   // Delete the file
           if (!(SD.exists(param)))
           {
             strcat (Answer, SEPARATOR);
