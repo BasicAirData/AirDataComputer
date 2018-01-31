@@ -19,6 +19,18 @@
    along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+
+/* --------------------------------------------------------------------------
+   BEFORE THE COMPILATION OF THIS SKETCH:
+
+   Please go to your Arduino installation folder and open the file
+   "arduino-1.8.5/hardware/teensy/avr/cores/teensy3/serial1.c"
+   Then go to the line 40 and change the buffer size with the new value:
+   "#define SERIAL1_TX_BUFFER_SIZE   1024"
+   --------------------------------------------------------------------------
+*/
+
+
 #include <TimeLib.h>
 #include <Metro.h>
 #include <AirDC.h>
