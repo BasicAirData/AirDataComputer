@@ -1179,6 +1179,7 @@ endread:
           }
         }
       }
+      strcpy (Answer, "$CCA"); //Reply #20, void acknoledge
       goto endeval;
     }
    
