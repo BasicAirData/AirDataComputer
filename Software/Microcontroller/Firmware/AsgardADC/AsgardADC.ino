@@ -1,7 +1,7 @@
-/* Work in progress Asgard ADC Firmware Relase 0.4.0 16/01/2018
+/* Work in progress Asgard ADC Firmware Relase 0.5.0 06/02/2018
    This is a preliminary release, work in progress. Misbehaviour is plausible.
    AsgardADC.ino - Air Data Computer Firmware
-   Conform to ADC Common Mesage Set 0.4
+   Conform to ADC Common Mesage Set 0.5
    Firmware for Teensy 3.6 MCU
    Created by JLJ and GC, BasicAirData Team www.basicairdata.eu
 
@@ -30,7 +30,7 @@
    --------------------------------------------------------------------------
 */
 
-
+#include <Time.h>
 #include <TimeLib.h>
 #include <Metro.h>
 #include <AirDC.h>
@@ -41,9 +41,9 @@
 #include <SSC.h>                          // Library for SSC series sensors, support two bus I2C
 
 #define ADC_NAME "ASGARD"                 // The name of the ADC device
-#define PROTOCOL_VERSION "0.4"            // The version of the communication protocol
+#define PROTOCOL_VERSION "0.5"            // The version of the communication protocol
 
-#define BUFFERLENGTH 512                  // The length of string buffers
+#define BUFFERLENGTH 2048                 // The length of string buffers
 #define DELIMITER '\n'
 #define SEPARATOR ","
 #define LEAVE_AS_IS "="
@@ -885,34 +885,76 @@ endread:
       if (!strcmp(command, "LST")) {          // List files on the SD
         strcpy (Answer, "$FMA,LST");
         if (!isSDCardPresent) goto endeval;
-        dir = SD.open("/");            // open root
 
+        SdFile root;
+        root.openRoot(volume);
+        dir_t p;
+        char* pfilename;
+        uint8_t result;
+        tmElements_t ts;
+        
+        //Serial.println(micros());
         // Send a string with the total number of files to be sent
         n = 0;
-        while (true) {
-          File entry =  dir.openNextFile();
-          if (!entry) break;
-          if (!entry.isDirectory()) n++;
-          entry.close();
+        root.rewind();
+        result = root.readDir(&p);
+        while (result) {
+          if (!(p.attributes & (0X08 | 0X10))) {      // if the entry is a file, not a subdir
+            pfilename = (char*)&p.name[0];
+            if (*pfilename != '.') n++;
+          }
+          result = root.readDir(&p);
         }
-        dir.close();
-        dir = SD.open("/");                 // open root
         strcat (Answer, SEPARATOR);
         itoa(n, workbuff, 10);              // Append number of files
         strcat (Answer, workbuff);
-        while (true) {
-          File entry2 =  dir.openNextFile();
-          if (!entry2) break;
-          if (!entry2.isDirectory()) {
-            strcat (Answer, SEPARATOR);
-            strcat (Answer, entry2.name()); // Send out filename
-            strcat (Answer, SEPARATOR);
-            ltoa(entry2.size(), workbuff, 10);
-            strcat (Answer, workbuff);      // Send out file size
+        //Serial.println(micros());
+        
+        root.rewind();
+        result = root.readDir(&p);
+        while (result) {
+          if (!(p.attributes & (0X08 | 0X10))) {      // if the entry is a file, not a subdir
+            pfilename = (char*)&p.name[0];
+            if (*pfilename != '.') {
+              strcat (Answer, SEPARATOR);
+              char fname[14];
+              int fi = 0;
+              for (int i = 0; i < 8; i++) {
+                if (pfilename[i] != ' ') {
+                  fname[fi] = pfilename[i];
+                  fi++;
+                }
+              }
+              fname[fi] = '.';
+              fi++;
+              for (int i = 8; i < 11; i++) {
+                if (pfilename[i] != ' ') {
+                  fname[fi] = pfilename[i];
+                  fi++;
+                }
+              }
+              fname[fi] = '\0';
+              strcat (Answer, fname);
+              strcat (Answer, SEPARATOR);
+              ltoa(p.fileSize, workbuff, 10);
+              strcat (Answer, workbuff);                       // Send out file size
+              strcat (Answer, SEPARATOR);
+              
+              ts.Year   = 10 + (p.creationDate >> 9);          // YEAR
+              ts.Month  = (p.creationDate >> 5) & 0XF;         // MONTH
+              ts.Day    = p.creationDate & 0X1F;               // DAY
+              ts.Hour   = p.creationTime >> 11;                // HOUR
+              ts.Minute = (p.creationTime >> 5) & 0X3F;        // MINUTE
+              ts.Second = 2*(p.creationTime & 0X1F);           // SECOND
+
+              ultoa(makeTime(ts), workbuff, 10);
+              strcat (Answer, workbuff);                       // Send out file size
+              //Serial.println((unsigned long)makeTime(ts));
+            }
           }
-          entry2.close();
+          result = root.readDir(&p);
         }
-        dir.close();
+        //Serial.println(micros());
         goto endeval;
       }
 
