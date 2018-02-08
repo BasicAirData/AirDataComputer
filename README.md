@@ -8,6 +8,11 @@ This repository, together with the media published on the BasicAirData website, 
 
 The project is a work in progress
 
+This Air Data Computer can be configured creating the CONFIG.CFG file on SDCard, and can be controlled sending plain text [messages](https://github.com/BasicAirData/AirDataComputer/tree/master/Software/Documentation/ADC%20Common%20Message%20Set) from any serial / bluetooth terminal.
+
+We are developing the [Air Data Bridge](https://github.com/BasicAirData/AirDataBridge), a simple app for Android devices to connect via Bluetooth and use this Air Data Computer on-the-field in an easy way.
+
+
 ## At a Glance
 * [Fast Assembly](https://www.basicairdata.eu/projects/airdatacomputer/asgard-adc/assembly-adc-asgard/)
 * [Pictures](http://www.basicairdata.eu/projects/airdatacomputer/asgard-adc/adc-asgard-pictures/)
