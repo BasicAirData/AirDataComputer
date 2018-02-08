@@ -1,4 +1,4 @@
-/* Work in progress Asgard ADC Firmware Relase 0.5.0 06/02/2018
+/* Work in progress Asgard ADC Firmware Relase 0.5.0 08/02/2018
    This is a preliminary release, work in progress. Misbehaviour is plausible.
    AsgardADC.ino - Air Data Computer Firmware
    Conform to ADC Common Mesage Set 0.5
@@ -1002,14 +1002,61 @@ endread:
       {
         strcpy (Answer, "$FMA,PRP");
         if (!isSDCardPresent) goto endeval;
-        if (SD.exists(param)) {               // if file exists
-          dir = SD.open(param);
-          strcat (Answer, SEPARATOR);
-          strcat (Answer, dir.name());        // Send out filename
-          strcat (Answer, SEPARATOR);
-          ltoa(dir.size(), workbuff, 10);
-          strcat (Answer, workbuff);          // Send out file size
-          dir.close();
+
+        SdFile root;
+        root.openRoot(volume);
+        dir_t p;
+        char* pfilename;
+        uint8_t result;
+        tmElements_t ts;
+
+        root.rewind();
+        result = root.readDir(&p);
+        while (result) {
+          if (!(p.attributes & (0X08 | 0X10))) {      // if the entry is a file, not a subdir
+            pfilename = (char*)&p.name[0];
+            if (*pfilename != '.') {
+              char fname[14];
+              int fi = 0;
+              for (int i = 0; i < 8; i++) {
+                if (pfilename[i] != ' ') {
+                  fname[fi] = pfilename[i];
+                  fi++;
+                }
+              }
+              fname[fi] = '.';
+              fi++;
+              for (int i = 8; i < 11; i++) {
+                if (pfilename[i] != ' ') {
+                  fname[fi] = pfilename[i];
+                  fi++;
+                }
+              }
+              fname[fi] = '\0';
+
+              if (!strcmp(param, fname)) {
+                // File found!    
+                strcat (Answer, SEPARATOR);
+                strcat (Answer, fname);
+                strcat (Answer, SEPARATOR);
+                ltoa(p.fileSize, workbuff, 10);
+                strcat (Answer, workbuff);                       // Send out file size
+                strcat (Answer, SEPARATOR);
+                
+                ts.Year   = 10 + (p.creationDate >> 9);          // YEAR
+                ts.Month  = (p.creationDate >> 5) & 0XF;         // MONTH
+                ts.Day    = p.creationDate & 0X1F;               // DAY
+                ts.Hour   = p.creationTime >> 11;                // HOUR
+                ts.Minute = (p.creationTime >> 5) & 0X3F;        // MINUTE
+                ts.Second = 2*(p.creationTime & 0X1F);           // SECOND
+  
+                ultoa(makeTime(ts), workbuff, 10);
+                strcat (Answer, workbuff);                       // Send out file size
+                break;
+              }
+            }
+          }
+          result = root.readDir(&p);
         }
         goto endeval;
       }
