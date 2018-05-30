@@ -7,8 +7,8 @@ exec('viscosityair.sci')
 exec('ISAaltitude.sci')
 clc
 //Q = csvRead("LG3-50HZ.CSV") //Field data  <-  Buono
-Q = csvRead("PIPPO01.CSV") //Air Data
-GPS = csvRead("PIPPO01GPS.CSV") //GPS data
+Q = csvRead("TEST1R.CSV") //Air Data
+GPS = csvRead("TEST1GPSR.CSV") //GPS data
 [r c]=size(Q);
 ngroups=20;//Number of data sets
 fsample=0; //Averaged value of fsample
@@ -221,7 +221,7 @@ end
 //TAS Airspeed at the sampled instants
 scatter3(GPS(:,lat),GPS(:,lon),GPS(:,c1+1),"blue","x")  
 //Difference 
-scatter3(GPS(:,lat),GPS(:,lon),(GPS(:,GPSspeed)-GPS(:,c1+1)))  
+scatter3(GPS(:,lat),GPS(:,lon),(GPS(:,GPSspeed)-GPS(:,c1+1)),"green")  
 
 azz=gca()
 // [xmin,ymin,zmin; xmax,ymax,zmax]
