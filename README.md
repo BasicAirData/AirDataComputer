@@ -1,3 +1,5 @@
+[Brainstorming in progress. New design. Rookies welcome](http://www.basicairdata.eu/projects/air-data-systems/brainstorming-on-muli-hole-probe-diy-air-data-computer/)
+
 [Airborne ADC Video](http://www.basicairdata.eu/projects/skyeye/review-diy-air-data-computer-asgard-and-pitot-static-on-skyeye-rc-model/)
 # [Air Data Computer](https://github.com/BasicAirData/AirDataComputer/wiki)
 ![Asgard ADC](http://www.basicairdata.eu/wp-content/uploads/sites/1/nggallery/adc-asgard-build-2/IMGP5610.JPG)
