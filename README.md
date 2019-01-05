@@ -1,4 +1,4 @@
-[Brainstorming in progress. New design. Rookies welcome](http://www.basicairdata.eu/projects/air-data-systems/brainstorming-on-muli-hole-probe-diy-air-data-computer/)
+[Brainstorming in progress. New design. Rookies welcome](https://www.basicairdata.eu/projects/air-data-systems/brainstorming-air-data-system-winter-2018-2019/)
 
 [Airborne ADC Video](http://www.basicairdata.eu/projects/skyeye/review-diy-air-data-computer-asgard-and-pitot-static-on-skyeye-rc-model/)
 # [Air Data Computer](https://github.com/BasicAirData/AirDataComputer/wiki)
