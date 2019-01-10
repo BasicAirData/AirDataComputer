@@ -1,0 +1,645 @@
+\hypertarget{class_air_d_c}{}\section{Air\+DC Class Reference}
+\label{class_air_d_c}\index{Air\+DC@{Air\+DC}}
+
+
+{\ttfamily \#include $<$Air\+D\+C.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_air_d_c_ad8fd49af8bf2b7db4dee29fe9bc28bb6}{Air\+DC} (int pid)
+\item 
+void \hyperlink{class_air_d_c_a89f74a0f980a2891d10f4e5637ddbc40}{Rho\+Air} (int mode)
+\item 
+void \hyperlink{class_air_d_c_af26c8e8ef7fa070a72f0a5777cf91ec0}{I\+AS} (int mode)
+\item 
+void \hyperlink{class_air_d_c_a7ff5cc226ca2b14d7c03fafef41e6a84}{C\+AS} (int mode)
+\item 
+void \hyperlink{class_air_d_c_ac5f852dcb7b32bf8b18f8dda9d1e7005}{T\+AS} (int mode)
+\item 
+void \hyperlink{class_air_d_c_a6e8f15eedeebbd094259bb38b9e0307a}{Mach} (int mode)
+\item 
+void \hyperlink{class_air_d_c_a4ce45312b9ac98b76af87f1718c4e0fc}{O\+AT} (int mode)
+\item 
+void \hyperlink{class_air_d_c_a1032c849abc753d30bb02b08d2809258}{I\+S\+A\+Altitude} (int mode)
+\item 
+double \hyperlink{class_air_d_c_af4044df1cd0d9b477f19b37f3cdc8836}{Correct\+Dp} (int Sensor\+ID, double Dp\+Meas)
+\item 
+String \hyperlink{class_air_d_c_a328439b2a9e401655b952d2a67931700}{Output\+Serial} (int mode)
+\item 
+void \hyperlink{class_air_d_c_a7b2dbfed69544bced169d425b55a9cd8}{Pitot\+Correction} (int mode)
+\item 
+void \hyperlink{class_air_d_c_a5c6e4f0974dbff73ea1bcdec01309193}{Viscosity} (int mode)
+\item 
+void \hyperlink{class_air_d_c_a4be77c1575a1ec53e6c2a7199942d3e2}{Red} (int mode)
+\item 
+void \hyperlink{class_air_d_c_ab324f87db272c1c9471b25536ba5e5bf}{Calibration\+Factor} (int mode)
+\item 
+void \hyperlink{class_air_d_c_a01cfc37b82ec5e4b1e568e4119a6b652}{Prepare\+Data} (void)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{class_air_d_c_a9c4b0adc82bd69694271041d3ac456b6}{\+\_\+pid}
+\item 
+char \hyperlink{class_air_d_c_a17c12091517ab30dd91546e89794aebf}{\+\_\+status} \mbox{[}11\mbox{]}
+\item 
+char \hyperlink{class_air_d_c_acb628ebdccdf9729d5a5952ea62019d2}{\+\_\+logfile} \mbox{[}15\mbox{]} =\hyperlink{_air_d_c_8h_a2ecbb6b97620287d0a619efd366a2b46}{D\+E\+F\+A\+U\+L\+T\+\_\+\+L\+O\+G\+\_\+\+F\+I\+LE}
+\item 
+char \hyperlink{class_air_d_c_a6a1f928a4a8de4050099d48790cd032c}{\+\_\+datasel} \mbox{[}25\mbox{]} =\{\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}\textbackslash{}0\textquotesingle{}\}
+\item 
+double \hyperlink{class_air_d_c_a6bd70f2cb324e1931c11e887bf587fff}{\+\_\+dataout} \mbox{[}25\mbox{]}
+\item 
+double \hyperlink{class_air_d_c_aa537425056f6d4cef77dd47100b1a577}{\+\_\+d}
+\item 
+double \hyperlink{class_air_d_c_a763dea78cd7b72ab32b8e3389d4b5748}{\+\_\+\+Pitot\+Xcog}
+\item 
+double \hyperlink{class_air_d_c_accf4f5a99feb4bf08dacebe46da31bc6}{\+\_\+\+Pitot\+Ycog}
+\item 
+double \hyperlink{class_air_d_c_a49979a01949fd019b5743f763d45bd31}{\+\_\+\+Pitot\+Zcog}
+\item 
+double \hyperlink{class_air_d_c_a0b72bf365fbe266f90f3f6474b6a412f}{\+\_\+p}
+\item 
+double \hyperlink{class_air_d_c_a0a27dd9c1310d80cc6fcd2a7206118e9}{\+\_\+p\+Raw}
+\item 
+double \hyperlink{class_air_d_c_ab6f890ee32ce1516ab4be2df5fc87512}{\+\_\+T}
+\item 
+double \hyperlink{class_air_d_c_a74c3becfb2567c4e5160462640464751}{\+\_\+\+T\+Raw}
+\item 
+double \hyperlink{class_air_d_c_a97e285a95da76399ef1b80d317304b08}{\+\_\+\+RH}
+\item 
+double \hyperlink{class_air_d_c_a1b24442b698f10a05b0f577cd29b2354}{\+\_\+qc}
+\item 
+double \hyperlink{class_air_d_c_a0230a9cb98053c272cbe4c759fb944a7}{\+\_\+qc\+Raw}
+\item 
+double \hyperlink{class_air_d_c_acffb07b44db4ac59865794b08166c076}{\+\_\+\+A\+OA}
+\item 
+double \hyperlink{class_air_d_c_a7a5ce65539837a96aea6ab27cc17805d}{\+\_\+\+A\+OS}
+\item 
+double \hyperlink{class_air_d_c_ae41c7ac96a56dfa11e23e4379f7126ee}{\+\_\+p\+Sea\+Level}
+\item 
+double \hyperlink{class_air_d_c_a35325b7c2689999015d1154711a4f4a8}{\+\_\+\+Tdeltap}
+\item 
+double \hyperlink{class_air_d_c_a9c0b07d8083b020b1bdc1b47b404d880}{\+\_\+\+Tabsp}
+\item 
+double \hyperlink{class_air_d_c_a01ef7b186b768452c9190e8d8c3d83d2}{\+\_\+\+Tdeltap\+Raw}
+\item 
+double \hyperlink{class_air_d_c_afe68f1ec8ccf7e83703cf14bfdd7671e}{\+\_\+\+Tabsp\+Raw}
+\item 
+double \hyperlink{class_air_d_c_a8ab31dfd4935d323247fc826056484cc}{\+\_\+\+Rho}
+\item 
+double \hyperlink{class_air_d_c_aa9009f1bc3acbff291ea74a16793925d}{\+\_\+\+I\+AS}
+\item 
+double \hyperlink{class_air_d_c_a3edeb2c3414928678ae4783390fbdcc2}{\+\_\+\+C\+AS}
+\item 
+double \hyperlink{class_air_d_c_acb03122240267d351311838467da7626}{\+\_\+\+T\+AS}
+\item 
+double \hyperlink{class_air_d_c_a98626ba90fef24d18f0ab1c6ff48c8f9}{\+\_\+\+T\+A\+S\+P\+Corrected}
+\item 
+double \hyperlink{class_air_d_c_a64c61411ff1046d4208729fd60843fcf}{\+\_\+M}
+\item 
+double \hyperlink{class_air_d_c_a0906212640e0c8b3aa1fde142defe528}{\+\_\+\+T\+AT}
+\item 
+double \hyperlink{class_air_d_c_a66fa186559440d1b4ae7a1d03bc1d6a5}{\+\_\+h}
+\item 
+double \hyperlink{class_air_d_c_a20551125b780e1ece94dd41a896c23e3}{\+\_\+mu}
+\item 
+double \hyperlink{class_air_d_c_ab3ab74af3a00dea2bcd0bab893b43eff}{\+\_\+\+Re}
+\item 
+double \hyperlink{class_air_d_c_a70fe35edba2791df773ca1a8d7443d2b}{\+\_\+\+A\+O\+Adot}
+\item 
+double \hyperlink{class_air_d_c_abd2d478d783886d15f87b99534fcaf62}{\+\_\+\+A\+O\+Sdot}
+\item 
+double \hyperlink{class_air_d_c_ab4b9f099c8aa4f062f6dec55e3df1283}{\+\_\+up}
+\item 
+double \hyperlink{class_air_d_c_a86f3d5b690a3b2ad95c7ec123f26cce6}{\+\_\+uT}
+\item 
+double \hyperlink{class_air_d_c_acf688ff55f29ba54c9597488892e5585}{\+\_\+u\+RH}
+\item 
+double \hyperlink{class_air_d_c_af57ba8f485f319af287418ce742b967c}{\+\_\+uqc}
+\item 
+double \hyperlink{class_air_d_c_aab669ac6d052f01d5dc9f345337d9e17}{\+\_\+u\+Rho}
+\item 
+double \hyperlink{class_air_d_c_a0ac29415592cc16e4b65df63d63e0c6d}{\+\_\+u\+I\+AS}
+\item 
+double \hyperlink{class_air_d_c_ad03e64d89fbbaf384742a78a9c8f3656}{\+\_\+u\+C\+AS}
+\item 
+double \hyperlink{class_air_d_c_acddb83fb7c5062242da92d1d84f45766}{\+\_\+u\+T\+AS}
+\item 
+double \hyperlink{class_air_d_c_ac872626f05fed673e71d599659dcd06b}{\+\_\+u\+T\+AT}
+\item 
+double \hyperlink{class_air_d_c_abbd58e546b9543b16efb338da5104c93}{\+\_\+uh}
+\item 
+double \hyperlink{class_air_d_c_ab9056d28bd322cca2c54667e9c19fda1}{\+\_\+\+Ip}
+\item 
+double \hyperlink{class_air_d_c_aeb849e008f547a98ee321899dc36f1fd}{\+\_\+\+Iq}
+\item 
+double \hyperlink{class_air_d_c_ade7fb03c0a98ea25741c3abc9ec2a3bd}{\+\_\+\+Ir}
+\item 
+double \hyperlink{class_air_d_c_a22989053a777ff145d35e5022f485668}{\+\_\+c}
+\item 
+double \hyperlink{class_air_d_c_a5bef6873f02bb7ef89da730e2ce25126}{\+\_\+\+Dp\+Zero\+Meas}
+\item 
+double \hyperlink{class_air_d_c_aea00f62b7477ab0270c88b04205b8212}{\+\_\+\+Gain\+Dp}
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_air_d_c_ad8fd49af8bf2b7db4dee29fe9bc28bb6}\label{class_air_d_c_ad8fd49af8bf2b7db4dee29fe9bc28bb6}} 
+\index{Air\+DC@{Air\+DC}!Air\+DC@{Air\+DC}}
+\index{Air\+DC@{Air\+DC}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{Air\+D\+C()}{AirDC()}}
+{\footnotesize\ttfamily Air\+D\+C\+::\+Air\+DC (\begin{DoxyParamCaption}\item[{int}]{pid }\end{DoxyParamCaption})}
+
+\hyperlink{class_air_d_c}{Air\+DC} -\/ Library for Basic Air Data calculations J.\+L.\+J (C)2015, Basic Air Data Team.~\newline
+ Refer to http\+:\textbackslash{}www.\+basicairdata.\+eu
+
+This program is free software\+: you can redistribute it and/or modify it under the terms of the G\+NU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but W\+I\+T\+H\+O\+UT A\+NY W\+A\+R\+R\+A\+N\+TY; without even the implie d warranty of M\+E\+R\+C\+H\+A\+N\+T\+A\+B\+I\+L\+I\+TY or F\+I\+T\+N\+E\+SS F\+OR A P\+A\+R\+T\+I\+C\+U\+L\+AR P\+U\+R\+P\+O\+SE. See the G\+NU General Public License for more details. You should have received a copy of the G\+NU General Public License along with this program. If not, see \href{http://www.gnu.org/licenses/}{\tt http\+://www.\+gnu.\+org/licenses/}. \hyperlink{class_air_d_c}{Air\+DC} Default constructor 
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_air_d_c_ab324f87db272c1c9471b25536ba5e5bf}\label{class_air_d_c_ab324f87db272c1c9471b25536ba5e5bf}} 
+\index{Air\+DC@{Air\+DC}!Calibration\+Factor@{Calibration\+Factor}}
+\index{Calibration\+Factor@{Calibration\+Factor}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{Calibration\+Factor()}{CalibrationFactor()}}
+{\footnotesize\ttfamily void Air\+D\+C\+::\+Calibration\+Factor (\begin{DoxyParamCaption}\item[{int}]{mode }\end{DoxyParamCaption})}
+
+Returns the calibration factor for the probe in function of operative conditions 
+\begin{DoxyParams}{Parameters}
+{\em Mode} & 1 fixed value c=1 \\
+\hline
+{\em Mode} & 2 Basic Air Data 8 mm Probe \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_air_d_c_a7ff5cc226ca2b14d7c03fafef41e6a84}\label{class_air_d_c_a7ff5cc226ca2b14d7c03fafef41e6a84}} 
+\index{Air\+DC@{Air\+DC}!C\+AS@{C\+AS}}
+\index{C\+AS@{C\+AS}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{C\+A\+S()}{CAS()}}
+{\footnotesize\ttfamily void Air\+D\+C\+::\+C\+AS (\begin{DoxyParamCaption}\item[{int}]{mode }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_air_d_c_af4044df1cd0d9b477f19b37f3cdc8836}\label{class_air_d_c_af4044df1cd0d9b477f19b37f3cdc8836}} 
+\index{Air\+DC@{Air\+DC}!Correct\+Dp@{Correct\+Dp}}
+\index{Correct\+Dp@{Correct\+Dp}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{Correct\+Dp()}{CorrectDp()}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+Correct\+Dp (\begin{DoxyParamCaption}\item[{int}]{Sensor\+ID,  }\item[{double}]{Dp\+Meas }\end{DoxyParamCaption})}
+
+Calculates correction factor for differential pressure measurements (SI) taken by sensor\+ID 
+\begin{DoxyParams}{Parameters}
+{\em Sensor\+ID} & Indicates the Sensor \\
+\hline
+{\em Pascal} & deltap measurement \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Correction Offset \mbox{[}Pa\mbox{]} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_air_d_c_af26c8e8ef7fa070a72f0a5777cf91ec0}\label{class_air_d_c_af26c8e8ef7fa070a72f0a5777cf91ec0}} 
+\index{Air\+DC@{Air\+DC}!I\+AS@{I\+AS}}
+\index{I\+AS@{I\+AS}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{I\+A\+S()}{IAS()}}
+{\footnotesize\ttfamily void Air\+D\+C\+::\+I\+AS (\begin{DoxyParamCaption}\item[{int}]{mode }\end{DoxyParamCaption})}
+
+Calcualtes Indicated Airspeed I\+AS=A\+SI=E\+AS 
+\begin{DoxyParams}{Parameters}
+{\em Mode} & Indicates the calculation method. 1 is Basic Air Data default \href{http://www.basicairdata.eu/pitot-tube.html}{\tt http\+://www.\+basicairdata.\+eu/pitot-\/tube.\+html}~\newline
+ \href{https://en.wikipedia.org/wiki/Equivalent_airspeed}{\tt https\+://en.\+wikipedia.\+org/wiki/\+Equivalent\+\_\+airspeed} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_air_d_c_a1032c849abc753d30bb02b08d2809258}\label{class_air_d_c_a1032c849abc753d30bb02b08d2809258}} 
+\index{Air\+DC@{Air\+DC}!I\+S\+A\+Altitude@{I\+S\+A\+Altitude}}
+\index{I\+S\+A\+Altitude@{I\+S\+A\+Altitude}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{I\+S\+A\+Altitude()}{ISAAltitude()}}
+{\footnotesize\ttfamily void Air\+D\+C\+::\+I\+S\+A\+Altitude (\begin{DoxyParamCaption}\item[{int}]{mode }\end{DoxyParamCaption})}
+
+Calculates barometric altitude with I\+SA atmosphere 
+\begin{DoxyParams}{Parameters}
+{\em Mode} & 1 Uncorrected altitude above mean sea level \href{http://www.basicairdata.eu/altimeter.html}{\tt http\+://www.\+basicairdata.\+eu/altimeter.\+html} \\
+\hline
+{\em Mode} & 2 Corrected above mean sea level altitude, pressure at sea level should be available, \href{https://en.wikipedia.org/wiki/QNH}{\tt https\+://en.\+wikipedia.\+org/wiki/\+Q\+NH} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_air_d_c_a6e8f15eedeebbd094259bb38b9e0307a}\label{class_air_d_c_a6e8f15eedeebbd094259bb38b9e0307a}} 
+\index{Air\+DC@{Air\+DC}!Mach@{Mach}}
+\index{Mach@{Mach}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{Mach()}{Mach()}}
+{\footnotesize\ttfamily void Air\+D\+C\+::\+Mach (\begin{DoxyParamCaption}\item[{int}]{mode }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_air_d_c_a4ce45312b9ac98b76af87f1718c4e0fc}\label{class_air_d_c_a4ce45312b9ac98b76af87f1718c4e0fc}} 
+\index{Air\+DC@{Air\+DC}!O\+AT@{O\+AT}}
+\index{O\+AT@{O\+AT}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{O\+A\+T()}{OAT()}}
+{\footnotesize\ttfamily void Air\+D\+C\+::\+O\+AT (\begin{DoxyParamCaption}\item[{int}]{mode }\end{DoxyParamCaption})}
+
+Calculates Outside Air Temperature 
+\begin{DoxyParams}{Parameters}
+{\em Mode} & Indicates the calculation method. 1 is Basic Air Data default \href{https://en.wikipedia.org/wiki/Total_air_temperature}{\tt https\+://en.\+wikipedia.\+org/wiki/\+Total\+\_\+air\+\_\+temperature} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_air_d_c_a328439b2a9e401655b952d2a67931700}\label{class_air_d_c_a328439b2a9e401655b952d2a67931700}} 
+\index{Air\+DC@{Air\+DC}!Output\+Serial@{Output\+Serial}}
+\index{Output\+Serial@{Output\+Serial}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{Output\+Serial()}{OutputSerial()}}
+{\footnotesize\ttfamily String Air\+D\+C\+::\+Output\+Serial (\begin{DoxyParamCaption}\item[{int}]{mode }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_air_d_c_a7b2dbfed69544bced169d425b55a9cd8}\label{class_air_d_c_a7b2dbfed69544bced169d425b55a9cd8}} 
+\index{Air\+DC@{Air\+DC}!Pitot\+Correction@{Pitot\+Correction}}
+\index{Pitot\+Correction@{Pitot\+Correction}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{Pitot\+Correction()}{PitotCorrection()}}
+{\footnotesize\ttfamily void Air\+D\+C\+::\+Pitot\+Correction (\begin{DoxyParamCaption}\item[{int}]{mode }\end{DoxyParamCaption})}
+
+Correct T\+AS based on pitot placement 
+\begin{DoxyParams}{Parameters}
+{\em Mode} & 1 No compensation \\
+\hline
+{\em Mode} & 2 Steady state(no angular acceleration) assumed for this method ~\newline
+ \href{http://basicairdata.blogspot.it/2014/07/pitot-correction-for-position-and.html}{\tt http\+://basicairdata.\+blogspot.\+it/2014/07/pitot-\/correction-\/for-\/position-\/and.\+html} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_air_d_c_a01cfc37b82ec5e4b1e568e4119a6b652}\label{class_air_d_c_a01cfc37b82ec5e4b1e568e4119a6b652}} 
+\index{Air\+DC@{Air\+DC}!Prepare\+Data@{Prepare\+Data}}
+\index{Prepare\+Data@{Prepare\+Data}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{Prepare\+Data()}{PrepareData()}}
+{\footnotesize\ttfamily void Air\+D\+C\+::\+Prepare\+Data (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Order all the data within an array \begin{DoxyReturn}{Returns}
+Void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_air_d_c_a4be77c1575a1ec53e6c2a7199942d3e2}\label{class_air_d_c_a4be77c1575a1ec53e6c2a7199942d3e2}} 
+\index{Air\+DC@{Air\+DC}!Red@{Red}}
+\index{Red@{Red}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{Red()}{Red()}}
+{\footnotesize\ttfamily void Air\+D\+C\+::\+Red (\begin{DoxyParamCaption}\item[{int}]{mode }\end{DoxyParamCaption})}
+
+Calculates Re number 
+\begin{DoxyParams}{Parameters}
+{\em Mode} & 1 Uses \+\_\+d as reference dimension \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_air_d_c_a89f74a0f980a2891d10f4e5637ddbc40}\label{class_air_d_c_a89f74a0f980a2891d10f4e5637ddbc40}} 
+\index{Air\+DC@{Air\+DC}!Rho\+Air@{Rho\+Air}}
+\index{Rho\+Air@{Rho\+Air}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{Rho\+Air()}{RhoAir()}}
+{\footnotesize\ttfamily void Air\+D\+C\+::\+Rho\+Air (\begin{DoxyParamCaption}\item[{int}]{mode }\end{DoxyParamCaption})}
+
+Calculates the Air Density 
+\begin{DoxyParams}{Parameters}
+{\em Mode} & Indicates the calculation method. 1 is Basic Air Data default \href{http://www.basicairdata.eu/calculation-routines.html}{\tt http\+://www.\+basicairdata.\+eu/calculation-\/routines.\+html} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_air_d_c_ac5f852dcb7b32bf8b18f8dda9d1e7005}\label{class_air_d_c_ac5f852dcb7b32bf8b18f8dda9d1e7005}} 
+\index{Air\+DC@{Air\+DC}!T\+AS@{T\+AS}}
+\index{T\+AS@{T\+AS}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{T\+A\+S()}{TAS()}}
+{\footnotesize\ttfamily void Air\+D\+C\+::\+T\+AS (\begin{DoxyParamCaption}\item[{int}]{mode }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_air_d_c_a5c6e4f0974dbff73ea1bcdec01309193}\label{class_air_d_c_a5c6e4f0974dbff73ea1bcdec01309193}} 
+\index{Air\+DC@{Air\+DC}!Viscosity@{Viscosity}}
+\index{Viscosity@{Viscosity}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{Viscosity()}{Viscosity()}}
+{\footnotesize\ttfamily void Air\+D\+C\+::\+Viscosity (\begin{DoxyParamCaption}\item[{int}]{mode }\end{DoxyParamCaption})}
+
+Calculates Air Viscosity 
+\begin{DoxyParams}{Parameters}
+{\em Mode} & 1 Calculate viscosity in Pas with Sutherland\textquotesingle{}s formula \\
+\hline
+{\em Mode} & 2 Calculate viscosity 10-\/6$\ast$\+Pas with Sutherland\textquotesingle{}s formula \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Void 
+\end{DoxyReturn}
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{class_air_d_c_acffb07b44db4ac59865794b08166c076}\label{class_air_d_c_acffb07b44db4ac59865794b08166c076}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+\+A\+OA@{\+\_\+\+A\+OA}}
+\index{\+\_\+\+A\+OA@{\+\_\+\+A\+OA}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+\+A\+OA}{\_AOA}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+\+A\+OA}
+
+Angle of Attack, rads \mbox{\Hypertarget{class_air_d_c_a70fe35edba2791df773ca1a8d7443d2b}\label{class_air_d_c_a70fe35edba2791df773ca1a8d7443d2b}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+\+A\+O\+Adot@{\+\_\+\+A\+O\+Adot}}
+\index{\+\_\+\+A\+O\+Adot@{\+\_\+\+A\+O\+Adot}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+\+A\+O\+Adot}{\_AOAdot}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+\+A\+O\+Adot}
+
+Time derivate of A\+OA rad/s \mbox{\Hypertarget{class_air_d_c_a7a5ce65539837a96aea6ab27cc17805d}\label{class_air_d_c_a7a5ce65539837a96aea6ab27cc17805d}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+\+A\+OS@{\+\_\+\+A\+OS}}
+\index{\+\_\+\+A\+OS@{\+\_\+\+A\+OS}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+\+A\+OS}{\_AOS}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+\+A\+OS}
+
+Angle of Sideslip, rads \mbox{\Hypertarget{class_air_d_c_abd2d478d783886d15f87b99534fcaf62}\label{class_air_d_c_abd2d478d783886d15f87b99534fcaf62}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+\+A\+O\+Sdot@{\+\_\+\+A\+O\+Sdot}}
+\index{\+\_\+\+A\+O\+Sdot@{\+\_\+\+A\+O\+Sdot}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+\+A\+O\+Sdot}{\_AOSdot}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+\+A\+O\+Sdot}
+
+Time derivate of A\+OS rad/s \mbox{\Hypertarget{class_air_d_c_a22989053a777ff145d35e5022f485668}\label{class_air_d_c_a22989053a777ff145d35e5022f485668}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+c@{\+\_\+c}}
+\index{\+\_\+c@{\+\_\+c}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+c}{\_c}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+c}
+
+Probe calibration factor \mbox{\Hypertarget{class_air_d_c_a3edeb2c3414928678ae4783390fbdcc2}\label{class_air_d_c_a3edeb2c3414928678ae4783390fbdcc2}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+\+C\+AS@{\+\_\+\+C\+AS}}
+\index{\+\_\+\+C\+AS@{\+\_\+\+C\+AS}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+\+C\+AS}{\_CAS}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+\+C\+AS}
+
+Calibrated Air Speed m/s \mbox{\Hypertarget{class_air_d_c_aa537425056f6d4cef77dd47100b1a577}\label{class_air_d_c_aa537425056f6d4cef77dd47100b1a577}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+d@{\+\_\+d}}
+\index{\+\_\+d@{\+\_\+d}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+d}{\_d}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+d}
+
+Reference length for Re number calculation \mbox{\Hypertarget{class_air_d_c_a6bd70f2cb324e1931c11e887bf587fff}\label{class_air_d_c_a6bd70f2cb324e1931c11e887bf587fff}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+dataout@{\+\_\+dataout}}
+\index{\+\_\+dataout@{\+\_\+dataout}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+dataout}{\_dataout}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+dataout\mbox{[}25\mbox{]}}
+
+\mbox{\Hypertarget{class_air_d_c_a6a1f928a4a8de4050099d48790cd032c}\label{class_air_d_c_a6a1f928a4a8de4050099d48790cd032c}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+datasel@{\+\_\+datasel}}
+\index{\+\_\+datasel@{\+\_\+datasel}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+datasel}{\_datasel}}
+{\footnotesize\ttfamily char Air\+D\+C\+::\+\_\+datasel\mbox{[}25\mbox{]} =\{\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}0\textquotesingle{},\textquotesingle{}\textbackslash{}0\textquotesingle{}\}}
+
+Data selection vector see communication protocol msg \#9 \mbox{\Hypertarget{class_air_d_c_a5bef6873f02bb7ef89da730e2ce25126}\label{class_air_d_c_a5bef6873f02bb7ef89da730e2ce25126}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+\+Dp\+Zero\+Meas@{\+\_\+\+Dp\+Zero\+Meas}}
+\index{\+\_\+\+Dp\+Zero\+Meas@{\+\_\+\+Dp\+Zero\+Meas}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+\+Dp\+Zero\+Meas}{\_DpZeroMeas}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+\+Dp\+Zero\+Meas}
+
+Sensor count value when zero differential pressure is applied \mbox{\Hypertarget{class_air_d_c_aea00f62b7477ab0270c88b04205b8212}\label{class_air_d_c_aea00f62b7477ab0270c88b04205b8212}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+\+Gain\+Dp@{\+\_\+\+Gain\+Dp}}
+\index{\+\_\+\+Gain\+Dp@{\+\_\+\+Gain\+Dp}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+\+Gain\+Dp}{\_GainDp}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+\+Gain\+Dp}
+
+Sensor gain \mbox{\Hypertarget{class_air_d_c_a66fa186559440d1b4ae7a1d03bc1d6a5}\label{class_air_d_c_a66fa186559440d1b4ae7a1d03bc1d6a5}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+h@{\+\_\+h}}
+\index{\+\_\+h@{\+\_\+h}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+h}{\_h}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+h}
+
+Altitude m \mbox{\Hypertarget{class_air_d_c_aa9009f1bc3acbff291ea74a16793925d}\label{class_air_d_c_aa9009f1bc3acbff291ea74a16793925d}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+\+I\+AS@{\+\_\+\+I\+AS}}
+\index{\+\_\+\+I\+AS@{\+\_\+\+I\+AS}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+\+I\+AS}{\_IAS}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+\+I\+AS}
+
+Indicated Air speed m/s \mbox{\Hypertarget{class_air_d_c_ab9056d28bd322cca2c54667e9c19fda1}\label{class_air_d_c_ab9056d28bd322cca2c54667e9c19fda1}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+\+Ip@{\+\_\+\+Ip}}
+\index{\+\_\+\+Ip@{\+\_\+\+Ip}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+\+Ip}{\_Ip}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+\+Ip}
+
+Pitch rate \mbox{\Hypertarget{class_air_d_c_aeb849e008f547a98ee321899dc36f1fd}\label{class_air_d_c_aeb849e008f547a98ee321899dc36f1fd}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+\+Iq@{\+\_\+\+Iq}}
+\index{\+\_\+\+Iq@{\+\_\+\+Iq}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+\+Iq}{\_Iq}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+\+Iq}
+
+Roll rate \mbox{\Hypertarget{class_air_d_c_ade7fb03c0a98ea25741c3abc9ec2a3bd}\label{class_air_d_c_ade7fb03c0a98ea25741c3abc9ec2a3bd}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+\+Ir@{\+\_\+\+Ir}}
+\index{\+\_\+\+Ir@{\+\_\+\+Ir}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+\+Ir}{\_Ir}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+\+Ir}
+
+yaw rate \mbox{\Hypertarget{class_air_d_c_acb628ebdccdf9729d5a5952ea62019d2}\label{class_air_d_c_acb628ebdccdf9729d5a5952ea62019d2}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+logfile@{\+\_\+logfile}}
+\index{\+\_\+logfile@{\+\_\+logfile}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+logfile}{\_logfile}}
+{\footnotesize\ttfamily char Air\+D\+C\+::\+\_\+logfile\mbox{[}15\mbox{]} =\hyperlink{_air_d_c_8h_a2ecbb6b97620287d0a619efd366a2b46}{D\+E\+F\+A\+U\+L\+T\+\_\+\+L\+O\+G\+\_\+\+F\+I\+LE}}
+
+Defines the active log file name \mbox{\Hypertarget{class_air_d_c_a64c61411ff1046d4208729fd60843fcf}\label{class_air_d_c_a64c61411ff1046d4208729fd60843fcf}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+M@{\+\_\+M}}
+\index{\+\_\+M@{\+\_\+M}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+M}{\_M}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+M}
+
+Mach number \mbox{\Hypertarget{class_air_d_c_a20551125b780e1ece94dd41a896c23e3}\label{class_air_d_c_a20551125b780e1ece94dd41a896c23e3}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+mu@{\+\_\+mu}}
+\index{\+\_\+mu@{\+\_\+mu}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+mu}{\_mu}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+mu}
+
+Dynamic Viscosity Pas \mbox{\Hypertarget{class_air_d_c_a0b72bf365fbe266f90f3f6474b6a412f}\label{class_air_d_c_a0b72bf365fbe266f90f3f6474b6a412f}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+p@{\+\_\+p}}
+\index{\+\_\+p@{\+\_\+p}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+p}{\_p}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+p}
+
+Static pressure Pa \mbox{\Hypertarget{class_air_d_c_a9c4b0adc82bd69694271041d3ac456b6}\label{class_air_d_c_a9c4b0adc82bd69694271041d3ac456b6}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+pid@{\+\_\+pid}}
+\index{\+\_\+pid@{\+\_\+pid}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+pid}{\_pid}}
+{\footnotesize\ttfamily int Air\+D\+C\+::\+\_\+pid}
+
+Class ID \mbox{\Hypertarget{class_air_d_c_a763dea78cd7b72ab32b8e3389d4b5748}\label{class_air_d_c_a763dea78cd7b72ab32b8e3389d4b5748}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+\+Pitot\+Xcog@{\+\_\+\+Pitot\+Xcog}}
+\index{\+\_\+\+Pitot\+Xcog@{\+\_\+\+Pitot\+Xcog}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+\+Pitot\+Xcog}{\_PitotXcog}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+\+Pitot\+Xcog}
+
+Distance along x body axes of the Pitot tip from center of gravity \mbox{\Hypertarget{class_air_d_c_accf4f5a99feb4bf08dacebe46da31bc6}\label{class_air_d_c_accf4f5a99feb4bf08dacebe46da31bc6}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+\+Pitot\+Ycog@{\+\_\+\+Pitot\+Ycog}}
+\index{\+\_\+\+Pitot\+Ycog@{\+\_\+\+Pitot\+Ycog}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+\+Pitot\+Ycog}{\_PitotYcog}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+\+Pitot\+Ycog}
+
+Distance along y body axes of the Pitot tip from center of gravity \mbox{\Hypertarget{class_air_d_c_a49979a01949fd019b5743f763d45bd31}\label{class_air_d_c_a49979a01949fd019b5743f763d45bd31}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+\+Pitot\+Zcog@{\+\_\+\+Pitot\+Zcog}}
+\index{\+\_\+\+Pitot\+Zcog@{\+\_\+\+Pitot\+Zcog}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+\+Pitot\+Zcog}{\_PitotZcog}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+\+Pitot\+Zcog}
+
+Distance along z body axes of the Pitot tip from center of gravity \mbox{\Hypertarget{class_air_d_c_a0a27dd9c1310d80cc6fcd2a7206118e9}\label{class_air_d_c_a0a27dd9c1310d80cc6fcd2a7206118e9}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+p\+Raw@{\+\_\+p\+Raw}}
+\index{\+\_\+p\+Raw@{\+\_\+p\+Raw}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+p\+Raw}{\_pRaw}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+p\+Raw}
+
+Static pressure raw sensor value \mbox{\Hypertarget{class_air_d_c_ae41c7ac96a56dfa11e23e4379f7126ee}\label{class_air_d_c_ae41c7ac96a56dfa11e23e4379f7126ee}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+p\+Sea\+Level@{\+\_\+p\+Sea\+Level}}
+\index{\+\_\+p\+Sea\+Level@{\+\_\+p\+Sea\+Level}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+p\+Sea\+Level}{\_pSeaLevel}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+p\+Sea\+Level}
+
+Value of pressure at sea level Pa \mbox{\Hypertarget{class_air_d_c_a1b24442b698f10a05b0f577cd29b2354}\label{class_air_d_c_a1b24442b698f10a05b0f577cd29b2354}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+qc@{\+\_\+qc}}
+\index{\+\_\+qc@{\+\_\+qc}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+qc}{\_qc}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+qc}
+
+Differential pressure at Pitot, Pascal \mbox{\Hypertarget{class_air_d_c_a0230a9cb98053c272cbe4c759fb944a7}\label{class_air_d_c_a0230a9cb98053c272cbe4c759fb944a7}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+qc\+Raw@{\+\_\+qc\+Raw}}
+\index{\+\_\+qc\+Raw@{\+\_\+qc\+Raw}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+qc\+Raw}{\_qcRaw}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+qc\+Raw}
+
+Raw sensor value of differential pressure at Pitot, Impact pressure minus static pressure Pa \mbox{\Hypertarget{class_air_d_c_ab3ab74af3a00dea2bcd0bab893b43eff}\label{class_air_d_c_ab3ab74af3a00dea2bcd0bab893b43eff}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+\+Re@{\+\_\+\+Re}}
+\index{\+\_\+\+Re@{\+\_\+\+Re}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+\+Re}{\_Re}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+\+Re}
+
+Reynolds Number \mbox{\Hypertarget{class_air_d_c_a97e285a95da76399ef1b80d317304b08}\label{class_air_d_c_a97e285a95da76399ef1b80d317304b08}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+\+RH@{\+\_\+\+RH}}
+\index{\+\_\+\+RH@{\+\_\+\+RH}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+\+RH}{\_RH}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+\+RH}
+
+Relative Humidity \mbox{\Hypertarget{class_air_d_c_a8ab31dfd4935d323247fc826056484cc}\label{class_air_d_c_a8ab31dfd4935d323247fc826056484cc}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+\+Rho@{\+\_\+\+Rho}}
+\index{\+\_\+\+Rho@{\+\_\+\+Rho}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+\+Rho}{\_Rho}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+\+Rho}
+
+Air Density kg/m$^\wedge$3 \mbox{\Hypertarget{class_air_d_c_a17c12091517ab30dd91546e89794aebf}\label{class_air_d_c_a17c12091517ab30dd91546e89794aebf}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+status@{\+\_\+status}}
+\index{\+\_\+status@{\+\_\+status}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+status}{\_status}}
+{\footnotesize\ttfamily char Air\+D\+C\+::\+\_\+status\mbox{[}11\mbox{]}}
+
+Hardware Status vector see communication protocol msg \#5 \mbox{\Hypertarget{class_air_d_c_ab6f890ee32ce1516ab4be2df5fc87512}\label{class_air_d_c_ab6f890ee32ce1516ab4be2df5fc87512}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+T@{\+\_\+T}}
+\index{\+\_\+T@{\+\_\+T}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+T}{\_T}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+T}
+
+Temperature K \mbox{\Hypertarget{class_air_d_c_a9c0b07d8083b020b1bdc1b47b404d880}\label{class_air_d_c_a9c0b07d8083b020b1bdc1b47b404d880}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+\+Tabsp@{\+\_\+\+Tabsp}}
+\index{\+\_\+\+Tabsp@{\+\_\+\+Tabsp}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+\+Tabsp}{\_Tabsp}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+\+Tabsp}
+
+Temperature at absolute p sensor \mbox{\Hypertarget{class_air_d_c_afe68f1ec8ccf7e83703cf14bfdd7671e}\label{class_air_d_c_afe68f1ec8ccf7e83703cf14bfdd7671e}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+\+Tabsp\+Raw@{\+\_\+\+Tabsp\+Raw}}
+\index{\+\_\+\+Tabsp\+Raw@{\+\_\+\+Tabsp\+Raw}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+\+Tabsp\+Raw}{\_TabspRaw}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+\+Tabsp\+Raw}
+
+Raw temperature at absolute p sensor \mbox{\Hypertarget{class_air_d_c_acb03122240267d351311838467da7626}\label{class_air_d_c_acb03122240267d351311838467da7626}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+\+T\+AS@{\+\_\+\+T\+AS}}
+\index{\+\_\+\+T\+AS@{\+\_\+\+T\+AS}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+\+T\+AS}{\_TAS}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+\+T\+AS}
+
+True Air Speed m/s \mbox{\Hypertarget{class_air_d_c_a98626ba90fef24d18f0ab1c6ff48c8f9}\label{class_air_d_c_a98626ba90fef24d18f0ab1c6ff48c8f9}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+\+T\+A\+S\+P\+Corrected@{\+\_\+\+T\+A\+S\+P\+Corrected}}
+\index{\+\_\+\+T\+A\+S\+P\+Corrected@{\+\_\+\+T\+A\+S\+P\+Corrected}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+\+T\+A\+S\+P\+Corrected}{\_TASPCorrected}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+\+T\+A\+S\+P\+Corrected}
+
+True Air Speed, corrected m/s \mbox{\Hypertarget{class_air_d_c_a0906212640e0c8b3aa1fde142defe528}\label{class_air_d_c_a0906212640e0c8b3aa1fde142defe528}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+\+T\+AT@{\+\_\+\+T\+AT}}
+\index{\+\_\+\+T\+AT@{\+\_\+\+T\+AT}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+\+T\+AT}{\_TAT}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+\+T\+AT}
+
+Total Air Temperature K \mbox{\Hypertarget{class_air_d_c_a35325b7c2689999015d1154711a4f4a8}\label{class_air_d_c_a35325b7c2689999015d1154711a4f4a8}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+\+Tdeltap@{\+\_\+\+Tdeltap}}
+\index{\+\_\+\+Tdeltap@{\+\_\+\+Tdeltap}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+\+Tdeltap}{\_Tdeltap}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+\+Tdeltap}
+
+Temperature at deltap sensor \mbox{\Hypertarget{class_air_d_c_a01ef7b186b768452c9190e8d8c3d83d2}\label{class_air_d_c_a01ef7b186b768452c9190e8d8c3d83d2}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+\+Tdeltap\+Raw@{\+\_\+\+Tdeltap\+Raw}}
+\index{\+\_\+\+Tdeltap\+Raw@{\+\_\+\+Tdeltap\+Raw}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+\+Tdeltap\+Raw}{\_TdeltapRaw}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+\+Tdeltap\+Raw}
+
+Raw temperature at deltap sensor \mbox{\Hypertarget{class_air_d_c_a74c3becfb2567c4e5160462640464751}\label{class_air_d_c_a74c3becfb2567c4e5160462640464751}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+\+T\+Raw@{\+\_\+\+T\+Raw}}
+\index{\+\_\+\+T\+Raw@{\+\_\+\+T\+Raw}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+\+T\+Raw}{\_TRaw}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+\+T\+Raw}
+
+Temperature sensor counts \mbox{\Hypertarget{class_air_d_c_ad03e64d89fbbaf384742a78a9c8f3656}\label{class_air_d_c_ad03e64d89fbbaf384742a78a9c8f3656}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+u\+C\+AS@{\+\_\+u\+C\+AS}}
+\index{\+\_\+u\+C\+AS@{\+\_\+u\+C\+AS}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+u\+C\+AS}{\_uCAS}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+u\+C\+AS}
+
+C\+AS uncertainty \mbox{\Hypertarget{class_air_d_c_abbd58e546b9543b16efb338da5104c93}\label{class_air_d_c_abbd58e546b9543b16efb338da5104c93}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+uh@{\+\_\+uh}}
+\index{\+\_\+uh@{\+\_\+uh}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+uh}{\_uh}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+uh}
+
+Altitude uncertainty \mbox{\Hypertarget{class_air_d_c_a0ac29415592cc16e4b65df63d63e0c6d}\label{class_air_d_c_a0ac29415592cc16e4b65df63d63e0c6d}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+u\+I\+AS@{\+\_\+u\+I\+AS}}
+\index{\+\_\+u\+I\+AS@{\+\_\+u\+I\+AS}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+u\+I\+AS}{\_uIAS}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+u\+I\+AS}
+
+I\+AS uncertainty \mbox{\Hypertarget{class_air_d_c_ab4b9f099c8aa4f062f6dec55e3df1283}\label{class_air_d_c_ab4b9f099c8aa4f062f6dec55e3df1283}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+up@{\+\_\+up}}
+\index{\+\_\+up@{\+\_\+up}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+up}{\_up}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+up}
+
+Pressure uncertainty Pa \mbox{\Hypertarget{class_air_d_c_af57ba8f485f319af287418ce742b967c}\label{class_air_d_c_af57ba8f485f319af287418ce742b967c}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+uqc@{\+\_\+uqc}}
+\index{\+\_\+uqc@{\+\_\+uqc}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+uqc}{\_uqc}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+uqc}
+
+Differential pressure uncertainty Pa \mbox{\Hypertarget{class_air_d_c_acf688ff55f29ba54c9597488892e5585}\label{class_air_d_c_acf688ff55f29ba54c9597488892e5585}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+u\+RH@{\+\_\+u\+RH}}
+\index{\+\_\+u\+RH@{\+\_\+u\+RH}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+u\+RH}{\_uRH}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+u\+RH}
+
+Relative Humidity uncertainty \mbox{\Hypertarget{class_air_d_c_aab669ac6d052f01d5dc9f345337d9e17}\label{class_air_d_c_aab669ac6d052f01d5dc9f345337d9e17}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+u\+Rho@{\+\_\+u\+Rho}}
+\index{\+\_\+u\+Rho@{\+\_\+u\+Rho}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+u\+Rho}{\_uRho}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+u\+Rho}
+
+Air density uncertainty kg/$^\wedge$3 \mbox{\Hypertarget{class_air_d_c_a86f3d5b690a3b2ad95c7ec123f26cce6}\label{class_air_d_c_a86f3d5b690a3b2ad95c7ec123f26cce6}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+uT@{\+\_\+uT}}
+\index{\+\_\+uT@{\+\_\+uT}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+uT}{\_uT}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+uT}
+
+Temperature uncertainty Pa \mbox{\Hypertarget{class_air_d_c_acddb83fb7c5062242da92d1d84f45766}\label{class_air_d_c_acddb83fb7c5062242da92d1d84f45766}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+u\+T\+AS@{\+\_\+u\+T\+AS}}
+\index{\+\_\+u\+T\+AS@{\+\_\+u\+T\+AS}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+u\+T\+AS}{\_uTAS}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+u\+T\+AS}
+
+T\+AS uncertainty \mbox{\Hypertarget{class_air_d_c_ac872626f05fed673e71d599659dcd06b}\label{class_air_d_c_ac872626f05fed673e71d599659dcd06b}} 
+\index{Air\+DC@{Air\+DC}!\+\_\+u\+T\+AT@{\+\_\+u\+T\+AT}}
+\index{\+\_\+u\+T\+AT@{\+\_\+u\+T\+AT}!Air\+DC@{Air\+DC}}
+\subsubsection{\texorpdfstring{\+\_\+u\+T\+AT}{\_uTAT}}
+{\footnotesize\ttfamily double Air\+D\+C\+::\+\_\+u\+T\+AT}
+
+T\+AT uncertainty 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/jlj/github/\+Air\+Data\+Computer/\+Software/\+Microcontroller/\+Libraries/\+Air\+D\+C/\hyperlink{_air_d_c_8h}{Air\+D\+C.\+h}\item 
+/home/jlj/github/\+Air\+Data\+Computer/\+Software/\+Microcontroller/\+Libraries/\+Air\+D\+C/\hyperlink{_air_d_c_8cpp}{Air\+D\+C.\+cpp}\end{DoxyCompactItemize}
