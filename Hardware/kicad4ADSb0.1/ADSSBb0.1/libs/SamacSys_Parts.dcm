@@ -1,0 +1,15 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP NE555D
+D NE555DG4, Timer, 4.5 To 16V, 8-Pin SOIC-8
+K
+F http://www.ti.com/lit/ds/symlink/ne555.pdf
+$ENDCMP
+#
+$CMP AD7856ANZ
+D AD7856ANZ, 14 bit ADC Differential, Serial, 24-Pin PDIP
+K
+F https://eu.mouser.com/datasheet/2/609/AD7856-877508.pdf
+$ENDCMP
+#
+#End Doc Library
