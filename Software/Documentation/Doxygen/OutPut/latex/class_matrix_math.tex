@@ -1,0 +1,82 @@
+\hypertarget{class_matrix_math}{}\section{Matrix\+Math Class Reference}
+\label{class_matrix_math}\index{Matrix\+Math@{Matrix\+Math}}
+
+
+{\ttfamily \#include $<$Matrix\+Math.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{class_matrix_math_a1ebe7b2f52b37c22ae933728951bcaa2}{Print} (float $\ast$A, int m, int n, String label)
+\item 
+void \hyperlink{class_matrix_math_a930d0115b62a5b90cea07fafea3143d4}{Copy} (float $\ast$A, int n, int m, float $\ast$B)
+\item 
+void \hyperlink{class_matrix_math_a70c07a8ea30698f5e824b1e759a0fa50}{Multiply} (float $\ast$A, float $\ast$B, int m, int p, int n, float $\ast$C)
+\item 
+void \hyperlink{class_matrix_math_a000bc14e0f353f501ba31dd2b5c3ac28}{Add} (float $\ast$A, float $\ast$B, int m, int n, float $\ast$C)
+\item 
+void \hyperlink{class_matrix_math_a3f6f124c09f5bb74e231c2c3f579ae4a}{Subtract} (float $\ast$A, float $\ast$B, int m, int n, float $\ast$C)
+\item 
+void \hyperlink{class_matrix_math_aba3cea366ead865747522c2fec0356f5}{Transpose} (float $\ast$A, int m, int n, float $\ast$C)
+\item 
+void \hyperlink{class_matrix_math_ada635d2211662e26c6efe867481505bb}{Scale} (float $\ast$A, int m, int n, float k)
+\item 
+int \hyperlink{class_matrix_math_ab9bf40bb3ecbab43d151030616ef70c0}{Invert} (float $\ast$A, int n)
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_matrix_math_a000bc14e0f353f501ba31dd2b5c3ac28}\label{class_matrix_math_a000bc14e0f353f501ba31dd2b5c3ac28}} 
+\index{Matrix\+Math@{Matrix\+Math}!Add@{Add}}
+\index{Add@{Add}!Matrix\+Math@{Matrix\+Math}}
+\subsubsection{\texorpdfstring{Add()}{Add()}}
+{\footnotesize\ttfamily void Matrix\+Math\+::\+Add (\begin{DoxyParamCaption}\item[{float $\ast$}]{A,  }\item[{float $\ast$}]{B,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{float $\ast$}]{C }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_matrix_math_a930d0115b62a5b90cea07fafea3143d4}\label{class_matrix_math_a930d0115b62a5b90cea07fafea3143d4}} 
+\index{Matrix\+Math@{Matrix\+Math}!Copy@{Copy}}
+\index{Copy@{Copy}!Matrix\+Math@{Matrix\+Math}}
+\subsubsection{\texorpdfstring{Copy()}{Copy()}}
+{\footnotesize\ttfamily void Matrix\+Math\+::\+Copy (\begin{DoxyParamCaption}\item[{float $\ast$}]{A,  }\item[{int}]{n,  }\item[{int}]{m,  }\item[{float $\ast$}]{B }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_matrix_math_ab9bf40bb3ecbab43d151030616ef70c0}\label{class_matrix_math_ab9bf40bb3ecbab43d151030616ef70c0}} 
+\index{Matrix\+Math@{Matrix\+Math}!Invert@{Invert}}
+\index{Invert@{Invert}!Matrix\+Math@{Matrix\+Math}}
+\subsubsection{\texorpdfstring{Invert()}{Invert()}}
+{\footnotesize\ttfamily int Matrix\+Math\+::\+Invert (\begin{DoxyParamCaption}\item[{float $\ast$}]{A,  }\item[{int}]{n }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_matrix_math_a70c07a8ea30698f5e824b1e759a0fa50}\label{class_matrix_math_a70c07a8ea30698f5e824b1e759a0fa50}} 
+\index{Matrix\+Math@{Matrix\+Math}!Multiply@{Multiply}}
+\index{Multiply@{Multiply}!Matrix\+Math@{Matrix\+Math}}
+\subsubsection{\texorpdfstring{Multiply()}{Multiply()}}
+{\footnotesize\ttfamily void Matrix\+Math\+::\+Multiply (\begin{DoxyParamCaption}\item[{float $\ast$}]{A,  }\item[{float $\ast$}]{B,  }\item[{int}]{m,  }\item[{int}]{p,  }\item[{int}]{n,  }\item[{float $\ast$}]{C }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_matrix_math_a1ebe7b2f52b37c22ae933728951bcaa2}\label{class_matrix_math_a1ebe7b2f52b37c22ae933728951bcaa2}} 
+\index{Matrix\+Math@{Matrix\+Math}!Print@{Print}}
+\index{Print@{Print}!Matrix\+Math@{Matrix\+Math}}
+\subsubsection{\texorpdfstring{Print()}{Print()}}
+{\footnotesize\ttfamily void Matrix\+Math\+::\+Print (\begin{DoxyParamCaption}\item[{float $\ast$}]{A,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{String}]{label }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_matrix_math_ada635d2211662e26c6efe867481505bb}\label{class_matrix_math_ada635d2211662e26c6efe867481505bb}} 
+\index{Matrix\+Math@{Matrix\+Math}!Scale@{Scale}}
+\index{Scale@{Scale}!Matrix\+Math@{Matrix\+Math}}
+\subsubsection{\texorpdfstring{Scale()}{Scale()}}
+{\footnotesize\ttfamily void Matrix\+Math\+::\+Scale (\begin{DoxyParamCaption}\item[{float $\ast$}]{A,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{float}]{k }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_matrix_math_a3f6f124c09f5bb74e231c2c3f579ae4a}\label{class_matrix_math_a3f6f124c09f5bb74e231c2c3f579ae4a}} 
+\index{Matrix\+Math@{Matrix\+Math}!Subtract@{Subtract}}
+\index{Subtract@{Subtract}!Matrix\+Math@{Matrix\+Math}}
+\subsubsection{\texorpdfstring{Subtract()}{Subtract()}}
+{\footnotesize\ttfamily void Matrix\+Math\+::\+Subtract (\begin{DoxyParamCaption}\item[{float $\ast$}]{A,  }\item[{float $\ast$}]{B,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{float $\ast$}]{C }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_matrix_math_aba3cea366ead865747522c2fec0356f5}\label{class_matrix_math_aba3cea366ead865747522c2fec0356f5}} 
+\index{Matrix\+Math@{Matrix\+Math}!Transpose@{Transpose}}
+\index{Transpose@{Transpose}!Matrix\+Math@{Matrix\+Math}}
+\subsubsection{\texorpdfstring{Transpose()}{Transpose()}}
+{\footnotesize\ttfamily void Matrix\+Math\+::\+Transpose (\begin{DoxyParamCaption}\item[{float $\ast$}]{A,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{float $\ast$}]{C }\end{DoxyParamCaption})}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/jlj/github/\+Air\+Data\+Computer/\+Software/\+Microcontroller/\+Libraries/\+Air\+D\+C/\hyperlink{_matrix_math_8h}{Matrix\+Math.\+h}\item 
+/home/jlj/github/\+Air\+Data\+Computer/\+Software/\+Microcontroller/\+Libraries/\+Air\+D\+C/\hyperlink{_matrix_math_8cpp}{Matrix\+Math.\+cpp}\end{DoxyCompactItemize}
