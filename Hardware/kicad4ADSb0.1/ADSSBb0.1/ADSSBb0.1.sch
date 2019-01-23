@@ -289,7 +289,7 @@ U 1 1 5C466183
 P 4550 3700
 F 0 "J1" V 4554 3880 50  0000 L CNN
 F 1 "ICSP ARDUINO NANO" V 4645 3880 50  0000 L CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_2x03_P2.54mm_Vertical" H 4550 3700 50  0001 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_2x03_P2.54mm_Vertical" H 4550 3700 50  0001 C CNN
 F 3 "~" H 4550 3700 50  0001 C CNN
 	1    4550 3700
 	0    1    1    0   
@@ -10301,7 +10301,7 @@ U 1 1 5C47040E
 P 1450 4300
 F 0 "J2" H 1530 4292 50  0000 L CNN
 F 1 "Conn_01x04" H 1530 4201 50  0000 L CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical" H 1450 4300 50  0001 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x04_P2.54mm_Vertical" H 1450 4300 50  0001 C CNN
 F 3 "~" H 1450 4300 50  0001 C CNN
 	1    1450 4300
 	1    0    0    -1  
@@ -10312,7 +10312,7 @@ U 1 1 5C470494
 P 1450 4950
 F 0 "J3" H 1530 4942 50  0000 L CNN
 F 1 "Conn_01x04" H 1530 4851 50  0000 L CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical" H 1450 4950 50  0001 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x04_P2.54mm_Vertical" H 1450 4950 50  0001 C CNN
 F 3 "~" H 1450 4950 50  0001 C CNN
 	1    1450 4950
 	1    0    0    -1  
@@ -10323,7 +10323,7 @@ U 1 1 5C470533
 P 1450 5650
 F 0 "J4" H 1530 5642 50  0000 L CNN
 F 1 "Conn_01x04" H 1530 5551 50  0000 L CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical" H 1450 5650 50  0001 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x04_P2.54mm_Vertical" H 1450 5650 50  0001 C CNN
 F 3 "~" H 1450 5650 50  0001 C CNN
 	1    1450 5650
 	1    0    0    -1  
@@ -10334,7 +10334,7 @@ U 1 1 5C470589
 P 2800 4300
 F 0 "J5" H 2880 4292 50  0000 L CNN
 F 1 "Conn_01x04" H 2880 4201 50  0000 L CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical" H 2800 4300 50  0001 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x04_P2.54mm_Vertical" H 2800 4300 50  0001 C CNN
 F 3 "~" H 2800 4300 50  0001 C CNN
 	1    2800 4300
 	1    0    0    -1  
@@ -10345,7 +10345,7 @@ U 1 1 5C4705ED
 P 2800 4950
 F 0 "J6" H 2880 4942 50  0000 L CNN
 F 1 "Conn_01x04" H 2880 4851 50  0000 L CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical" H 2800 4950 50  0001 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x04_P2.54mm_Vertical" H 2800 4950 50  0001 C CNN
 F 3 "~" H 2800 4950 50  0001 C CNN
 	1    2800 4950
 	1    0    0    -1  
@@ -10356,7 +10356,7 @@ U 1 1 5C47064D
 P 2800 5650
 F 0 "J7" H 2880 5642 50  0000 L CNN
 F 1 "Conn_01x04" H 2880 5551 50  0000 L CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical" H 2800 5650 50  0001 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x04_P2.54mm_Vertical" H 2800 5650 50  0001 C CNN
 F 3 "~" H 2800 5650 50  0001 C CNN
 	1    2800 5650
 	1    0    0    -1  
