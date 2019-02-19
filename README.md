@@ -23,6 +23,7 @@ We are developing [Air Data Bridge](https://github.com/BasicAirData/AirDataBridg
 ## Reference documents
 
 [Notes on firmware programming](https://www.basicairdata.eu/projects/notes-on-firmware-programming/)
+
 [Basic Air Data Home Page](https://www.basicairdata.eu)
 
 [Code of conduct](CODE_OF_CONDUCT.md)
